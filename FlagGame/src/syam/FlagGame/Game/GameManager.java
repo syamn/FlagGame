@@ -47,10 +47,10 @@ public class GameManager {
 	 * @return null または対象のゲーム
 	 */
 	public static Game getSelectedGame(Player player){
-		if (player == null || !selectedGame.containsKey(player)){
+		if (player == null || !selectedGame.containsKey(player.getName())){
 			return null;
 		}else{
-			return selectedGame.get(player);
+			return selectedGame.get(player.getName());
 		}
 	}
 	/**
@@ -67,10 +67,10 @@ public class GameManager {
 	 * @return null または対象チーム
 	 */
 	public static GameTeam getSelectedTeam(Player player){
-		if (player == null || !selectedTeam.containsKey(player)){
+		if (player == null || !selectedTeam.containsKey(player.getName())){
 			return null;
 		}else{
-			return selectedTeam.get(player);
+			return selectedTeam.get(player.getName());
 		}
 	}
 

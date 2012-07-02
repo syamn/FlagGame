@@ -4,18 +4,42 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import syam.FlagGame.Command.AdminCommand;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Listeners.FGPlayerListener;
 
 public class FlagGame extends JavaPlugin{
+
+	/*
+	 * TODO:
+	 * フラッグは新規クラス Flag を作って各ゲームに List<Flag> または HashMap<Location, Flag> で持たせる(後者のがいい？)
+	 *  → どちらのチームのものか(またはセンターか)、元と今のブロックのIDとデータ値、そのフラッグのポイント(ゲームの勝敗判定に使う点数)
+	 *
+	 *  ゲーム参加者だけにメッセージキャストする等で使うので、一つの変数(リスト？マップ？配列はナシ)に参加プレイヤーを格納したい
+	 *  → チーム毎も必須か 現状維持で HashMap<List,List>を使う
+	 *
+	 *
+	 *  WorldEdit/Guard連携、イベントワールド全域保護、試合中はステージ外への移動を禁止
+	 *  Valut連携、お金の概念にフック
+	 *
+	 *  プレイヤーも専用クラスを作る？
+	 *
+	 *  分かりづらいのでコマンドをサブコマンドでクラスを分ける
+	 *
+	 *  死亡メッセージをワールド外で非表示にする
+	 *
+	 */
+
 	// ** Logger **
 	public final static Logger log = Logger.getLogger("Minecraft");
 	public final static String logPrefix = "[FlagGame] ";
 	public final static String msgPrefix = "&c[FlagGame] &f";
 
 	// ** Listener **
+	private final FGPlayerListener playerListener = new FGPlayerListener(this);
 
 	// ** Private classes **
 	private ConfigurationManager config;
@@ -33,6 +57,7 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public void onEnable(){
 		instance  = this;
+		PluginManager pm = getServer().getPluginManager();
 		config = new ConfigurationManager(this);
 
 		// loadconfig
@@ -42,7 +67,10 @@ public class FlagGame extends JavaPlugin{
 			log.warning(logPrefix+"an error occured while trying to load the config file.");
 			ex.printStackTrace();
 		}
-		
+
+		// Regist Listeners
+		pm.registerEvents(playerListener, this);
+
 		// コマンド登録
 		getServer().getPluginCommand("flagadmin").setExecutor(new AdminCommand(this));
 
