@@ -1,0 +1,24 @@
+##  Plugin Information  ##
+name: FlagGame
+version: 0.1
+main: syam.FlagGame.FlagGame
+description: FlagMatch Gaming Plugin for SakuraServer
+website: http://sakura-server.net/
+##  Original Author     ##
+author: syam
+commands:
+    flag:
+      usage: /flag - to see the help
+      aliases: [fg]
+      description: To see the FlagGame help.
+    flagadmin:
+      usage: /flagadmin - to see the help
+      aliases: [fga, fa]
+      description: To see the FlagGame help for Administrator.
+permissions:
+    flag.admin:
+        default: op
+        description: Allow all of /flagadmin commands!
+    flag.admin.reload:
+        default: op
+        description: Allow reload configuration!
