@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import syam.FlagGame.Command.AdminCommand;
 import syam.FlagGame.Game.Game;
 
 public class FlagGame extends JavaPlugin{
@@ -41,6 +42,9 @@ public class FlagGame extends JavaPlugin{
 			log.warning(logPrefix+"an error occured while trying to load the config file.");
 			ex.printStackTrace();
 		}
+		
+		// コマンド登録
+		getServer().getPluginCommand("flagadmin").setExecutor(new AdminCommand(this));
 
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
