@@ -186,7 +186,7 @@ public class AdminCommand implements CommandExecutor{
 
 				new Flag(plugin, game, loc, type);
 
-				Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを登録しました！");
+				Actions.message(null, player, "&aゲーム'"+game.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
 				return true;
 			}
 		}

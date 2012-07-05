@@ -25,8 +25,6 @@ public class Flag {
 	private int blockID = 0;
 	private byte blockData = 0;
 
-	//
-
 	/**
 	 * コンストラクタ
 	 * @param plugin
@@ -51,10 +49,21 @@ public class Flag {
 	}
 
 	/**
+	 * 今のブロックデータを返す
+	 * @return Block
+	 */
+	public Block getNowBlock(){
+		return loc.getBlock();
+	}
+
+	/* フラッグ設定系 */
+	/**
 	 * このフラッグの点数を返す
 	 * @return フラッグの点数
 	 */
 	public int getFlagPoint(){
+		return type.getPoint();
+		/*
 		int point = 0;
 		switch(type){
 			case NORMAL:
@@ -70,14 +79,11 @@ public class Flag {
 				break;
 		}
 		return point;
+		*/
 	}
 
-	/**
-	 * 今のブロックデータを返す
-	 * @return Block
-	 */
-	public Block getNowBlock(){
-		return loc.getBlock();
+	public String getTypeName(){
+		return type.getTypeName();
 	}
 
 	/* getter / setter */
