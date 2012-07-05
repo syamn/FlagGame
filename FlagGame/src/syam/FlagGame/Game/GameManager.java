@@ -1,13 +1,20 @@
 package syam.FlagGame.Game;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import syam.FlagGame.FlagGame;
@@ -17,6 +24,10 @@ public class GameManager {
 	public static final Logger log = FlagGame.log;
 	private static final String logPrefix = FlagGame.logPrefix;
 	private static final String msgPrefix = FlagGame.msgPrefix;
+
+	// Files
+	private FileConfiguration confFile = new YamlConfiguration();
+	private File file;
 
 	private final FlagGame plugin;
 	public GameManager(final FlagGame plugin){
@@ -34,6 +45,55 @@ public class GameManager {
 	private static List<String> fgManager = new ArrayList<String>();
 
 
+	/* ゲームデータ保存/読み出し */
+	public void saveGames(){
+		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") +
+				"gameData" + System.getProperty("file.separator");
+
+		for (Game game : plugin.games.values()){
+			this.file = new File(fileDir + game.getName() + ".yml");
+
+			// フラッグデータ変換
+			List<String> flagList = convertFlagMap(game.getFlags());
+
+			// 保存するデータをここに
+			confFile.set("GameName", game.getName());
+			confFile.set("Flags", flagList);
+
+			try {
+				confFile.save(file);
+			} catch (IOException ex) {
+				log.warning(logPrefix+ "Couldn't write Game data!");
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * ハッシュマップからリストに変換
+	 * @param flags フラッグマップ
+	 * @return フラッグ情報文字列のリスト
+	 */
+	private List<String> convertFlagMap(Map<Location, Flag> flags){
+		List<String> ret = new ArrayList<String>();
+		ret.clear();
+
+		for (Flag flag : flags.values()){
+			// 331,41,213@IRON@44:3 みたいな感じに
+			// → GOLD@44:3@331,41,213に修正
+			String s = flag.getFlagType().name() + "@";
+			s = s + flag.getOriginBlockID() + ":" + flag.getOriginBlockData() + "@";
+
+			Location loc = flag.getLocation();
+			s = s + loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ();
+
+
+			// フラッグ追加
+			ret.add(s);
+		}
+
+		return ret;
+	}
 
 	/* getter/setter */
 

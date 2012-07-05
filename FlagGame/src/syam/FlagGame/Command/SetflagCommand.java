@@ -11,7 +11,7 @@ import syam.FlagGame.Game.GameManager;
 
 public class SetflagCommand extends BaseCommand {
 	public SetflagCommand(){
-		bePlayer = true;
+		bePlayer = false;
 		name = "setflag";
 		argLength = 0;
 		usage = "[FlagType] <- create new flag";

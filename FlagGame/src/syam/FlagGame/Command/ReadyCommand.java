@@ -1,7 +1,6 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.Actions;
-import syam.FlagGame.FlagGame;
 import syam.FlagGame.Game.Game;
 
 public class ReadyCommand extends BaseCommand {
@@ -9,7 +8,7 @@ public class ReadyCommand extends BaseCommand {
 		bePlayer = true;
 		name = "ready";
 		argLength = 1;
-		usage = "[name] <- ready game";
+		usage = "<name> <- ready game";
 	}
 
 	@Override

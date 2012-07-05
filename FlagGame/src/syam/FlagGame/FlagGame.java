@@ -17,10 +17,12 @@ import syam.FlagGame.Command.CreateCommand;
 import syam.FlagGame.Command.HelpCommand;
 import syam.FlagGame.Command.ReadyCommand;
 import syam.FlagGame.Command.ReloadCommand;
+import syam.FlagGame.Command.SaveCommand;
 import syam.FlagGame.Command.SelectGameCommand;
 import syam.FlagGame.Command.SelectTeamCommand;
 import syam.FlagGame.Command.SetflagCommand;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
 
@@ -64,6 +66,7 @@ public class FlagGame extends JavaPlugin{
 
 	// ** Private classes **
 	private ConfigurationManager config;
+	private GameManager gm;
 
 	// ** Variable **
 	// 存在するゲーム <String 一意のゲームID, Game>
@@ -96,6 +99,9 @@ public class FlagGame extends JavaPlugin{
 		//getServer().getPluginCommand("flagadmin").setExecutor(new AdminCommand(this));
 		registerCommands();
 
+		// ゲームマネージャ
+		gm = new GameManager(this);
+
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is enabled!");
@@ -121,6 +127,7 @@ public class FlagGame extends JavaPlugin{
 		commands.add(new SelectTeamCommand());
 		commands.add(new SetflagCommand());
 		commands.add(new ReadyCommand());
+		commands.add(new SaveCommand());
 	}
 
 	@Override
@@ -162,6 +169,14 @@ public class FlagGame extends JavaPlugin{
 		}else{
 			return games.get(gameName);
 		}
+	}
+
+	/**
+	 * ゲームマネージャを返す
+	 * @return GameManager
+	 */
+	public GameManager getManager(){
+		return gm;
 	}
 
 	/**

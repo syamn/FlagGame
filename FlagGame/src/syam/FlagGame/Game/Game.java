@@ -153,6 +153,7 @@ public class Game {
 		}
 	}
 
+
 	/* getter/setter */
 
 	/**
@@ -203,5 +204,9 @@ public class Game {
 	 */
 	public void removeFlag(Location loc){
 		flags.remove(loc);
+	}
+
+	public Map<Location, Flag> getFlags(){
+		return flags;
 	}
 }

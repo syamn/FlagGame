@@ -18,10 +18,13 @@ commands:
 permissions:
     flag.admin:
         default: op
-        description: Allow all of /flagadmin commands!
+        description: Allow all of /flagadmin commands
     flag.ignoreWorldProtect:
         default: op
-        description: Allow Break/Place protected game-world!
+        description: Allow Break/Place protected game-world
     flag.admin.reload:
         default: op
-        description: Allow reload configuration!
+        description: Allow reload configuration
+    flag.admin.save:
+        default: op
+        description: Allow save map data
