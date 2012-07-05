@@ -65,6 +65,11 @@ public class FGBlockListener implements Listener{
 			return;
 		}
 
+		// 権限チェック
+		if (player.hasPermission("flag.ignoreWorldProtect")){
+			return;
+		}
+
 		// ワールド保護チェック
 		if (plugin.getConfigs().isProtected){
 			event.setCancelled(true);
@@ -95,6 +100,11 @@ public class FGBlockListener implements Listener{
 
 			// フラッグ破壊
 			Actions.broadcastMessage(msgPrefix+ "&f'&6" + player.getName() +"&f'&cが"+flag.getTypeName()+"フラッグを獲得しました！");
+			return;
+		}
+
+		// 権限チェック
+		if (player.hasPermission("flag.ignoreWorldProtect")){
 			return;
 		}
 

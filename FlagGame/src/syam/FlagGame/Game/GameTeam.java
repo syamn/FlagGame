@@ -6,6 +6,21 @@ package syam.FlagGame.Game;
  *
  */
 public enum GameTeam {
-	RED, // 赤チーム
-	BLUE // 青チーム
+	RED ("赤"), // 赤チーム
+	BLUE ("青"), // 青チーム
+	;
+
+	private String teamName;
+
+	GameTeam(String teamName){
+		this.teamName = teamName;
+	}
+
+	/**
+	 * このチームの名前を返す
+	 * @return
+	 */
+	public String getTeamName(){
+		return teamName;
+	}
 }
