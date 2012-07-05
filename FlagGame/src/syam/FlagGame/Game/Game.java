@@ -23,10 +23,9 @@ public class Game {
 	// ゲーム名
 	private String gameName;
 
-	// ゲーム開始時のフラッグデータ
-	private Map<Location, GameTeam> defFlags = new HashMap<Location, GameTeam>();
-	// 現在のフラッグデータ
-	private Map<Location, GameTeam> nowFlags = new HashMap<Location, GameTeam>();
+	// フラッグデータ
+	private Map<Location, Flag> flags = new HashMap<Location, Flag>();
+	//private ArrayList<Flag> flags = new ArrayList<Flag>();
 
 	// 参加プレイヤー
 	private  Map<GameTeam, ArrayList<Player>> playersMap = new HashMap<GameTeam, ArrayList<Player>>();
@@ -63,17 +62,17 @@ public class Game {
 	 * @param loc 設定するブロック座標
 	 * @param team 設定するGameTeam
 	 */
-	public void setDefFlagBlock(Location loc, GameTeam team){
-		defFlags.put(loc, team);
+	public void setFlag(Location loc, Flag flag){
+		flags.put(loc, flag);
 	}
 	/**
 	 * デフォルトのフラッグブロックのチームを返す
 	 * @param loc 調べるブロックの座標
 	 * @return GameTeam または存在しない場合 null
 	 */
-	public GameTeam getDefFlagBlock(Location loc){
-		if (defFlags.containsKey(loc)){
-			return defFlags.get(loc);
+	public Flag getFlag(Location loc){
+		if (flags.containsKey(loc)){
+			return flags.get(loc);
 		}else{
 			return null;
 		}
@@ -83,6 +82,6 @@ public class Game {
 	 * @param loc 削除するフラッグのブロック座標
 	 */
 	public void removeFlag(Location loc){
-		defFlags.remove(loc);
+		flags.remove(loc);
 	}
 }

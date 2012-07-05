@@ -2,14 +2,19 @@ package syam.FlagGame.Command;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import syam.FlagGame.Actions;
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Game.Flag;
+import syam.FlagGame.Game.FlagType;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Game.GameTeam;
@@ -140,17 +145,50 @@ public class AdminCommand implements CommandExecutor{
 			}
 			Player player = (Player)sender;
 
-			if (GameManager.isManager(player)){
-				// フラッグ管理モード終了
-				GameManager.setManager(player, false);
-				Actions.message(null, player, "&aフラッグ管理モードを終了しました。");
+			// 引数が一つの場合はフラッグ管理モードの切り替えを行う
+			if (args.length == 1){
+				if (GameManager.isManager(player)){
+					// フラッグ管理モード終了
+					GameManager.setManager(player, false);
+					GameManager.setSelectedBlock(player, null);
+					Actions.message(null, player, "&aフラッグ管理モードを終了しました。");
+				}else{
+					// フラッグ管理モード開始
+					GameManager.setManager(player, true);
+					String tool = Material.getMaterial(plugin.getConfigs().toolID).name();
+					Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
+				}
+				return true;
 			}else{
-				// フラッグ管理モード開始
-				GameManager.setManager(player, true);
-				String tool = Material.getMaterial(plugin.getConfigs().toolID).name();
-				Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
+				// それ以上の場合は指定済みブロックをフラッグにする
+				// fa setflag (flag-type)
+				Game game = GameManager.getSelectedGame(player);
+				Location loc = GameManager.getSelectedBlock(player);
+				FlagType type = null;
+
+				if (game == null){
+					Actions.message(null, player, "&c先に編集するゲームを選択してください");
+					return true;
+				}
+				if (loc == null){
+					Actions.message(null, player, "&c先に編集するブロックを編集アイテムで右クリックしてください");
+					return true;
+				}
+
+				for (FlagType ft : FlagType.values()){
+					if (ft.name().toLowerCase().equalsIgnoreCase(args[1]))
+						type = ft;
+				}
+				if (type == null){
+					Actions.message(null, player, "&cフラッグの種類を正しく指定してください！");
+					return true;
+				}
+
+				new Flag(plugin, game, loc, type);
+
+				Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを登録しました！");
+				return true;
 			}
-			return true;
 		}
 
 		// コマンドヘルプを表示

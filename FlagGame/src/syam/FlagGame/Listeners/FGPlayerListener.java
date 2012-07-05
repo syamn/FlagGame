@@ -41,30 +41,21 @@ public class FGPlayerListener implements Listener{
 				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
 					/* 管理モードで特定のアイテムを持ったままブロックを右クリックした */
 					Game game = GameManager.getSelectedGame(player);
-
-					Location loc = block.getLocation();
 					if (game == null){
-						Actions.message(null, player, "&cゲームが選択されてません！先に選択してください！");
+						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
 						return;
 					}
+					Location loc = block.getLocation();
 
 					// 既にフラッグブロックになっているか判定
-					if (game.getDefFlagBlock(loc) == null){
-						GameTeam team = GameManager.getSelectedTeam(player);
-						// チーム選択済みチェック
-						if (team == null){
-							Actions.message(null, player, "&cチームが選択されてません！先に選択してください！");
-							return;
-						}
-
-						// 登録
-						game.setDefFlagBlock(loc, team);
-						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグ("+team.name()+")を作りました！");
+					if (game.getFlag(loc) == null){
+						// 選択
+						GameManager.setSelectedBlock(player, block.getLocation());
+						Actions.message(null, player, "&aブロックを選択しました！");
 					}else{
 						// 削除
-						String tmp = game.getDefFlagBlock(loc).name();
 						game.removeFlag(loc);
-						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグ("+tmp+")を削除しました！");
+						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
 					}
 				}
 			}

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import syam.FlagGame.FlagGame;
@@ -25,6 +27,8 @@ public class GameManager {
 	private static Map<String, Game> selectedGame = new HashMap<String, Game>();
 	// 選択中のチーム
 	private static Map<String, GameTeam> selectedTeam = new HashMap<String, GameTeam>();
+	// 選択中のブロック
+	private static Map<String, Location> selectedBlock = new HashMap<String, Location>();
 
 	// ゲームマネージャモードのリスト
 	private static List<String> fgManager = new ArrayList<String>();
@@ -71,6 +75,26 @@ public class GameManager {
 			return null;
 		}else{
 			return selectedTeam.get(player.getName());
+		}
+	}
+	/**
+	 * 指定したブロックを選択中にする
+	 * @param player プレイヤー
+	 * @param loc 対象ブロックの座標
+	 */
+	public static void setSelectedBlock(Player player, Location loc){
+		selectedBlock.put(player.getName(), loc);
+	}
+	/**
+	 * 選択中のブロックの座標を返す
+	 * @param player 対象プレイヤー
+	 * @return null または対象ブロックLocation
+	 */
+	public static Location getSelectedBlock(Player player){
+		if (player == null || !selectedBlock.containsKey(player.getName())){
+			return null;
+		}else{
+			return selectedBlock.get(player.getName());
 		}
 	}
 
