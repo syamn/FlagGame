@@ -20,8 +20,8 @@ public class Game {
 	private final FlagGame plugin;
 
 	/* ゲームデータ */
-	// ゲーム名
-	private String gameName;
+	private String gameName; // ゲーム名
+	private boolean started = true; // 開始状態フラグ
 
 	// フラッグデータ
 	private Map<Location, Flag> flags = new HashMap<Location, Flag>();
@@ -56,9 +56,16 @@ public class Game {
 	public String getName(){
 		return gameName;
 	}
+	/**
+	 * 開始中かどうか返す
+	 * @return
+	 */
+	public boolean isStarting(){
+		return started;
+	}
 
 	/**
-	 * デフォルトのフラッグブロックとそのチームを設定する
+	 * フラッグブロックとそのチームを設定する
 	 * @param loc 設定するブロック座標
 	 * @param team 設定するGameTeam
 	 */
@@ -66,7 +73,7 @@ public class Game {
 		flags.put(loc, flag);
 	}
 	/**
-	 * デフォルトのフラッグブロックのチームを返す
+	 * フラッグブロックのフラッグを返す
 	 * @param loc 調べるブロックの座標
 	 * @return GameTeam または存在しない場合 null
 	 */
@@ -78,7 +85,7 @@ public class Game {
 		}
 	}
 	/**
-	 * デフォルトフラッグブロックを削除する
+	 * フラッグブロックを削除する
 	 * @param loc 削除するフラッグのブロック座標
 	 */
 	public void removeFlag(Location loc){

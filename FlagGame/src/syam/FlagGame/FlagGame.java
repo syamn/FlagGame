@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import syam.FlagGame.Command.AdminCommand;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
 
 public class FlagGame extends JavaPlugin{
@@ -36,16 +37,16 @@ public class FlagGame extends JavaPlugin{
 	// ** Logger **
 	public final static Logger log = Logger.getLogger("Minecraft");
 	public final static String logPrefix = "[FlagGame] ";
-	public final static String msgPrefix = "&c[FlagGame] &f";
+	public final static String msgPrefix = "&6[FlagGame] &f";
 
 	// ** Listener **
 	private final FGPlayerListener playerListener = new FGPlayerListener(this);
+	private final FGBlockListener blockListener = new FGBlockListener(this);
 
 	// ** Private classes **
 	private ConfigurationManager config;
 
 	// ** Variable **
-	public final String GameWorld = "flag";
 	// 存在するゲーム <String 一意のゲームID, Game>
 	public HashMap<String, Game> games = new HashMap<String, Game>();
 
@@ -70,6 +71,7 @@ public class FlagGame extends JavaPlugin{
 
 		// Regist Listeners
 		pm.registerEvents(playerListener, this);
+		pm.registerEvents(blockListener, this);
 
 		// コマンド登録
 		getServer().getPluginCommand("flagadmin").setExecutor(new AdminCommand(this));

@@ -7,6 +7,10 @@
 #==================#
 # ItemID, used to create/remove Flag blocks
 ToolID: 269
+# FlagGame World
+WorldName: 'flag'
+# If it true, Gameworld will be protected by player
+WorldProtect: true
 
 #==================#
 #   DO NOT TOUCH   #

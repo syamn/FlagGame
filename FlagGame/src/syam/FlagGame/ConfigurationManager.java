@@ -30,10 +30,13 @@ public class ConfigurationManager {
 
 	// デフォルトの設定定数
 	private final String defaultLogPath = "plugins/GameManager/game.log";
+	private final String defaultWorldName = "flag";
 
 	// 設定項目
 	/* Basic Configs */
 	public int toolID = new Integer(269);
+	public String gameWorld = defaultWorldName;
+	public boolean isProtected = new Boolean(true);
 
 	/**
 	 * コンストラクタ
@@ -63,7 +66,9 @@ public class ConfigurationManager {
 		plugin.reloadConfig();
 
 		/* Basic Configs */
-		plugin.getConfig().getInt("ToolID", 269);
+		toolID = plugin.getConfig().getInt("ToolID", 269);
+		gameWorld = plugin.getConfig().getString("WorldName", defaultWorldName);
+		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
 	}
 
 	/**
