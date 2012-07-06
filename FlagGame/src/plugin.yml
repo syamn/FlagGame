@@ -9,16 +9,15 @@ author: syam
 commands:
     flag:
       usage: /flag - to see the help
-      aliases: [fg]
+      aliases: [f, fg]
       description: To see the FlagGame help.
-    flagadmin:
-      usage: /flagadmin - to see the help
-      aliases: [fga, fa]
-      description: To see the FlagGame help for Administrator.
 permissions:
+    flag.user.join:
+        default: op
+        description: Allow join the game
     flag.admin:
         default: op
-        description: Allow all of /flagadmin commands
+        description: Allow all of administer commands
     flag.ignoreWorldProtect:
         default: op
         description: Allow Break/Place protected game-world

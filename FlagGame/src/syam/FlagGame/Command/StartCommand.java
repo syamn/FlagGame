@@ -3,19 +3,19 @@ package syam.FlagGame.Command;
 import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
 
-public class ReadyCommand extends BaseCommand {
-	public ReadyCommand(){
-		bePlayer = false;
-		name = "ready";
+public class StartCommand extends BaseCommand{
+	public StartCommand(){
+		bePlayer = true;
+		name = "start";
 		argLength = 1;
-		usage = "<name> <- ready game";
+		usage = "<game> <- start game";
 	}
 
 	@Override
 	public boolean execute() {
 		// flagadmin ready - ゲームを開始準備中にする
 		if (args.size() == 0){
-			Actions.message(sender, null, "&cゲーム名を入力してください！ /fg ready (name)");
+			Actions.message(sender, null, "&cゲーム名を入力してください！ /fg start (name)");
 			return true;
 		}
 
@@ -25,8 +25,8 @@ public class ReadyCommand extends BaseCommand {
 			return true;
 		}
 
-		// ready
-		game.ready(sender);
+		// start
+		game.start(sender);
 		return true;
 	}
 
