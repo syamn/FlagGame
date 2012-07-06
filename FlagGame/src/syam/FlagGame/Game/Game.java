@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import syam.FlagGame.Actions;
@@ -33,12 +34,12 @@ public class Game {
 	//private ArrayList<Flag> flags = new ArrayList<Flag>();
 
 	// 参加プレイヤー
-	//private Map<GameTeam, ArrayList<Player>> playersMap = new HashMap<GameTeam, ArrayList<Player>>();
-	//private ArrayList<Player> playersRed = new ArrayList<Player>();
-	//private ArrayList<Player> playersBlue = new ArrayList<Player>();
 	private Map<GameTeam, Set<Player>> playersMap = new HashMap<GameTeam, Set<Player>>();
-	private Set<Player> playersRed = new HashSet<Player>();
-	private Set<Player> playersBlue = new HashSet<Player>();
+	private Set<Player> redPlayers = new HashSet<Player>();
+	private Set<Player> bluePlayers = new HashSet<Player>();
+
+	// スポーン地点
+	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
 
 	/**
 	 * コンストラクタ
@@ -58,10 +59,16 @@ public class Game {
 	/**
 	 * このゲームを開始待機中にする
 	 */
-	public void ready(){
+	public void ready(CommandSender sender){
+		// スポーン地点チェック
+		if (spawnMap.size() != playersMap.size()){
+			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
+			return;
+		}
+
 		// 一度プレイヤーリスト初期化
-		playersRed.clear();
-		playersBlue.clear();
+		redPlayers.clear();
+		bluePlayers.clear();
 		// 再マッピング
 		mappingPlayersList();
 	}
@@ -73,8 +80,8 @@ public class Game {
 		// 一度クリア
 		playersMap.clear();
 		// マッピング
-		playersMap.put(GameTeam.RED, playersRed);
-		playersMap.put(GameTeam.BLUE, playersBlue);
+		playersMap.put(GameTeam.RED, redPlayers);
+		playersMap.put(GameTeam.BLUE, bluePlayers);
 	}
 
 	/* チームのプレイヤー操作系 */
@@ -176,6 +183,28 @@ public class Game {
 	 */
 	public boolean isStarting(){
 		return started;
+	}
+
+	/**
+	 * チームのスポーン地点を設置/取得する
+	 * @param loc
+	 */
+	public void setSpawn(GameTeam team, Location loc){
+		spawnMap.put(team, loc);
+	}
+	public Location getSpawn(GameTeam team){
+		if (team == null || !spawnMap.containsKey(team))
+			return null;
+		return spawnMap.get(team);
+	}
+	public Map<GameTeam, Location> getSpawns(){
+		return spawnMap;
+	}
+	public void setSpawns(Map<GameTeam, Location> spawns){
+		// クリア
+		this.spawnMap.clear();
+		// セット
+		this.spawnMap.putAll(spawns);
 	}
 
 	/**

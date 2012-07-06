@@ -8,7 +8,7 @@ public class SelectTeamCommand extends BaseCommand {
 	public SelectTeamCommand(){
 		bePlayer = true;
 		name = "team";
-		argLength = 1;
+		argLength = 0;
 		usage = "[name] <- select team";
 	}
 

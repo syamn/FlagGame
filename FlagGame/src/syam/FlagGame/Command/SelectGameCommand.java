@@ -8,7 +8,7 @@ public class SelectGameCommand extends BaseCommand {
 	public SelectGameCommand(){
 		bePlayer = true;
 		name = "game";
-		argLength = 1;
+		argLength = 0;
 		usage = "[name] <- select exist game";
 	}
 

@@ -14,7 +14,7 @@ public class SaveCommand extends BaseCommand{
 	@Override
 	public boolean execute() {
 		// データ保存
-		plugin.getManager().saveGames();
+		plugin.getFileManager().saveGames();
 
 		Actions.message(sender, null, "&aGames Saved!");
 		return true;
