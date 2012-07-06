@@ -102,6 +102,9 @@ public class FlagGame extends JavaPlugin{
 		// ゲームマネージャ
 		gm = new GameManager(this);
 
+		// ゲーム読み込み
+		gm.loadGames();
+
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is enabled!");

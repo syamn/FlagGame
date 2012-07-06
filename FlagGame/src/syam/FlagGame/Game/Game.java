@@ -205,8 +205,21 @@ public class Game {
 	public void removeFlag(Location loc){
 		flags.remove(loc);
 	}
-
+	/**
+	 * フラッグマップを一括取得
+	 * @return
+	 */
 	public Map<Location, Flag> getFlags(){
 		return flags;
+	}
+	/**
+	 * フラッグマップを一括設定
+	 * @param flags
+	 */
+	public void setFlags(Map<Location, Flag> flags){
+		// クリア
+		this.flags.clear();
+		// セット
+		this.flags.putAll(flags);
 	}
 }

@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
 
 public class SaveCommand extends BaseCommand{
@@ -15,6 +16,7 @@ public class SaveCommand extends BaseCommand{
 		// データ保存
 		plugin.getManager().saveGames();
 
+		Actions.message(sender, null, "&aGames Saved!");
 		return true;
 	}
 
