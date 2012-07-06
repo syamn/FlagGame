@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import syam.FlagGame.Actions;
 import syam.FlagGame.FlagGame;
@@ -27,6 +28,9 @@ public class Game {
 	/* ゲームデータ */
 	private String gameName; // ゲーム名
 	private int teamPlayerLimit = 8; // 各チームの最大プレイヤー数
+	private int gameTimeInSeconds = 65; // 1ゲームの制限時間
+	private int remainSec = gameTimeInSeconds; // 1ゲームの制限時間
+	private int timerThreadID = -1; // タイマータスクのID
 	private boolean ready = false; // 待機状態フラグ
 	private boolean started = false; // 開始状態フラグ
 
@@ -82,14 +86,13 @@ public class Game {
 			return;
 		}
 
-		// アナウンス
-		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'"+getName()+"'が参加受付を開始しました！");
-		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+getName()+"&2' コマンドで参加してください");
-
 		// 待機
 		ready = true;
-	}
 
+		// アナウンス
+		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が参加受付を開始しました！");
+		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+getName()+"&2' コマンドで参加してください");
+	}
 	/**
 	 * ゲームを開始する
 	 */
@@ -100,10 +103,12 @@ public class Game {
 		}
 
 		// チームの人数チェック
+		/*
 		if (redPlayers.size() != bluePlayers.size()){
 			Actions.message(sender, null, "&c各チームのプレイヤー数が同じになるまでお待ちください");
 			return;
 		}
+		*/
 		if (redPlayers.size() <= 0){
 			Actions.message(sender, null, "&c参加しているプレイヤーがいないチームがあります");
 			return;
@@ -114,12 +119,23 @@ public class Game {
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
 			return;
 		}
+
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
 
 		// 開始
+		timer(); // タイマースタート
 		started = true;
-		//TODO: タイマー稼働
+
+		// アナウンス
+		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
+		Actions.broadcastMessage(msgPrefix+"&f | &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人&f |");
+	}
+	/**
+	 * タイマー終了によって呼ばれるゲーム終了処理
+	 */
+	private void finish(){
+		Actions.broadcastMessage(msgPrefix+"task ended, will be comparison flags");
 	}
 
 	/**
@@ -203,13 +219,21 @@ public class Game {
 		return null;
 	}
 	/**
-	 * フラッグワールドにのみメッセージを送る
+	 * ゲーム参加者全員にメッセージを送る
 	 * @param msg メッセージ
 	 */
 	public void message(String msg){
 		// イベントワールド全員に送る？ 全チームメンバーに送る？
-		// とりあえずワールドキャストする
-		Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld), msg);
+		// とりあえずワールドキャストする → ワールドキャストの場合同時進行が行えない
+		//Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld), msg);
+
+		// 全チームメンバーにメッセージを送る
+		for (Set<Player> set : playersMap.values()){
+			for (Player player : set){
+				if (player != null && player.isOnline())
+					Actions.message(null, player, msg);
+			}
+		}
 	}
 	/**
 	 * 特定チームにのみメッセージを送る
@@ -222,7 +246,8 @@ public class Game {
 
 		// チームメンバーでループさせてメッセージを送る
 		for (Player player : playersMap.get(team)){
-			Actions.message(null, player, msg);
+			if (player != null && player.isOnline())
+				Actions.message(null, player, msg);
 		}
 	}
 
@@ -242,6 +267,57 @@ public class Game {
 					player.teleport(loc);
 			}
 		}
+	}
+
+
+	/* timer */
+	/**
+	 * メインのタイマータスクを開始する
+	 */
+	public void timer(){
+		// タイマータスク
+		timerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+			public void run(){
+				/* 1秒ごとに呼ばれる */
+
+				// 残り時間がゼロになった
+				if (remainSec <= 0){
+					cancelTimerTask(); // タイマー停止
+					finish(); // ゲーム終了
+					return;
+				}
+
+				// 15秒以下
+				if (remainSec <= 15){
+					message(msgPrefix+ "&aゲーム終了まで あと "+remainSec+" 秒です！");
+				}
+				// 60秒間隔
+				else if ((remainSec % 60) == 0){
+					int remainMin = remainSec / 60;
+					message(msgPrefix+ "&aゲーム終了まで あと "+remainMin+" 分です！");
+				}
+
+				remainSec--;
+			}
+		}, 0L, 20L);
+	}
+
+	/**
+	 * タイマータスクが稼働中の場合停止する
+	 */
+	private void cancelTimerTask(){
+		if (started && timerThreadID != -1){
+			// タスクキャンセル
+			plugin.getServer().getScheduler().cancelTask(timerThreadID);
+		}
+	}
+
+	/**
+	 * このゲームの残り時間(秒)を取得する
+	 * @return 残り時間(秒)
+	 */
+	public int getRemainTime(){
+		return remainSec;
 	}
 
 	/* getter/setter */

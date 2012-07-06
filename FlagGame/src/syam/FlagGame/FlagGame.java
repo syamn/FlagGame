@@ -102,7 +102,6 @@ public class FlagGame extends JavaPlugin{
 		pm.registerEvents(blockListener, this);
 
 		// コマンド登録
-		//getServer().getPluginCommand("flagadmin").setExecutor(new AdminCommand(this));
 		registerCommands();
 
 		// マネージャ
@@ -121,6 +120,9 @@ public class FlagGame extends JavaPlugin{
 	 * プラグイン停止処理
 	 */
 	public void onDisable(){
+		// ゲームデータ保存
+		gfm.saveGames();
+
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is disabled!");

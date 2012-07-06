@@ -43,7 +43,7 @@ public class JoinCommand extends BaseCommand {
 
 		// 所属チーム取得
 		GameTeam team = game.getPlayerTeam(player);
-		Actions.broadcastMessage(logPrefix+"&aプレイヤー'&6"+player.getName()+"'&aが&6"+team.getTeamName()+"チーム&aに参加しました！");
+		Actions.broadcastMessage(msgPrefix+"&aプレイヤー'&6"+player.getName()+"'&aが&6"+team.getTeamName()+"チーム&aに参加しました！");
 		return true;
 	}
 
