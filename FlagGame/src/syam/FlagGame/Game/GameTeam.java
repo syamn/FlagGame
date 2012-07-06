@@ -6,14 +6,25 @@ package syam.FlagGame.Game;
  *
  */
 public enum GameTeam {
-	RED ("赤"), // 赤チーム
-	BLUE ("青"), // 青チーム
+	RED ("赤", 35, 14), // 赤チーム
+	BLUE ("青", 35, 11), // 青チーム
 	;
 
 	private String teamName;
+	private int blockID;
+	private byte blockData;
 
-	GameTeam(String teamName){
+	GameTeam(String teamName, int blockID, int blockData){
 		this.teamName = teamName;
+
+		// 例外回避
+		if (blockID < 0)
+			blockID = 0;
+		if (blockData < 0 || blockData > 127)
+			blockData = 0;
+
+		this.blockID = blockID;
+		this.blockData = (byte) blockData;
 	}
 
 	/**
@@ -22,5 +33,20 @@ public enum GameTeam {
 	 */
 	public String getTeamName(){
 		return teamName;
+	}
+
+	/**
+	 * このチームのブロックIDを返す
+	 * @return
+	 */
+	public int getBlockID(){
+		return blockID;
+	}
+	/**
+	 * このチームのブロックデータ値を返す
+	 * @return
+	 */
+	public byte getBlockData(){
+		return blockData;
 	}
 }

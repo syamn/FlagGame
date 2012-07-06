@@ -27,8 +27,8 @@ public class Game {
 
 	/* ゲームデータ */
 	private String gameName; // ゲーム名
-	private int teamPlayerLimit = 8; // 各チームの最大プレイヤー数
-	private int gameTimeInSeconds = 65; // 1ゲームの制限時間
+	private int teamPlayerLimit = 2; // 各チームの最大プレイヤー数
+	private int gameTimeInSeconds = 100; // 1ゲームの制限時間
 	private int remainSec = gameTimeInSeconds; // 1ゲームの制限時間
 	private int timerThreadID = -1; // タイマータスクのID
 	private boolean ready = false; // 待機状態フラグ
@@ -110,7 +110,7 @@ public class Game {
 		}
 		*/
 		if (redPlayers.size() <= 0){
-			Actions.message(sender, null, "&c参加しているプレイヤーがいないチームがあります");
+			Actions.message(sender, null, "&cプレイヤーが参加していないチームがあります");
 			return;
 		}
 
@@ -129,12 +129,16 @@ public class Game {
 
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
-		Actions.broadcastMessage(msgPrefix+"&f | &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人&f |");
+		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人&f |");
 	}
 	/**
 	 * タイマー終了によって呼ばれるゲーム終了処理
 	 */
 	private void finish(){
+		// フラグ初期化
+		ready = false;
+		started = false;
+
 		Actions.broadcastMessage(msgPrefix+"task ended, will be comparison flags");
 	}
 
@@ -240,7 +244,7 @@ public class Game {
 	 * @param msg メッセージ
 	 * @param team 対象のチーム
 	 */
-	public void message(String msg, GameTeam team){
+	public void message(GameTeam team, String msg){
 		if (team == null || !playersMap.containsKey(team))
 			return;
 
@@ -269,7 +273,6 @@ public class Game {
 		}
 	}
 
-
 	/* timer */
 	/**
 	 * メインのタイマータスクを開始する
@@ -289,6 +292,10 @@ public class Game {
 
 				// 15秒以下
 				if (remainSec <= 15){
+					message(msgPrefix+ "&aゲーム終了まで あと "+remainSec+" 秒です！");
+				}
+				// 30秒前
+				else if (remainSec == 30){
 					message(msgPrefix+ "&aゲーム終了まで あと "+remainSec+" 秒です！");
 				}
 				// 60秒間隔

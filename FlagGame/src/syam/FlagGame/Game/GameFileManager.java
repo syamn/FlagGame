@@ -66,9 +66,7 @@ public class GameFileManager {
 
 		// 取得データ
 		String name;
-		log.info("debug1");//debug
 		for (File file : files){
-			log.info("debug2");//debug
 			try{
 				confFile.load(file);
 

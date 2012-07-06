@@ -2,6 +2,7 @@ package syam.FlagGame.Command;
 
 import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.GameManager;
 
 public class CreateCommand extends BaseCommand {
 	public CreateCommand(){
@@ -25,8 +26,9 @@ public class CreateCommand extends BaseCommand {
 
 		// 新規ゲーム登録
 		game = new Game(plugin, args.get(0));
+		GameManager.setSelectedGame(player, game);
 
-		Actions.message(sender, null, "&a新規ゲーム'"+game.getName()+"'を登録しました！");
+		Actions.message(sender, null, "&a新規ゲーム'"+game.getName()+"'を登録して選択しました！");
 		return true;
 	}
 
