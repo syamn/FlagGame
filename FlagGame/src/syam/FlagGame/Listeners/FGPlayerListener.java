@@ -2,13 +2,19 @@ package syam.FlagGame.Listeners;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -48,6 +54,12 @@ public class FGPlayerListener implements Listener{
 						return;
 					}
 					Location loc = block.getLocation();
+
+					// ゲーム用ワールドでなければ返す
+					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
+						return;
+					}
 
 					// 既にフラッグブロックになっているか判定
 					if (game.getFlag(loc) == null){
@@ -103,9 +115,61 @@ public class FGPlayerListener implements Listener{
 
 			// チームに所属していてこの設定が有効なら、アナウンスしてHPをゼロにする
 			if (team != null && plugin.getConfigs().deathWhenLogout){
-				player.damage(1000);
 				player.setHealth(0);
 				game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+			}
+		}
+	}
+
+	// プレイヤーが死んだ
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onPlayerDeath(final PlayerDeathEvent event){
+		Player deader = event.getEntity();
+
+		// ゲームワールド以外は何もしない
+		if (deader.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+			return;
+		}
+
+		// 通常の死亡メッセージ非表示
+		event.setDeathMessage(null);
+		String deathMsg = "";
+
+		EntityDamageEvent cause = event.getEntity().getLastDamageCause();
+		Player killer = null;
+
+		// 死亡理由不明は何もしない
+		if (cause == null) return;
+		// エンティティによって殺された
+		if (cause instanceof EntityDamageByEntityEvent){
+			// TODO: Killカウント実装？
+			Entity killerEntity = ((EntityDamageByEntityEvent) cause).getDamager();
+			// エンティティ→プレイヤーによって殺された
+			if (killerEntity instanceof Player){
+				killer = (Player) killerEntity;
+			}
+			// エンティティ→プレイヤーによって発射された物(矢など)によって殺された
+			else if (killerEntity instanceof Projectile && ((Projectile) killerEntity).getShooter() instanceof Player){
+				killer = (Player) ((Projectile) killerEntity).getShooter();
+			}
+		}
+
+		// プレイヤーによって倒されてない場合は何もしない
+		if (killer == null) return;
+
+		// 存在するゲームを回す
+		for (Game game : plugin.games.values()){
+			if (!game.isStarting()) continue;
+
+			GameTeam dTeam = game.getPlayerTeam(deader);
+			GameTeam aTeam = game.getPlayerTeam(killer);
+
+			// 同じチームの場合そのゲームに
+			if (dTeam != null && aTeam != null){
+				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
+				Actions.broadcastMessage(deathMsg);
+				//game.message(deathMsg); ブロードキャストがうるさそうならこっちでゲーム参加者にだけキャスト
+				return;
 			}
 		}
 	}

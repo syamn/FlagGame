@@ -4,6 +4,7 @@ version: 0.1
 main: syam.FlagGame.FlagGame
 description: FlagMatch Gaming Plugin for SakuraServer
 website: http://sakura-server.net/
+softdepend: [DeathNotifier]
 ##  Original Author     ##
 author: syam
 commands:

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.block.Action;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,6 +29,7 @@ import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Listeners.DeathNotifierListener;
 import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGEntityListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
@@ -67,6 +69,7 @@ public class FlagGame extends JavaPlugin{
 	private final FGPlayerListener playerListener = new FGPlayerListener(this);
 	private final FGBlockListener blockListener = new FGBlockListener(this);
 	private final FGEntityListener entityListener = new FGEntityListener(this);
+	private final DeathNotifierListener dnListener = new DeathNotifierListener(this);
 
 	// ** Commands **
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
@@ -82,6 +85,9 @@ public class FlagGame extends JavaPlugin{
 
 	// ** Instance **
 	private static FlagGame instance;
+
+	// Hookup plugins
+	public boolean usingDeathNotifier = false;
 
 	/**
 	 * プラグイン起動処理
@@ -99,7 +105,7 @@ public class FlagGame extends JavaPlugin{
 			ex.printStackTrace();
 		}
 
-		//
+		// 設定内でプラグインを無効にした場合進まないようにする
 		if (!pm.isPluginEnabled(this)){
 			return;
 		}
@@ -108,6 +114,15 @@ public class FlagGame extends JavaPlugin{
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(entityListener, this);
+
+		// プラグインフック
+		// DeathNotifier
+		Plugin p = pm.getPlugin("DeathNotifier");
+		if (p != null){
+			pm.registerEvents(dnListener, this); // Regist Listener
+			usingDeathNotifier = true; //フラグ
+			log.info(logPrefix+ "Hooked to DeathNotifier!");
+		}
 
 		// コマンド登録
 		registerCommands();

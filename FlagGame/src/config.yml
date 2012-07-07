@@ -17,6 +17,8 @@ WorldProtect: true
 #==================#
 # If it true, Kills player when logout during the game
 DeathWhenLogout: true
+# If it true, Same teams damage will be disabled
+DisableTeamPVP: true
 
 #==================#
 #   DO NOT TOUCH   #

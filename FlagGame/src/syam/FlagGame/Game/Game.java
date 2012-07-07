@@ -26,6 +26,7 @@ public class Game {
 	private static final String logPrefix = FlagGame.logPrefix;
 	private static final String msgPrefix = FlagGame.msgPrefix;
 
+	// Instance
 	private final FlagGame plugin;
 
 	/* ゲームデータ */

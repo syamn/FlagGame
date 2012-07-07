@@ -64,6 +64,10 @@ public class GameFileManager {
 		// ゲームデータクリア
 		plugin.games.clear();
 
+		// ファイルなし
+		if (files == null || files.length == 0)
+			return;
+
 		// 取得データ
 		String name;
 		for (File file : files){

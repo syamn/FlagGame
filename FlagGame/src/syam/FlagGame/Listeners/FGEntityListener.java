@@ -53,38 +53,26 @@ public class FGEntityListener implements Listener{
 			damager = (Player) entity; // 攻撃された人
 			attacker = (Player) event.getDamager(); // 攻撃した人
 		}
-		// 矢・雪球・卵
-		else if((event.getCause() == DamageCause.PROJECTILE) && (entity instanceof Player)){
+		// 矢・雪球・卵など
+		else if((event.getCause() == DamageCause.PROJECTILE) &&
+					(entity instanceof Player) && (event.getDamager() instanceof Projectile)){
 			// ゲーム用ワールドでなければ返す
 			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
 				return;
-			damager = (Player) entity; // 攻撃された人
 
-			// 矢
-			if (event.getDamager().getType() == EntityType.ARROW){
-				Projectile arrow = (Arrow) event.getDamager();
-				// プレイヤーが打ったものでなければ返す
-				if (!(arrow.getShooter() instanceof Player)) return;
-				attacker = (Player) arrow.getShooter();
-			}
-			// 雪球
-			else if (event.getDamager().getType() == EntityType.SNOWBALL){
-				Projectile snowball = (Snowball) event.getDamager();
-				// プレイヤーが打ったものでなければ返す
-				if (!(snowball.getShooter() instanceof Player)) return;
-				attacker = (Player) snowball.getShooter();
-			}
-			// たまご
-			else if (event.getDamager().getType() == EntityType.EGG){
-				Projectile egg = (Egg) event.getDamager();
-				// プレイヤーが打ったものでなければ返す
-				if (!(egg.getShooter() instanceof Player)) return;
-				attacker = (Player) egg.getShooter();
+			// プレイヤーが打ったもの
+			if (((Projectile) event.getDamager()).getShooter() instanceof Player){
+				damager = (Player) entity; // 攻撃された人
+				attacker = (Player) ((Projectile) event.getDamager()).getShooter(); // 攻撃した人
 			}
 		}
 
 		// ダメージを受けたプレイヤー、与えたプレイヤーどちらかがnullなら何もしない
 		if (damager == null || attacker == null)
+			return;
+
+		// 設定確認 チーム内PVPを無効にする設定が無効であれば何もしない
+		if (!plugin.getConfigs().disableTeamPvP)
 			return;
 
 		// 存在するゲームを回す
@@ -99,18 +87,6 @@ public class FGEntityListener implements Listener{
 				event.setDamage(0);
 				event.setCancelled(true);
 				Actions.message(null, attacker, "&c同じチームメンバーには攻撃できません！");
-			}
-		}
-	}
-
-	// プレイヤーが倒された
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void onEntityDeath(final EntityDeathEvent event){
-		Entity entity = event.getEntity();
-		if (entity instanceof Player){
-			Player deader = (Player) entity; // 倒された人
-			if (deader.getKiller() instanceof Player){
-				Player killer = deader.getKiller(); // 倒した人
 			}
 		}
 	}

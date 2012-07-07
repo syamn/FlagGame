@@ -41,6 +41,7 @@ public class ConfigurationManager {
 	public boolean isProtected = new Boolean(true);
 	/* Games Configs */
 	public boolean deathWhenLogout = new Boolean(true);
+	public boolean disableTeamPvP = new Boolean(true);
 
 	/**
 	 * コンストラクタ
@@ -75,6 +76,7 @@ public class ConfigurationManager {
 		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
 		/* Games Configs */
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
+		disableTeamPvP = plugin.getConfig().getBoolean("DisableTeamPvP", true);
 
 		// ワールドチェック 見つからなければプラグイン無効化
 		if (Bukkit.getWorld(gameWorld) == null){
