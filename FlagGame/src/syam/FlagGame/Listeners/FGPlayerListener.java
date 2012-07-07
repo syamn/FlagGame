@@ -87,7 +87,7 @@ public class FGPlayerListener implements Listener{
 					Actions.message(null, player, msgPrefix+ "&6このゲームはあと "+game.getRemainTime()+"秒 残っています！");
 				}
 				return; // 複数ゲーム所属はあり得ないのでここで返す
-			}else log.info(player.getName() + "'s team == null !");//debug
+			}
 		}
 	}
 

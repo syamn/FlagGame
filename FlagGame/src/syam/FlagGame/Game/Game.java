@@ -42,9 +42,10 @@ public class Game {
 	//private ArrayList<Flag> flags = new ArrayList<Flag>();
 
 	// 参加プレイヤー
-	private Map<GameTeam, Set<Player>> playersMap = new HashMap<GameTeam, Set<Player>>();
-	private Set<Player> redPlayers = new HashSet<Player>();
-	private Set<Player> bluePlayers = new HashSet<Player>();
+	// 7/7 Map<GameTeam, Set<Player>> → Map<GameTeam, Set<String>> に変更
+	private Map<GameTeam, Set<String>> playersMap = new HashMap<GameTeam, Set<String>>();
+	private Set<String> redPlayers = new HashSet<String>();
+	private Set<String> bluePlayers = new HashSet<String>();
 
 	// スポーン地点
 	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
@@ -324,7 +325,7 @@ public class Game {
 			return false;
 		}
 		// 追加
-		playersMap.get(team).add(player);
+		playersMap.get(team).add(player.getName());
 		return true;
 	}
 	/**
@@ -339,11 +340,11 @@ public class Game {
 
 		// 削除
 		if (team != null){
-			playersMap.get(team).remove(player);
+			playersMap.get(team).remove(player.getName());
 		}else{
 			// チームがnullなら全チームから削除
-			for(Set<Player> set : playersMap.values()){
-				set.remove(player);
+			for(Set<String> set : playersMap.values()){
+				set.remove(player.getName());
 			}
 		}
 		return true;
@@ -354,9 +355,10 @@ public class Game {
 	 * @return GameTeam または所属なしの場合 null
 	 */
 	public GameTeam getPlayerTeam(Player player){
-		for(Map.Entry<GameTeam, Set<Player>> ent : playersMap.entrySet()){
+		String name = player.getName();
+		for(Map.Entry<GameTeam, Set<String>> ent : playersMap.entrySet()){
 			// すべてのチームセットを回す
-			if(ent.getValue().contains(player)){
+			if(ent.getValue().contains(name)){
 				return ent.getKey();
 			}
 		}
@@ -367,16 +369,18 @@ public class Game {
 	 * ゲーム参加者全員にメッセージを送る
 	 * @param msg メッセージ
 	 */
-	public void message(String msg){
+	public void message(String message){
 		// イベントワールド全員に送る？ 全チームメンバーに送る？
 		// とりあえずワールドキャストする → ワールドキャストの場合同時進行が行えない
 		//Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld), msg);
 
 		// 全チームメンバーにメッセージを送る
-		for (Set<Player> set : playersMap.values()){
-			for (Player player : set){
+		for (Set<String> set : playersMap.values()){
+			for (String name : set){
+				if (name == null) continue;
+				Player player = Bukkit.getServer().getPlayer(name);
 				if (player != null && player.isOnline())
-					Actions.message(null, player, msg);
+					Actions.message(null, player, message);
 			}
 		}
 	}
@@ -385,14 +389,16 @@ public class Game {
 	 * @param msg メッセージ
 	 * @param team 対象のチーム
 	 */
-	public void message(GameTeam team, String msg){
+	public void message(GameTeam team, String message){
 		if (team == null || !playersMap.containsKey(team))
 			return;
 
 		// チームメンバーでループさせてメッセージを送る
-		for (Player player : playersMap.get(team)){
+		for (String name : playersMap.get(team)){
+			if (name == null) continue;
+			Player player = Bukkit.getServer().getPlayer(name);
 			if (player != null && player.isOnline())
-				Actions.message(null, player, msg);
+				Actions.message(null, player, message);
 		}
 	}
 
@@ -401,13 +407,15 @@ public class Game {
 	 */
 	public void tpSpawnLocation(){
 		// 参加プレイヤーマップを回す
-		for (Map.Entry<GameTeam, Set<Player>> entry : playersMap.entrySet()){
+		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
 			GameTeam team = entry.getKey();
 			Location loc = getSpawnLocation(team);
 			// チームのスポーン地点が未設定の場合何もしない
 			if (loc == null) continue;
 			// チームの全プレイヤー(null/オフラインを除く)をスポーン地点にテレポート
-			for (Player player : entry.getValue()){
+			for (String name : entry.getValue()){
+				if (name == null) continue;
+				Player player = Bukkit.getServer().getPlayer(name);
 				if (player != null && player.isOnline())
 					player.teleport(loc);
 			}
@@ -515,7 +523,7 @@ public class Game {
 	 * プレイヤーマップを返す
 	 * @return
 	 */
-	public Map<GameTeam, Set<Player>> getPlayersMap(){
+	public Map<GameTeam, Set<String>> getPlayersMap(){
 		return playersMap;
 	}
 
@@ -524,7 +532,7 @@ public class Game {
 	 * @param team 取得するチーム
 	 * @return プレイヤーセット またはnull
 	 */
-	public Set<Player> getPlayersSet(GameTeam team){
+	public Set<String> getPlayersSet(GameTeam team){
 		if (team == null || !playersMap.containsKey(team))
 			return null;
 
