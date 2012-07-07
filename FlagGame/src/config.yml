@@ -19,6 +19,11 @@ WorldProtect: true
 DeathWhenLogout: true
 # If it true, Same teams damage will be disabled
 DisableTeamPVP: true
+# Lists of disabled commands during the game
+DisableCommands:
+- /spawn
+- /home
+- /kill
 
 #==================#
 #   DO NOT TOUCH   #

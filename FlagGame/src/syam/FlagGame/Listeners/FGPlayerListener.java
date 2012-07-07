@@ -127,7 +127,31 @@ public class FGPlayerListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
-		
+		// ワールドチェック
+		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+			return;
+
+		String cmd = event.getMessage();
+
+		// 存在するゲームを回す
+		for (Game game : plugin.games.values()){
+			if (!game.isReady() && !game.isStarting())
+				return;
+
+			GameTeam team = game.getPlayerTeam(player);
+			if (team != null){
+				// ゲーム中のプレイヤー 禁止コマンドを操作
+				for (String s : plugin.getConfigs().disableCommands){
+					// 禁止コマンドと同じコマンドがある
+					if (plugin.getConfigs().disableCommands.contains(cmd)){
+						// コマンド実行キャンセル
+						event.setCancelled(true);
+						Actions.message(null, player, msgPrefix+"このコマンドは試合中に使えません！");
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	// プレイヤーが死んだ

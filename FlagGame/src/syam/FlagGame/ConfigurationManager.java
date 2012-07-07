@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -32,6 +34,7 @@ public class ConfigurationManager {
 	// デフォルトの設定定数
 	private final String defaultLogPath = "plugins/GameManager/game.log";
 	private final String defaultWorldName = "flag";
+	private final List<String> defaultDisableCommands = new ArrayList<String>() {{add("/spawn"); add("/home"); add("/setspawn");}};
 
 	// 設定項目
 	/* Basic Configs */
@@ -41,6 +44,7 @@ public class ConfigurationManager {
 	/* Games Configs */
 	public boolean deathWhenLogout = new Boolean(true);
 	public boolean disableTeamPvP = new Boolean(true);
+	public List<String> disableCommands = new ArrayList<String>();
 
 	/**
 	 * コンストラクタ
@@ -76,6 +80,7 @@ public class ConfigurationManager {
 		/* Games Configs */
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
 		disableTeamPvP = plugin.getConfig().getBoolean("DisableTeamPvP", true);
+		disableCommands = plugin.getConfig().getStringList("DisableCommands");
 
 		// ワールドチェック 見つからなければプラグイン無効化
 		if (Bukkit.getWorld(gameWorld) == null){
