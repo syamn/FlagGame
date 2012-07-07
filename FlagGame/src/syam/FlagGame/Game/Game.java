@@ -1,6 +1,7 @@
 package syam.FlagGame.Game;
 
 import java.awt.List;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,7 +10,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.omg.CORBA.PUBLIC_MEMBER;
@@ -28,7 +31,7 @@ public class Game {
 	/* ゲームデータ */
 	private String gameName; // ゲーム名
 	private int teamPlayerLimit = 2; // 各チームの最大プレイヤー数
-	private int gameTimeInSeconds = 100; // 1ゲームの制限時間
+	private int gameTimeInSeconds = 61; // 1ゲームの制限時間
 	private int remainSec = gameTimeInSeconds; // 1ゲームの制限時間
 	private int timerThreadID = -1; // タイマータスクのID
 	private boolean ready = false; // 待機状態フラグ
@@ -90,8 +93,8 @@ public class Game {
 		ready = true;
 
 		// アナウンス
-		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が参加受付を開始しました！");
-		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+getName()+"&2' コマンドで参加してください");
+		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'の参加受付が開始されました！");
+		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+getName()+"&2' コマンドで参加してください！");
 	}
 	/**
 	 * ゲームを開始する
@@ -129,17 +132,128 @@ public class Game {
 
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
-		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人&f |");
+		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
 	}
 	/**
 	 * タイマー終了によって呼ばれるゲーム終了処理
 	 */
 	private void finish(){
+		// ポイントチェック
+		int redP = 0, blueP = 0, noneP = 0;
+		String redS = "", blueS = "", noneS = "";
+		Map<FlagState, HashMap<FlagType, Integer>> pointsMap = checkFlag();
+		// 赤チームチェック
+		if (pointsMap.containsKey(FlagState.RED)){
+			HashMap<FlagType, Integer> points = pointsMap.get(FlagState.RED);
+			for (Map.Entry<FlagType, Integer> entry : points.entrySet()){
+				FlagType ft = entry.getKey();
+				// 総得点に加算
+				redP = redP + (ft.getPoint() * entry.getValue());
+				// 文章組み立て
+				redS = redS + ft.getColor() + entry.getKey().getTypeName() + "フラッグ: &f" + entry.getValue()+" | ";
+			}
+			redS = redS.substring(0, redS.length() - 3);
+		}
+		// 青チームチェック
+		if (pointsMap.containsKey(FlagState.BLUE)){
+			HashMap<FlagType, Integer> points = pointsMap.get(FlagState.BLUE);
+			for (Map.Entry<FlagType, Integer> entry : points.entrySet()){
+				FlagType ft = entry.getKey();
+				// 総得点に加算
+				blueP = blueP + (ft.getPoint() * entry.getValue());
+				// 文章組み立て
+				blueS = blueS + ft.getColor() + entry.getKey().getTypeName() + "フラッグ: &f" + entry.getValue()+" | ";
+			}
+			blueS = blueS.substring(0, blueS.length() - 3);
+		}
+		// NONEチームチェック
+		if (pointsMap.containsKey(FlagState.NONE)){
+			HashMap<FlagType, Integer> points = pointsMap.get(FlagState.NONE);
+			for (Map.Entry<FlagType, Integer> entry : points.entrySet()){
+				FlagType ft = entry.getKey();
+				// 総得点に加算
+				noneP = noneP + (ft.getPoint() * entry.getValue());
+				// 文章組み立て
+				noneS = noneS + ft.getColor() + entry.getKey().getTypeName() + "フラッグ: &f" + entry.getValue()+" | ";
+			}
+			noneS = noneS.substring(0, noneS.length() - 3);
+		}
+
+		// 勝敗判定
+		GameTeam winTeam = null;
+		if (redP > blueP)
+			winTeam = GameTeam.RED;
+		else if(blueP > redP)
+			winTeam = GameTeam.BLUE;
+
+
+		// アナウンス
+		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が終わりました！");
+		if (redS != "")
+			Actions.broadcastMessage("&c赤チーム得点: &6"+redP+"&f - "+redS);
+		if (blueS != "")
+			Actions.broadcastMessage("&b青チーム得点: &6"+blueP+"&f - "+blueS);
+		if (noneS != "")
+			Actions.broadcastMessage("&7無効フラッグ: &6"+noneP+"&f - "+noneS);
+		Actions.broadcastMessage(msgPrefix+winTeam.getColor()+winTeam.getTeamName()+"チーム の勝利です！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
+
 		// フラグ初期化
 		ready = false;
 		started = false;
+	}
 
-		Actions.broadcastMessage(msgPrefix+"task ended, will be comparison flags");
+	private Map<FlagState, HashMap<FlagType, Integer>> checkFlag(){
+		// 各チームのポイントを格納する
+		Map<FlagState, HashMap<FlagType, Integer>> ret = new HashMap<FlagState, HashMap<FlagType, Integer>>();
+
+		// 全フラッグを回す
+		flag:
+		for (Flag flag : flags.values()){
+			Block block = flag.getNowBlock(); // フラッグ座標のブロックを取得
+			FlagType ft = flag.getFlagType();
+			FlagState state = null; // フラッグの現在状態
+			int i = 0; // 加算後と加算後の得点
+
+			// 全チームを回す
+			for (GameTeam gt : GameTeam.values()){
+
+				// チームのフラッグデータと一致すればそのチームにカウント
+				if (gt.getBlockID() == block.getTypeId() && gt.getBlockData() == block.getData()){
+					state = gt.getFlagState();
+
+					// get - FlagType, Integer
+					HashMap<FlagType, Integer> hm = ret.get(state);
+					if (hm == null){
+						hm = new HashMap<FlagType, Integer>();
+					}
+
+					// get Integer
+					if (hm.containsKey(ft)){
+						i = hm.get(ft);
+					}
+
+					// 個数加算
+					i++;
+
+					// put
+					hm.put(ft, i); // num
+					ret.put(state, hm); // state
+
+					// 先に進まないように
+					continue flag;
+				}
+			}
+			// 一致しなかった、どちらのブロックでもない場合
+			state = FlagState.NONE;
+			HashMap<FlagType, Integer> hm = ret.get(state);
+			if (hm == null) hm = new HashMap<FlagType, Integer>(); // get
+			if (hm.containsKey(ft)) i = hm.get(ft); // get
+			i++; // 個数加算
+			hm.put(ft, i); // put
+			ret.put(state, hm); // put
+		}
+
+		return ret;
 	}
 
 	/**

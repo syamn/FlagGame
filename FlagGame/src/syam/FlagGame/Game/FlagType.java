@@ -1,22 +1,24 @@
 package syam.FlagGame.Game;
 
 public enum FlagType {
-	NORMAL (0, "ノーマル"), // ノーマルフラッグ
-	IRON (1, "鉄"), // 鉄フラッグ
-	GOLD (2, "金"), // 金フラッグ
-	DIAMOND (3, "ダイヤモンド"), // ダイヤフラッグ
+	NORMAL (0, "ノーマル", "&7"), // ノーマルフラッグ
+	IRON (1, "鉄", "&3"), // 鉄フラッグ
+	GOLD (2, "金", "&6"), // 金フラッグ
+	DIAMOND (3, "ダイヤモンド", "&b"), // ダイヤフラッグ
 	;
 
 	private int point;
 	private String typeName;
+	private String colorTag;
 
-	FlagType(int point, String typeName){
+	FlagType(int point, String typeName, String colorTag){
 		/* TODO:
 		 * ポイントを設定ファイルで変更可能にする場合は、
 		 * この間にpointの値を書き換える？
 		 */
 		this.point = point;
 		this.typeName = typeName;
+		this.colorTag = colorTag;
 	}
 
 	/**
@@ -33,6 +35,14 @@ public enum FlagType {
 	 */
 	public String getTypeName(){
 		return typeName;
+	}
+
+	/**
+	 * フラッグの色タグ "&(char)" を返す
+	 * @return
+	 */
+	public String getColor(){
+		return colorTag;
 	}
 }
 

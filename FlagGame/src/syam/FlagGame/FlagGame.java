@@ -132,20 +132,28 @@ public class FlagGame extends JavaPlugin{
 	 * コマンドを登録
 	 */
 	private void registerCommands(){
+		// Intro Commands
 		commands.add(new HelpCommand());
-		commands.add(new CreateCommand());
-		commands.add(new ReloadCommand());
-		commands.add(new SelectGameCommand());
-		commands.add(new SelectTeamCommand());
-		commands.add(new SetflagCommand());
-		commands.add(new ReadyCommand());
-		commands.add(new SaveCommand());
-		commands.add(new SetspawnCommand());
-		commands.add(new TpCommand());
 		commands.add(new JoinCommand());
+
+		// Start Commands
+		commands.add(new ReadyCommand());
 		commands.add(new StartCommand());
+
+		// Admin Commands
+		commands.add(new CreateCommand());
+		commands.add(new SelectGameCommand());
+		commands.add(new SelectTeamCommand()); //deprecated
+		commands.add(new SetflagCommand());
+		commands.add(new TpCommand());
+		commands.add(new SetspawnCommand());
+		commands.add(new SaveCommand());
+		commands.add(new ReloadCommand());
 	}
 
+	/**
+	 * コマンドが呼ばれた
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]){
 		if (cmd.getName().equalsIgnoreCase("flag")){
