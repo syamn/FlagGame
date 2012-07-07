@@ -15,7 +15,6 @@ import java.nio.channels.FileChannel;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

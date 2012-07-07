@@ -1,11 +1,5 @@
 package syam.FlagGame.Command;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.entity.Player;
-
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;

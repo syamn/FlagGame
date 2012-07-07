@@ -1,8 +1,5 @@
 package syam.FlagGame.Game;
 
-import java.awt.List;
-import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,12 +7,10 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Util.Actions;
