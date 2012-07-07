@@ -129,7 +129,7 @@ public class Game {
 			return;
 		}
 		*/
-		if (redPlayers.size() <= 0){
+		if (redPlayers.size() <= 0 || bluePlayers.size() <= 0){
 			Actions.message(sender, null, "&cプレイヤーが参加していないチームがあります");
 			return;
 		}

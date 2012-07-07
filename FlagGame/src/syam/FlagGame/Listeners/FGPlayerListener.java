@@ -131,7 +131,15 @@ public class FGPlayerListener implements Listener{
 		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
 			return;
 
-		String cmd = event.getMessage();
+		String cmdMsg = event.getMessage().trim();
+		String cmds[] = cmdMsg.split(" ");
+		String cmd = null;
+
+		if (cmds.length > 1){
+			cmd = cmds[0].trim();
+		}else{ // cmds.length == 1
+			cmd = cmdMsg;
+		}
 
 		// 存在するゲームを回す
 		for (Game game : plugin.games.values()){
@@ -143,7 +151,7 @@ public class FGPlayerListener implements Listener{
 				// ゲーム中のプレイヤー 禁止コマンドを操作
 				for (String s : plugin.getConfigs().disableCommands){
 					// 禁止コマンドと同じコマンドがある
-					if (plugin.getConfigs().disableCommands.contains(cmd)){
+					if (s.trim().equalsIgnoreCase(cmd)){
 						// コマンド実行キャンセル
 						event.setCancelled(true);
 						Actions.message(null, player, msgPrefix+"このコマンドは試合中に使えません！");
