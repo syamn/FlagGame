@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameTeam;
+import syam.FlagGame.Util.Actions;
 
 public class JoinCommand extends BaseCommand {
 	public JoinCommand(){

@@ -1,7 +1,7 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Util.Actions;
 
 public class SaveCommand extends BaseCommand{
 	public SaveCommand(){

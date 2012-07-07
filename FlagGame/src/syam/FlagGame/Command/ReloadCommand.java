@@ -1,6 +1,6 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Actions;
+import syam.FlagGame.Util.Actions;
 
 public class ReloadCommand extends BaseCommand {
 	public ReloadCommand(){

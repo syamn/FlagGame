@@ -29,6 +29,7 @@ import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Listeners.FGBlockListener;
+import syam.FlagGame.Listeners.FGEntityListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
 
 public class FlagGame extends JavaPlugin{
@@ -65,6 +66,7 @@ public class FlagGame extends JavaPlugin{
 	// ** Listener **
 	private final FGPlayerListener playerListener = new FGPlayerListener(this);
 	private final FGBlockListener blockListener = new FGBlockListener(this);
+	private final FGEntityListener entityListener = new FGEntityListener(this);
 
 	// ** Commands **
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
@@ -97,9 +99,15 @@ public class FlagGame extends JavaPlugin{
 			ex.printStackTrace();
 		}
 
+		//
+		if (!pm.isPluginEnabled(this)){
+			return;
+		}
+
 		// Regist Listeners
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(blockListener, this);
+		pm.registerEvents(entityListener, this);
 
 		// コマンド登録
 		registerCommands();
@@ -121,7 +129,9 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public void onDisable(){
 		// ゲームデータ保存
-		gfm.saveGames();
+		if (gfm != null){
+			gfm.saveGames();
+		}
 
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();

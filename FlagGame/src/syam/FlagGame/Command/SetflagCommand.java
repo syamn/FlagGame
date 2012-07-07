@@ -3,11 +3,11 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.FlagType;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Util.Actions;
 
 public class SetflagCommand extends BaseCommand {
 	public SetflagCommand(){

@@ -20,11 +20,11 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameTeam;
+import syam.FlagGame.Util.Actions;
 
 public class FGBlockListener implements Listener{
 	public static final Logger log = FlagGame.log;

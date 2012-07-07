@@ -17,8 +17,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Util.Actions;
 
 public class Game {
 	// Logger
@@ -62,6 +62,26 @@ public class Game {
 
 		// ゲームをメインクラスに登録
 		plugin.games.put(this.gameName, this);
+	}
+
+	/**
+	 * ゲームデータを初期化する
+	 */
+	public void init(){
+		// 一度プレイヤーリスト初期化
+		redPlayers.clear();
+		bluePlayers.clear();
+		// 再マッピング
+		mappingPlayersList();
+
+		// タイマー関係初期化
+		cancelTimerTask();
+		timerThreadID = -1;
+		remainSec = gameTimeInSeconds;
+
+		// フラグ初期化
+		started = false;
+		ready = false;
 	}
 
 	/**
@@ -122,6 +142,9 @@ public class Game {
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
 			return;
 		}
+
+		// フラッグブロックをロールバックする
+		rollbackFlags();
 
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
@@ -186,7 +209,6 @@ public class Game {
 		else if(blueP > redP)
 			winTeam = GameTeam.BLUE;
 
-
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が終わりました！");
 		if (redS != "")
@@ -195,11 +217,15 @@ public class Game {
 			Actions.broadcastMessage("&b青チーム得点: &6"+blueP+"&f - "+blueS);
 		if (noneS != "")
 			Actions.broadcastMessage("&7無効フラッグ: &6"+noneP+"&f - "+noneS);
-		Actions.broadcastMessage(msgPrefix+winTeam.getColor()+winTeam.getTeamName()+"チーム の勝利です！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
+		if (winTeam != null)
+			Actions.broadcastMessage(msgPrefix+winTeam.getColor()+winTeam.getTeamName()+"チーム の勝利です！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
+		else
+			Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けです！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
 
-		// フラグ初期化
-		ready = false;
-		started = false;
+		// フラッグブロックロールバック
+		rollbackFlags();
+		// 初期化
+		init();
 	}
 
 	private Map<FlagState, HashMap<FlagType, Integer>> checkFlag(){
@@ -274,6 +300,7 @@ public class Game {
 	 * @return
 	 */
 	public boolean addPlayer(Player player){
+		if (true) return addPlayer(player, GameTeam.RED);
 		// 赤チームのが少ないか、または同じなら赤チームに追加 それ以外は青チームに追加
 		if (redPlayers.size() <= bluePlayers.size()){
 			return addPlayer(player, GameTeam.RED);
@@ -376,7 +403,7 @@ public class Game {
 		// 参加プレイヤーマップを回す
 		for (Map.Entry<GameTeam, Set<Player>> entry : playersMap.entrySet()){
 			GameTeam team = entry.getKey();
-			Location loc = getSpawn(team);
+			Location loc = getSpawnLocation(team);
 			// チームのスポーン地点が未設定の場合何もしない
 			if (loc == null) continue;
 			// チームの全プレイヤー(null/オフラインを除く)をスポーン地点にテレポート
@@ -422,7 +449,6 @@ public class Game {
 			}
 		}, 0L, 20L);
 	}
-
 	/**
 	 * タイマータスクが稼働中の場合停止する
 	 */
@@ -432,13 +458,26 @@ public class Game {
 			plugin.getServer().getScheduler().cancelTask(timerThreadID);
 		}
 	}
-
 	/**
 	 * このゲームの残り時間(秒)を取得する
 	 * @return 残り時間(秒)
 	 */
 	public int getRemainTime(){
 		return remainSec;
+	}
+
+	/* Flag */
+	/**
+	 * このゲームの全ブロックをロールバックする
+	 * @return
+	 */
+	public int rollbackFlags(){
+		int count = 0;
+		for (Flag flag : flags.values()){
+			if (flag.rollback())
+				count++;
+		}
+		return count;
 	}
 
 	/* getter/setter */
@@ -499,7 +538,7 @@ public class Game {
 	public void setSpawn(GameTeam team, Location loc){
 		spawnMap.put(team, loc);
 	}
-	public Location getSpawn(GameTeam team){
+	public Location getSpawnLocation(GameTeam team){
 		if (team == null || !spawnMap.containsKey(team))
 			return null;
 		return spawnMap.get(team);

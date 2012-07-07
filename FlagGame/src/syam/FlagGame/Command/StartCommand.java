@@ -1,7 +1,7 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Util.Actions;
 
 public class StartCommand extends BaseCommand{
 	public StartCommand(){
@@ -22,6 +22,11 @@ public class StartCommand extends BaseCommand{
 		Game game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'が見つかりません");
+			return true;
+		}
+
+		if (!game.isReady()){
+			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'は参加受付状態ではありません");
 			return true;
 		}
 

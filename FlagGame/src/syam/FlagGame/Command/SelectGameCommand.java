@@ -1,8 +1,8 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Util.Actions;
 
 public class SelectGameCommand extends BaseCommand {
 	public SelectGameCommand(){

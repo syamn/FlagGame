@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Util.Actions;
 
 public abstract class BaseCommand {
 	// Logger

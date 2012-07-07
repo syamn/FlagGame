@@ -13,6 +13,12 @@ WorldName: 'flag'
 WorldProtect: true
 
 #==================#
+#   Games Config   #
+#==================#
+# If it true, Kills player when logout during the game
+DeathWhenLogout: true
+
+#==================#
 #   DO NOT TOUCH   #
 #==================#
 # Do not touch this option! It is a check if you are running the recent configuration version

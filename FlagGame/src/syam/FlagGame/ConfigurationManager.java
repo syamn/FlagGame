@@ -14,6 +14,8 @@ import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,6 +39,8 @@ public class ConfigurationManager {
 	public int toolID = new Integer(269);
 	public String gameWorld = defaultWorldName;
 	public boolean isProtected = new Boolean(true);
+	/* Games Configs */
+	public boolean deathWhenLogout = new Boolean(true);
 
 	/**
 	 * コンストラクタ
@@ -69,6 +73,15 @@ public class ConfigurationManager {
 		toolID = plugin.getConfig().getInt("ToolID", 269);
 		gameWorld = plugin.getConfig().getString("WorldName", defaultWorldName);
 		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
+		/* Games Configs */
+		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
+
+		// ワールドチェック 見つからなければプラグイン無効化
+		if (Bukkit.getWorld(gameWorld) == null){
+			log.warning(logPrefix+ "World "+gameWorld+" is Not Found! Disabling plugin..");
+			plugin.getPluginLoader().disablePlugin(plugin);
+			return;
+		}
 	}
 
 	/**

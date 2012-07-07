@@ -2,10 +2,10 @@ package syam.FlagGame.Command;
 
 import org.bukkit.Location;
 
-import syam.FlagGame.Actions;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Game.GameTeam;
+import syam.FlagGame.Util.Actions;
 
 public class TpCommand extends BaseCommand{
 	public TpCommand(){
@@ -49,7 +49,7 @@ public class TpCommand extends BaseCommand{
 				return true;
 			}
 
-			Location loc = game.getSpawn(team);
+			Location loc = game.getSpawnLocation(team);
 
 			if (loc == null){
 				Actions.message(null, player, "&c"+team.getTeamName()+"チームのスポーン地点は未設定です！");

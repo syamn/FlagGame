@@ -22,6 +22,7 @@ public class Flag {
 	private FlagType type = null; // フラッグの種類
 
 	// 元のブロックデータ
+	//TODO: デフォルトブロックを可変にする とりあえず空気に変える
 	private int blockID = 0;
 	private byte blockData = 0;
 
@@ -62,6 +63,21 @@ public class Flag {
 	 */
 	public Block getNowBlock(){
 		return loc.getBlock();
+	}
+
+	/**
+	 * ブロックを元のブロックにロールバックする
+	 * @return ロールバックが発生した場合にだけtrue
+	 */
+	public boolean rollback(){
+		Block block = loc.getBlock();
+		// 既に同じブロックの場合は何もしない
+		if (block.getTypeId() != blockID || block.getData() != blockData){
+			// ブロック変更
+			block.setTypeIdAndData(blockID, blockData, false);
+			return true;
+		}
+		return false;
 	}
 
 	/* フラッグ設定系 */

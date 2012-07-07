@@ -1,4 +1,4 @@
-package syam.FlagGame;
+package syam.FlagGame.Util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import syam.FlagGame.FlagGame;
 
 public class Actions {
 	// Logger
@@ -57,7 +59,8 @@ public class Actions {
 			message = message
 					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
 					.replaceAll("%version", FlagGame.getInstance().getDescription().getVersion());
-			Bukkit.broadcastMessage(message);
+			debug(message);//debug
+			//Bukkit.broadcastMessage(message);
 		}
 	}
 	/**
