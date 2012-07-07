@@ -67,7 +67,7 @@ public class FGEntityListener implements Listener{
 			return;
 
 		// 設定確認 チーム内PVPを無効にする設定が無効であれば何もしない
-		if (!plugin.getConfigs().disableTeamPvP)
+		if (!plugin.getConfigs().disableTeamPVP)
 			return;
 
 		// 存在するゲームを回す

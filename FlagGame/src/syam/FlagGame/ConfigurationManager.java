@@ -43,7 +43,7 @@ public class ConfigurationManager {
 	public boolean isProtected = new Boolean(true);
 	/* Games Configs */
 	public boolean deathWhenLogout = new Boolean(true);
-	public boolean disableTeamPvP = new Boolean(true);
+	public boolean disableTeamPVP = new Boolean(true);
 	public List<String> disableCommands = new ArrayList<String>();
 
 	/**
@@ -79,7 +79,7 @@ public class ConfigurationManager {
 		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
 		/* Games Configs */
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
-		disableTeamPvP = plugin.getConfig().getBoolean("DisableTeamPvP", true);
+		disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
 		disableCommands = plugin.getConfig().getStringList("DisableCommands");
 
 		// ワールドチェック 見つからなければプラグイン無効化

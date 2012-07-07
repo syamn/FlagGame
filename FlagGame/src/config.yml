@@ -23,7 +23,9 @@ DisableTeamPVP: true
 DisableCommands:
 - /spawn
 - /home
-- /kill
+- /sethome
+- /warp
+- /tp
 
 #==================#
 #   DO NOT TOUCH   #
