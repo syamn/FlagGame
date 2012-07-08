@@ -38,9 +38,8 @@ public class Flag {
 		this.loc = loc;
 		this.type = type;
 
-		Block block = loc.getBlock();
-		this.blockID = block.getTypeId();
-		this.blockData = block.getData();
+		this.blockID = blockID;
+		this.blockData = blockData;
 
 		// ゲームに設定
 		init();

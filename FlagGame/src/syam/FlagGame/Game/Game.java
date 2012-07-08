@@ -297,7 +297,6 @@ public class Game {
 	 * @return
 	 */
 	public boolean addPlayer(Player player){
-		//if (true) return addPlayer(player, GameTeam.RED);//debug
 		// 赤チームのが少ないか、または同じなら赤チームに追加 それ以外は青チームに追加
 		if (redPlayers.size() <= bluePlayers.size()){
 			return addPlayer(player, GameTeam.RED);

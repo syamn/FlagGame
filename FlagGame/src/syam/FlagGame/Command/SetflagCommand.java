@@ -58,7 +58,8 @@ public class SetflagCommand extends BaseCommand {
 				return true;
 			}
 
-			new Flag(plugin, game, loc, type);
+			// ロールバックブロックを空気で設定
+			new Flag(plugin, game, loc, type, 0 ,(byte) 0);
 
 			Actions.message(null, player, "&aゲーム'"+game.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
 			return true;

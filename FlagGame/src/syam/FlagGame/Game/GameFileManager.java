@@ -94,7 +94,7 @@ public class GameFileManager {
 
 	/**
 	 * ハッシュマップからリストに変換
-	 * @param flags フラッグ　マップ
+	 * @param flags フラッグマップ
 	 * @return フラッグ情報文字列のリスト
 	 */
 	private List<String> convertFlagMapToList(Map<Location, Flag> flags){
