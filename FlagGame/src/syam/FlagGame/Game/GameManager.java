@@ -24,8 +24,6 @@ public class GameManager {
 
 	// 選択中のゲーム
 	private static Map<String, Game> selectedGame = new HashMap<String, Game>();
-	// 選択中のチーム
-	private static Map<String, GameTeam> selectedTeam = new HashMap<String, GameTeam>();
 	// 選択中のブロック
 	private static Map<String, Location> selectedBlock = new HashMap<String, Location>();
 
@@ -54,26 +52,7 @@ public class GameManager {
 			return selectedGame.get(player.getName());
 		}
 	}
-	/**
-	 * 指定したチームを選択中にする
-	 * @param player プレイヤー
-	 * @param team 対象チーム
-	 */
-	public static void setSelectedTeam(Player player, GameTeam team){
-		selectedTeam.put(player.getName(), team);
-	}
-	/**
-	 * 選択中のチームを返す
-	 * @param player 対象プレイヤー
-	 * @return null または対象チーム
-	 */
-	public static GameTeam getSelectedTeam(Player player){
-		if (player == null || !selectedTeam.containsKey(player.getName())){
-			return null;
-		}else{
-			return selectedTeam.get(player.getName());
-		}
-	}
+
 	/**
 	 * 指定したブロックを選択中にする
 	 * @param player プレイヤー
