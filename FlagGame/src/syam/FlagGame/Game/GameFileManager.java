@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Util.Cuboid;
 
 public class GameFileManager {
 	// Logger
@@ -40,11 +41,13 @@ public class GameFileManager {
 			// マップデータをリストに変換
 			List<String> flagList = convertFlagMapToList(game.getFlags());
 			List<String> spawnList = convertSpawnMapToList(game.getSpawns());
+			List<String> baseList = convertBaseMapToList(game.getBases());
 
 			// 保存するデータをここに
 			confFile.set("GameName", game.getName());
 			confFile.set("Spawns", spawnList);
 			confFile.set("Flags", flagList);
+			confFile.set("Bases", baseList);
 
 			try {
 				confFile.save(file);
@@ -83,6 +86,8 @@ public class GameFileManager {
 				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns")));
 				// フラッグ追加
 				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game));
+				// 拠点追加
+				game.setBases(convertBaseListToMap(confFile.getStringList("Bases")));
 
 				log.info(logPrefix+ "Loaded Game: "+file.getName()+" ("+name+")");
 
@@ -92,8 +97,9 @@ public class GameFileManager {
 		}
 	}
 
+	/* フラッグデータを変換 */
 	/**
-	 * ハッシュマップからリストに変換
+	 * フラッグデータをハッシュマップからリストに変換
 	 * @param flags フラッグマップ
 	 * @return フラッグ情報文字列のリスト
 	 */
@@ -118,7 +124,7 @@ public class GameFileManager {
 		return ret;
 	}
 	/**
-	 * リストからハッシュマップに変換
+	 * フラッグデータをリストからハッシュマップに変換
 	 * @param flags
 	 * @param game
 	 * @return
@@ -176,6 +182,7 @@ public class GameFileManager {
 		return ret;
 	}
 
+	/* スポーン地点データを変換 */
 	private List<String> convertSpawnMapToList(Map<GameTeam, Location> spawns){
 		List<String> ret = new ArrayList<String>();
 		ret.clear();
@@ -232,6 +239,83 @@ public class GameFileManager {
 
 			Location loc = new Location(world, Double.valueOf(coord[0]), Double.valueOf(coord[1]), Double.valueOf(coord[2]), Float.valueOf(coord[3]), Float.valueOf(coord[4]));
 			ret.put(team, loc);
+		}
+
+		return ret;
+	}
+
+	/* 拠点データを変換 */
+	private List<String> convertBaseMapToList(Map<GameTeam, Cuboid> bases){
+		List<String> ret = new ArrayList<String>();
+		ret.clear();
+
+		for (Map.Entry<GameTeam, Cuboid> entry : bases.entrySet()){
+			// RED@x,y,z@x,y,z
+			String s = entry.getKey().name()+"@";
+
+			Cuboid cuboid = entry.getValue();
+			Location pos1 = cuboid.getPos1();
+			Location pos2 = cuboid.getPos2();
+
+			s = s + pos1.getBlockX()+","+pos1.getBlockY()+","+pos1.getBlockZ()+"@";
+			s = s + pos2.getBlockX()+","+pos2.getBlockY()+","+pos2.getBlockZ();
+
+			// リストに追加
+			ret.add(s);
+		}
+
+		return ret;
+	}
+	private Map<GameTeam, Cuboid> convertBaseListToMap(List<String> bases){
+		Map<GameTeam, Cuboid> ret = new HashMap<GameTeam, Cuboid>();
+		ret.clear();
+
+		String[] data;
+		String[] pos1;
+		String[] pos2;
+
+		int line = 0;
+		for (String s : bases){
+			line++;
+			// デリミタ分割
+			data = s.split("@");
+			if (data.length != 3){
+				log.warning(logPrefix+ "Skipping BaseLine "+line+": incorrect format (@)");
+				continue;
+			}
+
+			// data[0] : チームチェック
+			GameTeam team = null;
+			for (GameTeam gt : GameTeam.values()){
+				if (gt.name().equalsIgnoreCase(data[0])){
+					team = gt;
+				}
+			}
+			if (team == null){
+				log.warning(logPrefix+ "Skipping BaseLine "+line+": undefined TeamName");
+				continue;
+			}
+
+			// data[1] : 座標形式チェック
+			pos1 = data[1].split(",");
+			if (pos1.length != 3){
+				log.warning(logPrefix+ "Skipping BaseLine "+line+": incorrect 1st coord format (,)");
+				continue;
+			}
+
+			// data[2] : 座標形式チェック
+			pos2 = data[2].split(",");
+			if (pos2.length != 3){
+				log.warning(logPrefix+ "Skipping BaseLine "+line+": incorrect 2nd coord format (,)");
+				continue;
+			}
+
+			World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+
+			ret.put(team, new Cuboid(
+					new Location(world, Double.parseDouble(pos1[0]), Double.parseDouble(pos1[1]), Double.parseDouble(pos1[2])),
+					new Location(world, Double.parseDouble(pos2[0]), Double.parseDouble(pos2[1]), Double.parseDouble(pos2[2]))
+					));
 		}
 
 		return ret;
