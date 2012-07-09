@@ -208,7 +208,10 @@ public class FGPlayerListener implements Listener{
 			// 同じチームの場合そのゲームに
 			if (dTeam != null && aTeam != null){
 				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
-				Actions.broadcastMessage(deathMsg);
+				for (Player player : Bukkit.getOnlinePlayers())
+					Actions.message(null, player, deathMsg);
+
+				//Actions.broadcastMessage(deathMsg); // 死亡したプレイヤーには送信されない？
 				//game.message(deathMsg); ブロードキャストがうるさそうならこっちでゲーム参加者にだけキャスト
 				return;
 			}
