@@ -9,7 +9,7 @@ public class CreateCommand extends BaseCommand {
 		bePlayer = true;
 		name = "create";
 		argLength = 1;
-		usage = "<name> <- create new map";
+		usage = "<name> <- create new game";
 	}
 
 	@Override
