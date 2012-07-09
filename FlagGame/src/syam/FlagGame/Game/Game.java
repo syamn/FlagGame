@@ -24,7 +24,7 @@ public class Game {
 	// Instance
 	private final FlagGame plugin;
 
-	/* ゲームデータ */
+	/* ***** ゲームデータ ***** */
 	private String gameName; // ゲーム名
 	private int teamPlayerLimit = 2; // 各チームの最大プレイヤー数
 	private int gameTimeInSeconds = 61; // 1ゲームの制限時間
@@ -290,7 +290,8 @@ public class Game {
 		playersMap.put(GameTeam.BLUE, bluePlayers);
 	}
 
-	/* チームのプレイヤー操作系 */
+	/* ***** 参加プレイヤー関係 ***** */
+
 	/**
 	 * プレイヤーを少ないチームに自動で参加させる 同じなら赤チーム
 	 * @param player 参加させるプレイヤー
@@ -361,6 +362,17 @@ public class Game {
 		return null;
 	}
 	/**
+	 * プレイヤーマップを返す
+	 * @return
+	 */
+	public Map<GameTeam, Set<String>> getPlayersMap(){
+		return playersMap;
+	}
+
+
+	/* ***** 参加しているプレイヤーへのアクション関係 ***** */
+
+	/**
 	 * ゲーム参加者全員にメッセージを送る
 	 * @param msg メッセージ
 	 */
@@ -396,7 +408,6 @@ public class Game {
 				Actions.message(null, player, message);
 		}
 	}
-
 	/**
 	 * 参加プレイヤーをスポーン地点へ移動させる
 	 */
@@ -416,8 +427,21 @@ public class Game {
 			}
 		}
 	}
+	/**
+	 * 指定したチームのプレイヤーセットを返す
+	 * @param team 取得するチーム
+	 * @return プレイヤーセット またはnull
+	 */
+	public Set<String> getPlayersSet(GameTeam team){
+		if (team == null || !playersMap.containsKey(team))
+			return null;
 
-	/* timer */
+		return playersMap.get(team);
+	}
+
+
+	/* ***** タイマー関係 ***** */
+
 	/**
 	 * メインのタイマータスクを開始する
 	 */
@@ -469,92 +493,8 @@ public class Game {
 		return remainSec;
 	}
 
-	/* Flag */
-	/**
-	 * このゲームの全ブロックをロールバックする
-	 * @return
-	 */
-	public int rollbackFlags(){
-		int count = 0;
-		for (Flag flag : flags.values()){
-			if (flag.rollback())
-				count++;
-		}
-		return count;
-	}
 
-	/* getter/setter */
-
-	/**
-	 * ゲーム名を返す
-	 * @return このゲームの名前
-	 */
-	public String getName(){
-		return gameName;
-	}
-	/**
-	 * チームごとのプレイヤー数上限を返す
-	 * @return teamPlayerLimit
-	 */
-	public int getTeamPlayerLimit(){
-		return teamPlayerLimit;
-	}
-	/**
-	 * 開始待機中かどうか返す
-	 * @return
-	 */
-	public boolean isReady(){
-		return ready;
-	}
-	/**
-	 * 開始中かどうか返す
-	 * @return
-	 */
-	public boolean isStarting(){
-		return started;
-	}
-
-	/**
-	 * プレイヤーマップを返す
-	 * @return
-	 */
-	public Map<GameTeam, Set<String>> getPlayersMap(){
-		return playersMap;
-	}
-
-	/**
-	 * 指定したチームのプレイヤーセットを返す
-	 * @param team 取得するチーム
-	 * @return プレイヤーセット またはnull
-	 */
-	public Set<String> getPlayersSet(GameTeam team){
-		if (team == null || !playersMap.containsKey(team))
-			return null;
-
-		return playersMap.get(team);
-	}
-
-	/**
-	 * チームのスポーン地点を設置/取得する
-	 * @param loc
-	 */
-	public void setSpawn(GameTeam team, Location loc){
-		spawnMap.put(team, loc);
-	}
-	public Location getSpawnLocation(GameTeam team){
-		if (team == null || !spawnMap.containsKey(team))
-			return null;
-		return spawnMap.get(team);
-	}
-	public Map<GameTeam, Location> getSpawns(){
-		return spawnMap;
-	}
-	public void setSpawns(Map<GameTeam, Location> spawns){
-		// クリア
-		this.spawnMap.clear();
-		// セット
-		this.spawnMap.putAll(spawns);
-	}
+	/* ***** フラッグ関係 ***** */
 
 	/**
 	 * フラッグブロックとそのチームを設定する
@@ -599,5 +539,75 @@ public class Game {
 		this.flags.clear();
 		// セット
 		this.flags.putAll(flags);
+	}
+
+	/**
+	 * このゲームの全ブロックをロールバックする
+	 * @return
+	 */
+	public int rollbackFlags(){
+		int count = 0;
+		for (Flag flag : flags.values()){
+			if (flag.rollback())
+				count++;
+		}
+		return count;
+	}
+
+
+	/* ***** スポーン地点関係 ***** */
+
+	/**
+	 * チームのスポーン地点を設置/取得する
+	 * @param loc
+	 */
+	public void setSpawn(GameTeam team, Location loc){
+		spawnMap.put(team, loc);
+	}
+	public Location getSpawnLocation(GameTeam team){
+		if (team == null || !spawnMap.containsKey(team))
+			return null;
+		return spawnMap.get(team);
+	}
+	public Map<GameTeam, Location> getSpawns(){
+		return spawnMap;
+	}
+	public void setSpawns(Map<GameTeam, Location> spawns){
+		// クリア
+		this.spawnMap.clear();
+		// セット
+		this.spawnMap.putAll(spawns);
+	}
+
+
+	/* ***** ゲーム全般のgetterとsetter ***** */
+
+	/**
+	 * ゲーム名を返す
+	 * @return このゲームの名前
+	 */
+	public String getName(){
+		return gameName;
+	}
+	/**
+	 * チームごとのプレイヤー数上限を返す
+	 * @return teamPlayerLimit
+	 */
+	public int getTeamPlayerLimit(){
+		return teamPlayerLimit;
+	}
+	/**
+	 * 開始待機中かどうか返す
+	 * @return
+	 */
+	public boolean isReady(){
+		return ready;
+	}
+	/**
+	 * 開始中かどうか返す
+	 * @return
+	 */
+	public boolean isStarting(){
+		return started;
 	}
 }
