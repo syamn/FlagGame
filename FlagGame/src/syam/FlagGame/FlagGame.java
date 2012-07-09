@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import syam.FlagGame.Command.BaseCommand;
 import syam.FlagGame.Command.CreateCommand;
+import syam.FlagGame.Command.DeleteCommand;
 import syam.FlagGame.Command.HelpCommand;
 import syam.FlagGame.Command.JoinCommand;
 import syam.FlagGame.Command.ReadyCommand;
@@ -166,6 +167,7 @@ public class FlagGame extends JavaPlugin{
 
 		// Admin Commands
 		commands.add(new CreateCommand());
+		commands.add(new DeleteCommand());
 		commands.add(new SelectGameCommand());
 		commands.add(new SetflagCommand());
 		commands.add(new TpCommand());
