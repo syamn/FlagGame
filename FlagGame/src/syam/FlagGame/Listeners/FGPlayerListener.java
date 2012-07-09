@@ -1,5 +1,6 @@
 package syam.FlagGame.Listeners;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -28,6 +30,7 @@ import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
+import syam.FlagGame.Util.Cuboid;
 
 public class FGPlayerListener implements Listener{
 	public static final Logger log = FlagGame.log;
@@ -81,30 +84,47 @@ public class FGPlayerListener implements Listener{
 	}
 
 	// プレイヤーがブロックをクリックした
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerOpen(final PlayerInteractEvent event){
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
+		Location loc = block.getLocation();
 
 		// ゲーム用ワールドでなければ返す
 		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
 			return;
 
-		//TODO:
-		// ブロックを右クリックした
-		if (block != null && event.getAction() == Action.RIGHT_CLICK_BLOCK){
-			// ドア関係のブロックかチェック
+		if (block != null){
 			Material type = block.getType();
-			if (type == Material.WOODEN_DOOR || type == Material.IRON_DOOR || type == Material.FENCE_GATE){
-				Block topBlock = Actions.getTopBlock(block);
-				// 空気、液体ブロックは何もしない
-				if (topBlock.getType() == Material.AIR || topBlock.isLiquid())
+			// ブロックを左または右クリックした
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK){
+				// クリックしたブロックがドア関係
+				if (type == Material.WOODEN_DOOR || type == Material.IRON_DOOR || type == Material.FENCE_GATE){
+					// 使用可能かチェック
+					if (!canUseBlock(player, block)){
+						event.setUseInteractedBlock(Result.DENY);
+						event.setUseItemInHand(Result.DENY);
+						event.setCancelled(true);
+						Actions.message(null, player, msgPrefix+ "&cここは相手の拠点です！");
+					}
 					return;
-				Block signBlock = Actions.getProtectSign(topBlock);
-				if (signBlock == null) return; // 保護看板が見つからない
-				Sign sign = (Sign) signBlock.getState();
+				}
+			}
 
-
+			// ブロックを右クリックした
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK){
+				// ブロックがコンテナ関係か看板関係
+				if (type == Material.CHEST || type == Material.FURNACE || type == Material.DISPENSER || type == Material.JUKEBOX
+						|| type == Material.SIGN || type == Material.WALL_SIGN){
+					// 使用可能かチェック
+					if (!canUseBlock(player, block)){
+						event.setUseInteractedBlock(Result.DENY);
+						event.setUseItemInHand(Result.DENY);
+						event.setCancelled(true);
+						Actions.message(null, player, msgPrefix+ "&cここは相手の拠点です！");
+					}
+					return;
+				}
 			}
 		}
 	}
@@ -252,4 +272,38 @@ public class FGPlayerListener implements Listener{
 
 
 	/* methods */
+
+	private boolean canUseBlock(Player player, Block block){
+		// ワールドがゲーム用ワールドでなければ常にtrueを返す
+		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+			return true;
+
+		Location loc = block.getLocation();
+		// 開始中のゲームを回す
+		for (Game game : plugin.games.values()){
+			if (!game.isStarting()) continue;
+
+			// プレイヤーのチーム取得
+			GameTeam playerTeam = game.getPlayerTeam(player);
+			if (playerTeam == null) continue;
+
+			GameTeam blockTeam = null;
+			// 拠点マップを回してブロックの所属拠点チームを取得
+			for (Map.Entry<GameTeam, Cuboid> entry : game.getBases().entrySet()){
+				if (entry.getValue().isIn(loc)){
+					blockTeam = entry.getKey();
+					break;
+				}
+			}
+			// パブリックなものは何もしない
+			if (blockTeam == null) continue;
+
+			// プレイヤーとブロックのチームが違えばイベントをキャンセルする
+			if (playerTeam != blockTeam){
+				return false; // 開けない
+			}
+		}
+		// 開ける
+		return true;
+	}
 }
