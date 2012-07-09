@@ -25,6 +25,20 @@ public class JoinCommand extends BaseCommand {
 			return true;
 		}
 
+		// 既に参加していないかチェック
+		if (game.getPlayerTeam(player) != null){
+			GameTeam team = game.getPlayerTeam(player);
+			Actions.message(null, player, "&cあなたは既にこのゲームに"+team.getColor()+team.getTeamName()+"チーム&cとしてエントリーしています！");
+			return true;
+		}
+		for (Game check : plugin.games.values()){
+			GameTeam checkT = check.getPlayerTeam(player);
+			if (checkT != null){
+				Actions.message(null, player, "&cあなたは別のフラッグゲーム'"+check.getName()+"'に"+checkT.getColor()+checkT.getTeamName()+"チーム&cとして参加しています！");
+				return true;
+			}
+		}
+
 		// 人数チェック
 		int limit = game.getTeamPlayerLimit();
 		if ((game.getPlayersSet(GameTeam.RED).size() >= limit) && (game.getPlayersSet(GameTeam.BLUE).size() >= limit)){
@@ -37,7 +51,7 @@ public class JoinCommand extends BaseCommand {
 
 		// 所属チーム取得
 		GameTeam team = game.getPlayerTeam(player);
-		Actions.broadcastMessage(msgPrefix+"&aプレイヤー'&6"+player.getName()+"'&aが&6"+team.getTeamName()+"チーム&aに参加しました！");
+		Actions.broadcastMessage(msgPrefix+"&aプレイヤー'&6"+player.getName()+"&a'が"+team.getColor()+team.getTeamName()+"チーム&aに参加しました！");
 		return true;
 	}
 
