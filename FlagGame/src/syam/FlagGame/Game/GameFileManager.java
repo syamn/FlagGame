@@ -82,12 +82,14 @@ public class GameFileManager {
 
 				// ゲーム追加
 				Game game = new Game(plugin, name);
-				// スポーン地点追加
-				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns")));
-				// フラッグ追加
-				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game));
-				// 拠点追加
-				game.setBases(convertBaseListToMap(confFile.getStringList("Bases")));
+
+				// ファイル名設定
+				game.setFileName(file.getName());
+
+				// 各設定やマップを追加
+				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
+				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game)); // フラッグ
+				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点
 
 				log.info(logPrefix+ "Loaded Game: "+file.getName()+" ("+name+")");
 

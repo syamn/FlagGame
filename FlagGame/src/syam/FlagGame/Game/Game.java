@@ -26,6 +26,7 @@ public class Game {
 	private final FlagGame plugin;
 
 	/* ***** ゲームデータ ***** */
+	private String fileName; // ゲームデータのファイル名
 	private String gameName; // ゲーム名
 	private int teamPlayerLimit = 2; // 各チームの最大プレイヤー数
 	private int gameTimeInSeconds = 61; // 1ゲームの制限時間
@@ -58,6 +59,9 @@ public class Game {
 
 		// ゲームデータ設定
 		this.gameName = name;
+
+		// ファイル名設定
+		this.fileName = this.gameName + ".yml";
 
 		// ゲームをメインクラスに登録
 		plugin.games.put(this.gameName, this);
@@ -600,6 +604,22 @@ public class Game {
 	}
 
 	/* ***** ゲーム全般のgetterとsetter ***** */
+
+	/**
+	 * ファイル名を設定
+	 * @param filename
+	 */
+	public void setFileName(String filename){
+		this.fileName = filename;
+	}
+
+	/**
+	 * ファイル名を取得
+	 * @return
+	 */
+	public String getFileName(){
+		return fileName;
+	}
 
 	/**
 	 * ゲーム名を返す
