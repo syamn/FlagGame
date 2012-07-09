@@ -33,6 +33,7 @@ public class WorldEditHandler{
 	 * @param bPlayer WorldEditで領域を指定しているプレイヤー
 	 * @return 選択された領域の両端のブロック配列[2] エラーならnull
 	 */
+	@SuppressWarnings("deprecation")
 	public static Block[] getWorldEditRegion(final Player bPlayer){
 		// WorldEditプラグイン取得
 		Plugin plugin = FlagGame.getInstance().getServer().getPluginManager().getPlugin("WorldEdit");

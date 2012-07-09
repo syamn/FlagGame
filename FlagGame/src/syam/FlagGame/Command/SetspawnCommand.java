@@ -10,7 +10,7 @@ public class SetspawnCommand extends BaseCommand{
 		bePlayer = true;
 		name = "setspawn";
 		argLength = 1;
-		usage = "[team] <- set team spawn";
+		usage = "<team> <- set team spawn";
 	}
 
 	@Override

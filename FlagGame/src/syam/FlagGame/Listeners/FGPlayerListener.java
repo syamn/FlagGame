@@ -4,7 +4,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -41,7 +43,7 @@ public class FGPlayerListener implements Listener{
 	/* 登録するイベントはここから下に */
 
 	// プレイヤーがブロックをクリックした
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInteract(final PlayerInteractEvent event){
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
@@ -77,6 +79,36 @@ public class FGPlayerListener implements Listener{
 			}
 		}
 	}
+
+	// プレイヤーがブロックをクリックした
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public void onPlayerOpen(final PlayerInteractEvent event){
+		Player player = event.getPlayer();
+		Block block = event.getClickedBlock();
+
+		// ゲーム用ワールドでなければ返す
+		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+			return;
+
+		//TODO:
+		// ブロックを右クリックした
+		if (block != null && event.getAction() == Action.RIGHT_CLICK_BLOCK){
+			// ドア関係のブロックかチェック
+			Material type = block.getType();
+			if (type == Material.WOODEN_DOOR || type == Material.IRON_DOOR || type == Material.FENCE_GATE){
+				Block topBlock = Actions.getTopBlock(block);
+				// 空気、液体ブロックは何もしない
+				if (topBlock.getType() == Material.AIR || topBlock.isLiquid())
+					return;
+				Block signBlock = Actions.getProtectSign(topBlock);
+				if (signBlock == null) return; // 保護看板が見つからない
+				Sign sign = (Sign) signBlock.getState();
+
+
+			}
+		}
+	}
+
 
 	// プレイヤーがリスポーンした
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -217,4 +249,7 @@ public class FGPlayerListener implements Listener{
 			}
 		}
 	}
+
+
+	/* methods */
 }

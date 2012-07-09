@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Util.Actions;
+import syam.FlagGame.Util.Cuboid;
 
 public class Game {
 	// Logger
@@ -43,8 +44,9 @@ public class Game {
 	private Set<String> redPlayers = new HashSet<String>();
 	private Set<String> bluePlayers = new HashSet<String>();
 
-	// スポーン地点
+	// スポーン地点と拠点マップ
 	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
+	private Map<GameTeam, Cuboid> baseMap = new HashMap<GameTeam, Cuboid>();
 
 	/**
 	 * コンストラクタ
@@ -209,18 +211,18 @@ public class Game {
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が終わりました！");
 		if (redS != "")
-			Actions.broadcastMessage("&c赤チーム得点: &6"+redP+"&f - "+redS);
+			Actions.broadcastMessage("&c赤チーム: &6"+redP+"&c点&f ("+redS+"&f)");
 		if (blueS != "")
-			Actions.broadcastMessage("&b青チーム得点: &6"+blueP+"&f - "+blueS);
+			Actions.broadcastMessage("&b青チーム得点: &6"+blueP+"&b点&f ("+blueS+"&f)");
 		if (noneS != "")
-			Actions.broadcastMessage("&7無効フラッグ: &6"+noneP+"&f - "+noneS);
+			Actions.broadcastMessage("&7無効フラッグ: &6"+noneP+"&7点&f ("+noneS+"&f)");
 		if (winTeam != null)
 			Actions.broadcastMessage(msgPrefix+winTeam.getColor()+winTeam.getTeamName()+"チーム の勝利です！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
 		else
 			Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けです！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
 
-		// フラッグブロックロールバック
-		rollbackFlags();
+		// フラッグブロックロールバック 終了時はロールバックしない
+		//rollbackFlags();
 		// 初期化
 		init();
 	}
@@ -579,6 +581,23 @@ public class Game {
 		this.spawnMap.putAll(spawns);
 	}
 
+	/* ***** 拠点関係 ***** */
+
+	public void setBase(GameTeam team, Location pos1, Location pos2){
+		baseMap.put(team, new Cuboid(pos1, pos2));
+	}
+	public Cuboid getBaseRegion(GameTeam team){
+		if (team == null || !baseMap.containsKey(team))
+			return null;
+		return baseMap.get(team);
+	}
+	public Map<GameTeam, Cuboid> getBases(){
+		return baseMap;
+	}
+	public void setBases(Map<GameTeam, Cuboid> bases){
+		this.baseMap.clear();
+		this.baseMap.putAll(bases);
+	}
 
 	/* ***** ゲーム全般のgetterとsetter ***** */
 
