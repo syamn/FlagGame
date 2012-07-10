@@ -46,6 +46,22 @@ public class JoinCommand extends BaseCommand {
 			return true;
 		}
 
+		// 参加料チェック
+		if (game.getEntryFee() > 0){
+			// 所持金確認
+			if (!Actions.checkMoney(player.getName(), game.getEntryFee())){
+				Actions.message(null, player, "&c参加するためには参加料 "+game.getEntryFee()+"Coin が必要です！");
+				return true;
+			}
+			// 引き落とし
+			if (!Actions.takeMoney(player.getName(), game.getEntryFee())){
+				Actions.message(null, player, "&c参加料の引き落としにエラーが発生しました。管理人までご連絡ください。");
+				return true;
+			}else{
+				Actions.message(null, player, "&c参加料として "+game.getEntryFee()+"Coin を支払いました！");
+			}
+		}
+
 		// join
 		game.addPlayer(player);
 
