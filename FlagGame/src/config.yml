@@ -27,6 +27,12 @@ DisableCommands:
 - /warp
 - /tp
 
+#====================#
+#   Logging Config   #
+#====================#
+# DetailLogDirectory
+DetailDirectory: plugins/FlagGame/detail/
+
 #==================#
 #   DO NOT TOUCH   #
 #==================#

@@ -32,9 +32,10 @@ public class ConfigurationManager {
 	private static File pluginDir = new File("plugins", "FlagGame");
 
 	// デフォルトの設定定数
-	private final String defaultLogPath = "plugins/GameManager/game.log";
+	private final String defaultLogPath = "plugins/FlagGame/game.log";
 	private final String defaultWorldName = "flag";
 	private final List<String> defaultDisableCommands = new ArrayList<String>() {{add("/spawn"); add("/home"); add("/setspawn");}};
+	private final String defaultDetailDirectory = "plugins/FlagGame/detail/";
 
 	// 設定項目
 	/* Basic Configs */
@@ -45,6 +46,8 @@ public class ConfigurationManager {
 	public boolean deathWhenLogout = new Boolean(true);
 	public boolean disableTeamPVP = new Boolean(true);
 	public List<String> disableCommands = new ArrayList<String>();
+	/* Logging Configs */
+	public String detailDirectory = defaultDetailDirectory;
 
 	/**
 	 * コンストラクタ
@@ -81,6 +84,8 @@ public class ConfigurationManager {
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
 		disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
 		disableCommands = plugin.getConfig().getStringList("DisableCommands");
+		/* Logging Configs */
+		detailDirectory = plugin.getConfig().getString("DetailDirectory", defaultDetailDirectory);
 
 		// ワールドチェック 見つからなければプラグイン無効化
 		if (Bukkit.getWorld(gameWorld) == null){
@@ -88,6 +93,9 @@ public class ConfigurationManager {
 			plugin.getPluginLoader().disablePlugin(plugin);
 			return;
 		}
+
+		// 詳細ログ用ディレクトリ作成
+		createDir(new File(detailDirectory));
 	}
 
 	/**

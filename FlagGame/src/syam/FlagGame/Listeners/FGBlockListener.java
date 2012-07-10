@@ -92,6 +92,7 @@ public class FGBlockListener implements Listener{
 				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
 				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
 			}
+			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag!");
 			return;
 		}
 
@@ -161,6 +162,7 @@ public class FGBlockListener implements Listener{
 				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
 				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
 			}
+			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag!");
 			return;
 		}
 

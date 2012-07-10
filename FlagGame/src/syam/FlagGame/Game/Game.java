@@ -1,5 +1,7 @@
 package syam.FlagGame.Game;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class Game {
 	private final FlagGame plugin;
 
 	/* ***** ゲームデータ ***** */
+	private String GameID; // 一意なゲームID ログ用
 	private String fileName; // ゲームデータのファイル名
 	private String gameName; // ゲーム名
 	private int teamPlayerLimit = 8; // 各チームの最大プレイヤー数
@@ -140,6 +143,17 @@ public class Game {
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'の参加受付が開始されました！");
 		Actions.broadcastMessage(msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
 		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+getName()+"&2' コマンドで参加してください！");
+
+		// ロギング
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd-HHmmss");
+		this.GameID = gameName+"_"+sdf.format(new Date());
+
+		log("========================================");
+		log("Sender "+sender.getName()+" Ready to Game");
+		log("Game: "+gameName+ " ("+fileName+")");
+		log("TeamPlayerLimit: "+teamPlayerLimit+" GameTime: "+gameTimeInSeconds+" sec");
+		log("Award: "+award+" EntryFee:"+entryFee);
+		log("========================================");
 	}
 	/**
 	 * ゲームを開始する
@@ -203,6 +217,21 @@ public class Game {
 				Actions.message(null, player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
 			}
 		}
+		String blue = "", red = "";
+		for (String name : bluePlayers){
+			blue = blue + name + ", ";
+		}
+		for (String name : redPlayers){
+			red = red + name + ", ";
+		}
+		if (blue != "") blue = blue.substring(0, blue.length() - 2);
+		if (red != "") red = red.substring(0, red.length() - 2);
+
+		log("========================================");
+		log("Sender "+sender.getName()+" Start Game");
+		log("RedTeam("+redPlayers.size()+"): "+red);
+		log("BlueTeam("+bluePlayers.size()+"): "+blue);
+		log("========================================");
 	}
 	/**
 	 * タイマー終了によって呼ばれるゲーム終了処理
@@ -270,6 +299,8 @@ public class Game {
 			Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けです！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
 		}
 
+		log("========================================");
+
 		// 賞金支払い
 		if (winTeam != null && award > 0){
 			for (String name : playersMap.get(winTeam)){
@@ -278,12 +309,31 @@ public class Game {
 					// 入金
 					if (Actions.addMoney(name, award)){
 						Actions.message(null, player, "&aおめでとうございます！賞金として "+award+"Coin を得ました！");
+						log("+ Player "+name+" received "+award+ "Coin!");
 					}else{
 						Actions.message(null, player, "&c報酬受け取りにエラーが発生しました。管理人までご連絡ください。");
+						log("* [Error] Player "+name+" received "+award+ "Coin ?");
 					}
 				}
 			}
 		}
+
+		// Logging
+		log("========================================");
+		log(" * FlagGame Finished");
+		log(" RedTeam: "+redP+" point - "+redS);
+		log("BlueTeam: "+blueP+" point - "+blueS);
+		log(" Invalid: "+noneP+" point - "+noneS);
+		log("========================================");
+		if (winTeam == null){
+			log(" *** DRAW GAME *** ("+redP+" - "+blueP+")");
+		}else{
+			log(" *** WIN TEAM: "+winTeam.name()+" *** ("+redP+" - "+blueP+")");
+		}
+		log("========================================");
+
+		// ログの終わり
+		GameID = null;
 
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();
@@ -392,6 +442,7 @@ public class Game {
 		}
 		// 追加
 		playersMap.get(team).add(player.getName());
+		log("+ Player "+player.getName()+" joined "+team.name()+" Team!");
 		return true;
 	}
 	/**
@@ -847,5 +898,17 @@ public class Game {
 	 */
 	public int getEntryFee(){
 		return entryFee;
+	}
+
+
+	/**
+	 * 各ゲームごとのログを取る
+	 * @param line ログ
+	 */
+	public void log(String line){
+		if (GameID != null){
+			String filepath = plugin.getConfigs().detailDirectory + GameID + ".log";
+			Actions.log(filepath, line);
+		}
 	}
 }

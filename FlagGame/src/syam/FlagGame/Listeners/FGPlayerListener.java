@@ -219,6 +219,7 @@ public class FGPlayerListener implements Listener{
 			if (team != null && plugin.getConfigs().deathWhenLogout){
 				player.setHealth(0);
 				game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+				game.log(" Player "+player.getName()+" Died because Logged out!");
 			}
 		}
 	}
@@ -313,6 +314,7 @@ public class FGPlayerListener implements Listener{
 
 				//Actions.broadcastMessage(deathMsg); // 死亡したプレイヤーには送信されない？
 				//game.message(deathMsg); ブロードキャストがうるさそうならこっちでゲーム参加者にだけキャスト
+				game.log(" Player ("+aTeam.name()+")"+killer.getName()+" Killed ("+dTeam.name()+")"+deader.getName()+"!");
 				return;
 			}
 		}
