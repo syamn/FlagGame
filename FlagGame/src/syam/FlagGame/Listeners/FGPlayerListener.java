@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.SignAction;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
@@ -78,6 +79,14 @@ public class FGPlayerListener implements Listener{
 						game.removeFlag(loc);
 						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
 					}
+				}
+			}
+			// 看板を右クリックした
+			else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){
+				Sign sign = (Sign) block.getState();
+				// 1行目チェック
+				if (sign.getLine(0).equals("§a[FlagGame]")){
+					clickFlagSign(player, block);
 				}
 			}
 		}
@@ -305,5 +314,91 @@ public class FGPlayerListener implements Listener{
 		}
 		// 開ける
 		return true;
+	}
+
+	private void clickFlagSign(Player player, Block block){
+		if (!(block.getState() instanceof Sign)) return;
+
+		Sign sign = (Sign) block.getState();
+		String line2 = sign.getLine(1); // 2行目
+		String line3 = sign.getLine(2); // 3行目
+
+		SignAction action = null;
+		for (SignAction sa : SignAction.values()){
+			if (sa.name().toLowerCase().equalsIgnoreCase(line2.trim()))
+				action = sa;
+		}
+		if (action == null){
+			Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
+			return;
+		}
+
+		// 処理を分ける
+		switch (action){
+			// 回復
+			case HEAL:
+				if (line3 != "" && !line3.isEmpty()){
+					GameTeam signTeam = null;
+					GameTeam playerTeam = null;
+					for (GameTeam gt : GameTeam.values()){
+						if (gt.name().toLowerCase().equalsIgnoreCase(line3))
+							signTeam = gt;
+					}
+					if (signTeam == null){
+						Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
+						return;
+					}
+					for (Game game : plugin.games.values()){
+						if (!game.isStarting()) continue;
+						if (game.getPlayerTeam(player) != null){
+							playerTeam = game.getPlayerTeam(player);
+							break;
+						}
+					}
+					if (playerTeam == null){
+						Actions.message(null, player, "&cこの看板はフラッグゲーム中にのみ使うことができます");
+						return;
+					}
+
+					if (playerTeam != signTeam){
+						Actions.message(null, player, "&cこれはあなたのチームの看板ではありません！");
+						return;
+					}
+				}
+
+				// 20以上にならないように体力とお腹ゲージを+2(ハート、おにく1つ分)回復させる
+				int nowHP = player.getHealth();
+				nowHP = nowHP + 2;
+				if (nowHP > 20) nowHP = 20;
+
+				int nowFL = player.getFoodLevel();
+				nowFL = nowFL + 2;
+				if (nowFL > 20) nowFL = 20;
+
+				// プレイヤーにセット
+				player.setHealth(nowHP);
+				player.setFoodLevel(nowFL);
+				player.setFireTicks(0); // 燃えてれば消してあげる
+
+				Actions.message(null, player, msgPrefix+ "&aHealed!");
+
+				break;
+			// 自殺
+			case KILL:
+				for (Game game : plugin.games.values()){
+					if (!game.isStarting()) continue;
+					if (game.getPlayerTeam(player) != null){
+						GameTeam team = game.getPlayerTeam(player);
+						game.message(msgPrefix+"&6["+game.getName()+"]&6 '"+team.getColor()+player.getName()+"&6'が自殺しました。");
+						break;
+					}
+				}
+				player.setHealth(0);
+				player.setFoodLevel(0);
+				break;
+			default:
+				Actions.message(null, player, msgPrefix+"&cSorry I forgot this sign-action. Please contact server staff!");
+		}
+
 	}
 }

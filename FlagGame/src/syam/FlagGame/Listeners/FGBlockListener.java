@@ -185,15 +185,15 @@ public class FGBlockListener implements Listener{
 		if (state instanceof Sign){
 			Sign sign = (Sign)state;
 
-			/* ヒール看板設置 */
-			if(event.getLine(0).trim().toLowerCase().endsWith("[FlagHeal]")){
+			/* 特殊看板設置 */
+			if(event.getLine(0).trim().toLowerCase().endsWith("[flaggame]")){
 				// 権限チェック
 				if (!player.hasPermission("flag.admin.sign")){
 					event.setLine(0, "Denied!");
 					Actions.message(null, player, "&cYou don't have permission to do this!");
 					return;
 				}
-				//event.setLine(0, "&)
+				event.setLine(0, "&a[FlagGame]");
 			}
 		}
 	}
