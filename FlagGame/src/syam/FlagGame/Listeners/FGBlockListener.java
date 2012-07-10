@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +17,7 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.SignChangeEvent;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Game.Flag;
@@ -169,6 +172,23 @@ public class FGBlockListener implements Listener{
 		// ワールド保護チェック
 		if (plugin.getConfigs().isProtected){
 			event.setCancelled(true);
+		}
+	}
+
+	// 看板設置
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onSignChange(final SignChangeEvent event){
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
+		BlockState state = event.getBlock().getState();
+
+		if (state instanceof Sign){
+			Sign sign = (Sign)state;
+
+			/* ヒール看板設置 */
+			if(event.getLine(0).trim().equalsIgnoreCase("[FlagHeal]")){
+				event.setLine(0, "&6[FlagHeal]");
+			}
 		}
 	}
 

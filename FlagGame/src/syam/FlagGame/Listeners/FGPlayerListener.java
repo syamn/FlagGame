@@ -150,7 +150,7 @@ public class FGPlayerListener implements Listener{
 				}else{
 					// 設定あり
 					event.setRespawnLocation(loc);
-					Actions.message(null, player, msgPrefix+ "&6このゲームはあと "+game.getRemainTime()+"秒 残っています！");
+					Actions.message(null, player, msgPrefix+ "&6このゲームはあと "+Actions.getTimeString(game.getRemainTime())+" 残っています！");
 				}
 				return; // 複数ゲーム所属はあり得ないのでここで返す
 			}

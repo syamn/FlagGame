@@ -20,6 +20,9 @@ permissions:
     flag.admin:
         default: op
         description: Allow all of administer commands
+    flag.admin.sign:
+        default: op
+        description: Allow place FlagGame sign
     flag.ignoreWorldProtect:
         default: op
         description: Allow Break/Place protected game-world

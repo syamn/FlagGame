@@ -63,8 +63,8 @@ public class Actions {
 			message = message
 					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
 					.replaceAll("%version", FlagGame.getInstance().getDescription().getVersion());
-			debug(message);//debug
-			//Bukkit.broadcastMessage(message);
+			//debug(message);//debug
+			Bukkit.broadcastMessage(message);
 		}
 	}
 	/**
