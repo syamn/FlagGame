@@ -80,7 +80,7 @@ public class InfoCommand extends BaseCommand {
 			else players = "&7参加プレイヤーなし";
 
 			String s1 = "&6 "+game.getName()+"&7("+game.getFileName()+")"+"&b: 状態=&f"+status+"&b 制限時間=&6"+Actions.getTimeString(game.getGameTime())+"&b フラッグ数=&6"+game.getFlags().size();
-			String s2 = "&b チーム毎人数制限=&6"+game.getTeamPlayerLimit()+"&b 赤チームスポーン="+chksp_red+"&b 青チームスポーン="+chksp_blue;
+			String s2 = "&b チーム毎人数制限=&6"+game.getTeamLimit()+"&b 赤チームスポーン="+chksp_red+"&b 青チームスポーン="+chksp_blue;
 			String s3 = "&b プレイヤーリスト&7("+cnt_players+"人)&b: "+players;
 
 			// メッセージ送信

@@ -59,8 +59,8 @@ public class SetoptionCommand extends BaseCommand {
 						return true;
 					}
 
-					if (num < 0){
-						Actions.message(sender, null, "&c負の値を制限時間に使うことはできません！");
+					if (num <= 0){
+						Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
 						return true;
 					}
 
@@ -72,20 +72,20 @@ public class SetoptionCommand extends BaseCommand {
 				case TEAMLIMIT:
 					int cnt = 8; // デフォルト8人
 					try{
-						num = Integer.parseInt(args.get(1));
+						cnt = Integer.parseInt(args.get(1));
 					}catch(NumberFormatException ex){
 						Actions.message(sender, null, "&cオプションの値が整数ではありません！");
 						return true;
 					}
 
-					if (cnt < 0){
-						Actions.message(sender, null, "&c負の値を上限に使うことはできません！");
+					if (cnt <= 0){
+						Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
 						return true;
 					}
 
 					game.setTeamLimit(cnt);
 
-					Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+num+"人に設定されました！");
+					Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 					break;
 				default:
 					Actions.message(sender, null, "&cSorry, this option is non available. Please report this issue.");

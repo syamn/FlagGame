@@ -40,7 +40,7 @@ public class JoinCommand extends BaseCommand {
 		}
 
 		// 人数チェック
-		int limit = game.getTeamPlayerLimit();
+		int limit = game.getTeamLimit();
 		if ((game.getPlayersSet(GameTeam.RED).size() >= limit) && (game.getPlayersSet(GameTeam.BLUE).size() >= limit)){
 			Actions.message(null, player, "&cこのゲームは参加可能な定員に達しています！");
 			return true;

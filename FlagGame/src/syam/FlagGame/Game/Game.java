@@ -628,13 +628,7 @@ public class Game {
 	public String getName(){
 		return gameName;
 	}
-	/**
-	 * チームごとのプレイヤー数上限を返す
-	 * @return teamPlayerLimit
-	 */
-	public int getTeamPlayerLimit(){
-		return teamPlayerLimit;
-	}
+
 	/**
 	 * 開始待機中かどうか返す
 	 * @return
