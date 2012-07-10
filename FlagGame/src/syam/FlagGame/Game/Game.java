@@ -43,6 +43,8 @@ public class Game {
 	private boolean started = false; // 開始状態フラグ
 
 	private int award = 1000; // 賞金
+	private int entryFee = 100; // エントリー料
+
 
 	// フラッグ・チェストデータ
 	//private ArrayList<Flag> flags = new ArrayList<Flag>();
@@ -126,8 +128,17 @@ public class Game {
 		// 待機
 		ready = true;
 
+		// 賞金系メッセージ
+		String entryFeeMsg = String.valueOf(entryFee) + "Coin";
+		String awardMsg = String.valueOf(award) +"Coin";
+		if (entryFee <= 0)
+			entryFeeMsg = "&7FREE!";
+		if (award <= 0)
+			awardMsg = "&7なし";
+
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'の参加受付が開始されました！");
+		Actions.broadcastMessage(msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
 		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+getName()+"&2' コマンドで参加してください！");
 	}
 	/**
@@ -820,5 +831,21 @@ public class Game {
 	 */
 	public int getAward(){
 		return award;
+	}
+
+	/**
+	 * 参加料を設定する
+	 * @param entryFee 参加料
+	 */
+	public void setEntryFee(int entryFee){
+		if (entryFee < 0) entryFee = 0;
+		this.entryFee = entryFee;
+	}
+	/**
+	 * 参加料を取得する
+	 * @return 参加料
+	 */
+	public int getEntryFee(){
+		return entryFee;
 	}
 }

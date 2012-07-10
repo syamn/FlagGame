@@ -105,6 +105,25 @@ public class SetoptionCommand extends BaseCommand {
 
 					Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 					break;
+				// 参加料
+				case ENTRYFEE:
+					int entryfee = 100; // デフォルト100コイン
+					try{
+						entryfee = Integer.parseInt(args.get(1));
+					}catch(NumberFormatException ex){
+						Actions.message(sender, null, "&cオプションの値が整数ではありません！");
+						return true;
+					}
+					if (entryfee < 0){
+						Actions.message(sender, null, "&c値が不正です！負数は指定できません！");
+						return true;
+					}
+
+					game.setEntryFee(entryfee);
+
+					Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
+					break;
+				// デフォルト - 例外
 				default:
 					Actions.message(sender, null, "&cSorry, this option is non available. Please report this issue.");
 					break;
@@ -138,6 +157,7 @@ public class SetoptionCommand extends BaseCommand {
 		GAMETIME ("ゲームの制限時間(秒)"),
 		TEAMLIMIT ("チーム毎の人数制限"),
 		AWARD ("勝利チームへの賞金"),
+		ENTRYFEE ("参加料"),
 		;
 
 		String description;
