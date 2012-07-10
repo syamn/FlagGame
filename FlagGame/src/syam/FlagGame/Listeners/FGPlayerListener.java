@@ -121,8 +121,9 @@ public class FGPlayerListener implements Listener{
 				}
 				return;
 			}
+
 			// 看板を右クリックした
-			else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){
 				Sign sign = (Sign) block.getState();
 				// 1行目チェック
 				if (sign.getLine(0).equals("§a[FlagGame]")){
@@ -137,7 +138,6 @@ public class FGPlayerListener implements Listener{
 	public void onPlayerOpen(final PlayerInteractEvent event){
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		Location loc = block.getLocation();
 
 		// ゲーム用ワールドでなければ返す
 		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
@@ -163,8 +163,7 @@ public class FGPlayerListener implements Listener{
 			// ブロックを右クリックした
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK){
 				// ブロックがコンテナ関係か看板関係
-				if (type == Material.CHEST || type == Material.FURNACE || type == Material.DISPENSER || type == Material.JUKEBOX
-						|| type == Material.SIGN || type == Material.WALL_SIGN){
+				if (type == Material.CHEST || type == Material.FURNACE || type == Material.DISPENSER || type == Material.JUKEBOX){
 					// 使用可能かチェック
 					if (!canUseBlock(player, block)){
 						event.setUseInteractedBlock(Result.DENY);
