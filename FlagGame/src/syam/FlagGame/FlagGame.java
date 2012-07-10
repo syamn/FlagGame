@@ -16,6 +16,7 @@ import syam.FlagGame.Command.BaseCommand;
 import syam.FlagGame.Command.CreateCommand;
 import syam.FlagGame.Command.DeleteCommand;
 import syam.FlagGame.Command.HelpCommand;
+import syam.FlagGame.Command.InfoCommand;
 import syam.FlagGame.Command.JoinCommand;
 import syam.FlagGame.Command.ReadyCommand;
 import syam.FlagGame.Command.ReloadCommand;
@@ -159,6 +160,7 @@ public class FlagGame extends JavaPlugin{
 	private void registerCommands(){
 		// Intro Commands
 		commands.add(new HelpCommand());
+		commands.add(new InfoCommand());
 		commands.add(new JoinCommand());
 
 		// Start Commands

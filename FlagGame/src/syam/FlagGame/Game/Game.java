@@ -649,4 +649,12 @@ public class Game {
 	public boolean isStarting(){
 		return started;
 	}
+
+	/**
+	 * このゲームの制限時間(秒)を返す
+	 * @return
+	 */
+	public int getGameTime(){
+		return gameTimeInSeconds;
+	}
 }

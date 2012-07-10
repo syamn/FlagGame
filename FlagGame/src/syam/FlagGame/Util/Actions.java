@@ -199,7 +199,6 @@ public class Actions {
 		else
 			return getTopBlock(upBlock);
 	}
-
 	/**
 	 * 周囲の保護看板ブロックを返す
 	 * @param block 対象ブロック
@@ -220,7 +219,6 @@ public class Actions {
 
 		return sign;
 	}
-
 	/**
 	 * そのブロックが保護看板か返す
 	 * @param signBlock 対象ブロック
@@ -257,6 +255,26 @@ public class Actions {
 			return false;
 	}
 
+	/**
+	 * 引数の秒を読みやすい形式の文字列に変換して返す
+	 * @param sec 正の秒数
+	 * @return 変換後の文字列
+	 */
+	public static String getTimeString(int sec){
+		// 負数は許容しない
+		if (sec < 0) return "0秒";
+
+		// 60秒以下はそのまま返す
+		if (sec < 60) return sec + "秒";
+
+		// 60秒で割り切れれば分だけを返す
+		if (sec % 60 == 0) return sec / 60 + "分";
+
+		// 当て嵌まらなければ n分n秒 で返す
+		int m = sec / 60; // 小数点以下は切られるのでこれで問題ないはず..
+		int s = sec % 60;
+		return m + "分" + s + "秒";
+	}
 	/****************************************/
 	/* ログ操作系 */
 	/****************************************/
