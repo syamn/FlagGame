@@ -18,6 +18,18 @@ public class SelectGameCommand extends BaseCommand {
 			// flag game (ゲーム名) - 選択
 			Game game = plugin.getGame(args.get(0));
 			if (game != null){
+				if (GameManager.getSelectedGame(player) != null){
+					if (GameManager.getSelectedGame(player) != game){
+						if (GameManager.isFlagManager(player)){
+							GameManager.setFlagManager(player, false);
+							Actions.message(null, player, "&aフラッグ管理モードを終了しました！");
+						}
+						if (GameManager.isChestManager(player)){
+							GameManager.setChestManager(player, false);
+							Actions.message(null, player, "&aチェスト管理モードを終了しました！");
+						}
+					}
+				}
 				GameManager.setSelectedGame(player, game);
 				Actions.message(null, player, "&aゲーム'"+game.getName()+"'を選択しました！");
 			}else{
@@ -28,6 +40,14 @@ public class SelectGameCommand extends BaseCommand {
 			// flagadmin game - 選択解除
 			if (GameManager.getSelectedGame(player) != null){
 				GameManager.setSelectedGame(player, null);
+			}
+			if (GameManager.isFlagManager(player)){
+				GameManager.setFlagManager(player, false);
+				Actions.message(null, player, "&aフラッグ管理モードを終了しました！");
+			}
+			if (GameManager.isChestManager(player)){
+				GameManager.setChestManager(player, false);
+				Actions.message(null, player, "&aチェスト管理モードを終了しました！");
 			}
 			Actions.message(null, player, "&aゲームの選択を解除しました！");
 		}

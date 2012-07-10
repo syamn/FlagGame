@@ -4,13 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -44,6 +47,7 @@ public class GameFileManager {
 			List<String> flagList = convertFlagMapToList(game.getFlags());
 			List<String> spawnList = convertSpawnMapToList(game.getSpawns());
 			List<String> baseList = convertBaseMapToList(game.getBases());
+			List<String> chestList = convertChestMapToList(game.getChests());
 
 			// 保存するデータをここに
 			confFile.set("GameName", game.getName());
@@ -52,6 +56,7 @@ public class GameFileManager {
 			confFile.set("Spawns", spawnList);
 			confFile.set("Flags", flagList);
 			confFile.set("Bases", baseList);
+			confFile.set("Chests", chestList);
 
 			try {
 				confFile.save(file);
@@ -96,6 +101,7 @@ public class GameFileManager {
 				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
 				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game)); // フラッグ
 				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点
+				game.setChests(convertChestListToMap(confFile.getStringList("Chests"))); // チェスト
 
 				log.info(logPrefix+ "Loaded Game: "+file.getName()+" ("+name+")");
 
@@ -282,6 +288,8 @@ public class GameFileManager {
 		String[] pos1;
 		String[] pos2;
 
+		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+
 		int line = 0;
 		for (String s : bases){
 			line++;
@@ -318,8 +326,6 @@ public class GameFileManager {
 				continue;
 			}
 
-			World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
-
 			ret.put(team, new Cuboid(
 					new Location(world, Double.parseDouble(pos1[0]), Double.parseDouble(pos1[1]), Double.parseDouble(pos1[2])),
 					new Location(world, Double.parseDouble(pos2[0]), Double.parseDouble(pos2[1]), Double.parseDouble(pos2[2]))
@@ -329,4 +335,42 @@ public class GameFileManager {
 		return ret;
 	}
 
+	/* チェストデータを変換 */
+	private List<String> convertChestMapToList(Set<Location> chests){
+		List<String> ret = new ArrayList<String>();
+		ret.clear();
+
+		for (Location loc : chests){
+			// x,y,z
+			String s = loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ();
+
+			// リストに追加
+			ret.add(s);
+		}
+
+		return ret;
+	}
+	private Set<Location> convertChestListToMap(List<String> chests){
+		Set<Location> ret = new HashSet<Location>();
+		ret.clear();
+
+		String[] coord;
+
+		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+
+		int line = 0;
+		for (String s : chests){
+			line++;
+			// 座標形式チェック
+			coord = s.split(",");
+			if (coord.length != 3){
+				log.warning(logPrefix+ "Skipping ChestLine "+line+": incorrect coord format (,)");
+				continue;
+			}
+
+			ret.add(new Location(world, Double.parseDouble(coord[0]), Double.parseDouble(coord[1]), Double.parseDouble(coord[2])));
+		}
+
+		return ret;
+	}
 }

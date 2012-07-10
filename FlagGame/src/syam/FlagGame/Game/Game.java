@@ -8,9 +8,13 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagState;
@@ -38,9 +42,11 @@ public class Game {
 	private boolean ready = false; // 待機状態フラグ
 	private boolean started = false; // 開始状態フラグ
 
-	// フラッグデータ
-	private Map<Location, Flag> flags = new HashMap<Location, Flag>();
+	// フラッグ・チェストデータ
 	//private ArrayList<Flag> flags = new ArrayList<Flag>();
+	private Map<Location, Flag> flags = new HashMap<Location, Flag>();
+	//private Map<Location, Block> chests = new HashMap<Location, Block>();
+	private Set<Location> chests = new HashSet<Location>();
 
 	// 参加プレイヤー
 	// 7/7 Map<GameTeam, Set<Player>> → Map<GameTeam, Set<String>> に変更
@@ -149,8 +155,9 @@ public class Game {
 			return;
 		}
 
-		// フラッグブロックをロールバックする
+		// フラッグブロックとチェストをロールバックする
 		rollbackFlags();
+		rollbackChests();
 
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
@@ -255,6 +262,10 @@ public class Game {
 		init();
 	}
 
+	/**
+	 * すべてのフラッグの状態をチェックする
+	 * @return Map<FlagState, HashMap<FlagType, Integer>>
+	 */
 	private Map<FlagState, HashMap<FlagType, Integer>> checkFlag(){
 		// 各チームのポイントを格納する
 		Map<FlagState, HashMap<FlagType, Integer>> ret = new HashMap<FlagState, HashMap<FlagType, Integer>>();
@@ -584,6 +595,80 @@ public class Game {
 		return count;
 	}
 
+
+	/* ***** チェスト関係 ***** */
+
+	/**
+	 * チェストを設定する
+	 * @param loc チェストの座標
+	 */
+	public void setChest(Location loc){
+		chests.add(loc);
+	}
+	/**
+	 * チェストブロックを返す
+	 * @param loc 調べるブロックの座標
+	 * @return GameTeam または存在しない場合 null
+	 */
+	public Block getChest(Location loc){
+		if (chests.contains(loc)){
+			return loc.getBlock();
+		}else{
+			return null;
+		}
+	}
+	/**
+	 * チェストブロックを削除する
+	 * @param loc 削除するチェストのブロック座標
+	 */
+	public void removeChest(Location loc){
+		chests.remove(loc);
+	}
+	/**
+	 * チェストブロックマップを一括取得する
+	 * @return チェストブロックマップ Map<Location, Block>
+	 */
+	public Set<Location> getChests(){
+		return chests;
+	}
+	/**
+	 * チェストブロックマップを一括設定する
+	 * @param chests 設定する元のLocation, Blockマップ
+	 */
+	public void setChests(Set<Location> chests){
+		this.chests.clear();
+		this.chests.addAll(chests);
+	}
+
+	/**
+	 * コンテナブロックを2ブロック下の同じコンテナから要素をコピーする
+	 */
+	public void rollbackChests(){
+		for (Location loc : chests){
+			Block toBlock = loc.getBlock();
+			Block fromBlock = toBlock.getRelative(BlockFace.DOWN, 2);
+
+			// 対象ブロックがコンテナブロックかチェック チェスト、かまど、ディスペンサーじゃなければ何もしない
+			/*if (toBlock.getType() != Material.CHEST && toBlock.getType() != Material.FURNACE && toBlock.getType() != Material.DISPENSER){
+				return;
+			}*/
+
+			// インベントリインターフェースを持たないブロックは返す
+			if (!(toBlock.getState() instanceof InventoryHolder)){
+				return;
+			}
+			// 2ブロック下とブロックIDが違えば何もしない
+			if (toBlock.getTypeId() != toBlock.getTypeId()){
+				return;
+			}
+
+			InventoryHolder toContainer = (InventoryHolder) toBlock.getState();
+			InventoryHolder fromContainer = (InventoryHolder) fromBlock.getState();
+
+			ItemStack[] is = fromContainer.getInventory().getContents();
+			toContainer.getInventory().setContents(is);
+		}
+	}
 
 	/* ***** スポーン地点関係 ***** */
 
