@@ -53,6 +53,7 @@ public class GameFileManager {
 			confFile.set("GameName", game.getName());
 			confFile.set("GameTime", game.getGameTime());
 			confFile.set("TeamLimit", game.getTeamLimit());
+			confFile.set("Award", game.getAward());
 			confFile.set("Spawns", spawnList);
 			confFile.set("Flags", flagList);
 			confFile.set("Bases", baseList);
@@ -98,6 +99,7 @@ public class GameFileManager {
 				// 各設定やマップを追加
 				game.setGameTime(confFile.getInt("GameTime", 60 * 10));
 				game.setTeamLimit(confFile.getInt("TeamLimit", 8));
+				game.setAward(confFile.getInt("Award", 1000));
 				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
 				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game)); // フラッグ
 				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点

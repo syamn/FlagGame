@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import syam.FlagGame.Command.BaseCommand;
@@ -91,6 +95,8 @@ public class FlagGame extends JavaPlugin{
 
 	// Hookup plugins
 	public boolean usingDeathNotifier = false;
+	public static Vault vault = null;
+	public static Economy economy = null;
 
 	/**
 	 * プラグイン起動処理
@@ -108,7 +114,18 @@ public class FlagGame extends JavaPlugin{
 			ex.printStackTrace();
 		}
 
-		// 設定内でプラグインを無効にした場合進まないようにする
+		// プラグインフック
+		// Vault
+		setupVault();
+		// DeathNotifier
+		Plugin p = pm.getPlugin("DeathNotifier");
+		if (p != null){
+			pm.registerEvents(dnListener, this); // Regist Listener
+			usingDeathNotifier = true; //フラグ
+			log.info(logPrefix+ "Hooked to DeathNotifier!");
+		}
+
+		// プラグインを無効にした場合進まないようにする
 		if (!pm.isPluginEnabled(this)){
 			return;
 		}
@@ -117,15 +134,6 @@ public class FlagGame extends JavaPlugin{
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(entityListener, this);
-
-		// プラグインフック
-		// DeathNotifier
-		Plugin p = pm.getPlugin("DeathNotifier");
-		if (p != null){
-			pm.registerEvents(dnListener, this); // Regist Listener
-			usingDeathNotifier = true; //フラグ
-			log.info(logPrefix+ "Hooked to DeathNotifier!");
-		}
 
 		// コマンド登録
 		registerCommands();
@@ -154,6 +162,38 @@ public class FlagGame extends JavaPlugin{
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is disabled!");
+	}
+
+	/**
+	 * Vaultプラグインにフック
+	 */
+	private void setupVault(){
+		Plugin plugin = this.getServer().getPluginManager().getPlugin("Vault");
+		if(plugin != null & plugin instanceof Vault) {
+			RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+			// 経済概念のプラグインがロードされているかチェック
+			if(economyProvider==null){
+	        	log.warning(logPrefix+"Economy plugin not Fount. Disabling plugin.");
+		        getPluginLoader().disablePlugin(this);
+		        return;
+			}
+
+			try{
+				vault = (Vault) plugin;
+				economy = economyProvider.getProvider();
+			} // 例外チェック
+			catch(Exception e){
+				log.warning(logPrefix+"Could NOT be hook to Vault. Disabling plugin.");
+		        getPluginLoader().disablePlugin(this);
+		        return;
+			}
+			log.info(logPrefix+"Hooked to Vault!");
+		} else {
+			// Vaultが見つからなかった
+	        log.warning(logPrefix+"Vault was NOT found! Disabling plugin.");
+	        getPluginLoader().disablePlugin(this);
+	        return;
+	    }
 	}
 
 	/**

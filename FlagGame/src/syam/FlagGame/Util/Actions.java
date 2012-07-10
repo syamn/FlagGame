@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -275,6 +277,51 @@ public class Actions {
 		int s = sec % 60;
 		return m + "分" + s + "秒";
 	}
+
+
+	/****************************************/
+	// 所持金操作系関数 - Vault
+	/****************************************/
+	/**
+	 * 指定したユーザーにお金を加える
+	 * @param name ユーザー名
+	 * @param amount 金額
+	 * @return 成功ならtrue、失敗ならfalse
+	 */
+	public static boolean addMoney(String name, double amount){
+		if (amount < 0) return false; // 負数は許容しない
+		EconomyResponse r = FlagGame.economy.depositPlayer(name, amount);
+		if(r.transactionSuccess()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * 指定したユーザーからお金を引く
+	 * @param name ユーザー名
+	 * @param amount 金額
+	 * @return 成功ならtrue、失敗ならfalse
+	 */
+	public static boolean takeMoney(String name, double amount){
+		if (amount < 0) return false; // 負数は許容しない
+		EconomyResponse r = FlagGame.economy.withdrawPlayer(name, amount);
+		if(r.transactionSuccess()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * 指定したユーザーがお金を持っているか
+	 * @param name ユーザー名
+	 * @param amount 金額
+	 * @return 持っていればtrue、無ければfalse
+	 */
+	public static boolean checkMoney(String name, double amount){
+		return (FlagGame.economy.has(name, amount));
+	}
+
 	/****************************************/
 	/* ログ操作系 */
 	/****************************************/

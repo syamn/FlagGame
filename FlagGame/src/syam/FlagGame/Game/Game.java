@@ -42,6 +42,8 @@ public class Game {
 	private boolean ready = false; // 待機状態フラグ
 	private boolean started = false; // 開始状態フラグ
 
+	private int award = 1000; // 賞金
+
 	// フラッグ・チェストデータ
 	//private ArrayList<Flag> flags = new ArrayList<Flag>();
 	private Map<Location, Flag> flags = new HashMap<Location, Flag>();
@@ -168,7 +170,7 @@ public class Game {
 
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
-		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
+		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+Actions.getTimeString(gameTimeInSeconds)+"&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
 
 		// 全プレイヤーを回す
 		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
@@ -251,10 +253,26 @@ public class Game {
 			Actions.broadcastMessage("&b青チーム得点: &6"+blueP+"&b点&f ("+blueS+"&f)");
 		if (noneS != "")
 			Actions.broadcastMessage("&7無効フラッグ: &6"+noneP+"&7点&f ("+noneS+"&f)");
-		if (winTeam != null)
+		if (winTeam != null){
 			Actions.broadcastMessage(msgPrefix+winTeam.getColor()+winTeam.getTeamName()+"チーム の勝利です！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
-		else
+		}else{
 			Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けです！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
+		}
+
+		// 賞金支払い
+		if (winTeam != null && award > 0){
+			for (String name : playersMap.get(winTeam)){
+				Player player = Bukkit.getPlayer(name);
+				if (player != null && player.isOnline()){
+					// 入金
+					if (Actions.addMoney(name, award)){
+						Actions.message(null, player, "&aおめでとうございます！賞金として "+award+"Coin を得ました！");
+					}else{
+						Actions.message(null, player, "&c報酬受け取りにエラーが発生しました。管理人までご連絡ください。");
+					}
+				}
+			}
+		}
 
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();
@@ -786,5 +804,21 @@ public class Game {
 	 */
 	public int getTeamLimit(){
 		return teamPlayerLimit;
+	}
+
+	/**
+	 * 賞金を設定する
+	 * @param award 賞金
+	 */
+	public void setAward(int award){
+		if (award < 0) award = 0;
+		this.award = award;
+	}
+	/**
+	 * 賞金を取得する
+	 * @return 賞金
+	 */
+	public int getAward(){
+		return award;
 	}
 }
