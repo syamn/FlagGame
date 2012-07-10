@@ -28,8 +28,8 @@ public class Game {
 	/* ***** ゲームデータ ***** */
 	private String fileName; // ゲームデータのファイル名
 	private String gameName; // ゲーム名
-	private int teamPlayerLimit = 2; // 各チームの最大プレイヤー数
-	private int gameTimeInSeconds = 61; // 1ゲームの制限時間
+	private int teamPlayerLimit = 8; // 各チームの最大プレイヤー数
+	private int gameTimeInSeconds = 600; // 1ゲームの制限時間
 	private int remainSec = gameTimeInSeconds; // 1ゲームの制限時間
 	private int timerThreadID = -1; // タイマータスクのID
 	private boolean ready = false; // 待機状態フラグ
@@ -651,10 +651,37 @@ public class Game {
 	}
 
 	/**
+	 * このゲームの制限時間(秒)を設定する
+	 * @param sec 制限時間(秒)
+	 */
+	public void setGameTime(int sec){
+		// もしゲーム開始中なら何もしない
+		if (!started){
+			cancelTimerTask(); // しなくてもいいかな…？
+			gameTimeInSeconds = sec;
+			remainSec = gameTimeInSeconds;
+		}
+	}
+	/**
 	 * このゲームの制限時間(秒)を返す
 	 * @return
 	 */
 	public int getGameTime(){
 		return gameTimeInSeconds;
+	}
+
+	/**
+	 * チーム毎の人数上限を設定する
+	 * @param limit チーム毎の人数上限
+	 */
+	public void setTeamLimit(int limit){
+		this.teamPlayerLimit = limit;
+	}
+	/**
+	 * チーム毎の人数上限を取得
+	 * @return チーム毎の人数上限
+	 */
+	public int getTeamLimit(){
+		return teamPlayerLimit;
 	}
 }

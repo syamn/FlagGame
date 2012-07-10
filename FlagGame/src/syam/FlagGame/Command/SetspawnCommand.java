@@ -18,7 +18,7 @@ public class SetspawnCommand extends BaseCommand{
 		// ゲーム取得
 		Game game = GameManager.getSelectedGame(player);
 		if (game == null){
-			Actions.message(null, player, "&c先に編集するゲームを選択してください");
+			Actions.message(null, player, "&c先に編集するゲームを選択してください！");
 			return true;
 		}
 
