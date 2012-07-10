@@ -53,7 +53,7 @@ public class FGPlayerListener implements Listener{
 		Block block = event.getClickedBlock();
 
 		if(block != null){
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isManager(player)){
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isFlagManager(player)){
 				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
 					/* 管理モードで特定のアイテムを持ったままブロックを右クリックした */
 					Game game = GameManager.getSelectedGame(player);

@@ -28,7 +28,8 @@ public class GameManager {
 	private static Map<String, Location> selectedBlock = new HashMap<String, Location>();
 
 	// ゲームマネージャモードのリスト
-	private static List<String> fgManager = new ArrayList<String>();
+	private static List<String> fgFlagManager = new ArrayList<String>();
+	private static List<String> fgChestManager = new ArrayList<String>();
 
 	/* getter/setter */
 
@@ -75,27 +76,53 @@ public class GameManager {
 	}
 
 	/**
-	 * プレイヤーをマネージモードにする/しない
+	 * プレイヤーをフラッグマネージモードにする/しない
 	 * @param player 対象のプレイヤー
 	 * @param state true = 管理モードにする/false = しない
 	 */
-	public static void setManager(Player player, boolean state){
+	public static void setFlagManager(Player player, boolean state){
 		if (state){
-			if (!fgManager.contains(player.getName()))
-				fgManager.add(player.getName());
+			if (!fgFlagManager.contains(player.getName()))
+				fgFlagManager.add(player.getName());
 		}else{
-			if (fgManager.contains(player.getName()))
-				fgManager.remove(player.getName());
+			if (fgFlagManager.contains(player.getName()))
+				fgFlagManager.remove(player.getName());
 		}
-
 	}
 	/**
 	 * プレイヤーがゲームマネージモードかどうか返す
 	 * @param player チェックするプレイヤー
 	 * @return trueなら管理モード、falseなら管理モードでない
 	 */
-	public static boolean isManager(Player player){
-		if(player != null && fgManager.contains(player.getName())){
+	public static boolean isFlagManager(Player player){
+		if(player != null && fgFlagManager.contains(player.getName())){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	/**
+	 * プレイヤーをチェストマネージモードにする/しない
+	 * @param player 対象のプレイヤー
+	 * @param state true = 管理モードにする/false = しない
+	 */
+	public static void setChestManager(Player player, boolean state){
+		if (state){
+			if (!fgChestManager.contains(player.getName()))
+				fgChestManager.add(player.getName());
+		}else{
+			if (fgChestManager.contains(player.getName()))
+				fgChestManager.remove(player.getName());
+		}
+	}
+	/**
+	 * プレイヤーがチェストマネージモードかどうか返す
+	 * @param player チェックするプレイヤー
+	 * @return trueなら管理モード、falseなら管理モードでない
+	 */
+	public static boolean isChestManager(Player player){
+		if(player != null && fgChestManager.contains(player.getName())){
 			return true;
 		}else{
 			return false;

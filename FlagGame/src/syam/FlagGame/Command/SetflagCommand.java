@@ -21,14 +21,18 @@ public class SetflagCommand extends BaseCommand {
 	public boolean execute() {
 		// 引数なしの場合はフラッグ管理モードの切り替えを行う
 		if (args.size() == 0){
-			if (GameManager.isManager(player)){
+			if (GameManager.isFlagManager(player)){
 				// フラッグ管理モード終了
-				GameManager.setManager(player, false);
+				GameManager.setFlagManager(player, false);
 				GameManager.setSelectedBlock(player, null);
 				Actions.message(null, player, "&aフラッグ管理モードを終了しました。");
 			}else{
+				if (GameManager.isChestManager(player)){
+					Actions.message(null, player, "&aチェスト管理モードを終了します。");
+					GameManager.setChestManager(player, false);
+				}
 				// フラッグ管理モード開始
-				GameManager.setManager(player, true);
+				GameManager.setFlagManager(player, true);
 				String tool = Material.getMaterial(plugin.getConfigs().toolID).name();
 				Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
 			}

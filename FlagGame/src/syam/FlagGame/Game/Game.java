@@ -162,6 +162,27 @@ public class Game {
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
 		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+gameTimeInSeconds+"&a秒&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
+
+		// 全プレイヤーを回す
+		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
+			GameTeam team = entry.getKey();
+			for (String name : entry.getValue()){
+				Player player = Bukkit.getPlayer(name);
+				// アイテムクリア
+				player.getInventory().clear();
+				player.getInventory().setHelmet(null);
+				player.getInventory().setChestplate(null);
+				player.getInventory().setLeggings(null);
+				player.getInventory().setBoots(null);
+
+				// 回復させる
+				player.setHealth(20);
+				player.setFoodLevel(20);
+
+				// メッセージ通知
+				Actions.message(null, player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
+			}
+		}
 	}
 	/**
 	 * タイマー終了によって呼ばれるゲーム終了処理
