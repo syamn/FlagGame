@@ -2,9 +2,9 @@ package syam.FlagGame.Command;
 
 import org.bukkit.Location;
 
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
-import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
 
 public class TpCommand extends BaseCommand{

@@ -13,8 +13,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
 
 public class FGEntityListener implements Listener{

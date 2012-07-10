@@ -26,9 +26,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
-import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 

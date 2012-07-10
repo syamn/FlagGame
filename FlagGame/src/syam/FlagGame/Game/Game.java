@@ -13,6 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.FlagState;
+import syam.FlagGame.Enum.FlagType;
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 

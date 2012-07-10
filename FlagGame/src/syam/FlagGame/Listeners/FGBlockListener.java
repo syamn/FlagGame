@@ -20,9 +20,9 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
 
 public class FGBlockListener implements Listener{
@@ -186,8 +186,14 @@ public class FGBlockListener implements Listener{
 			Sign sign = (Sign)state;
 
 			/* ヒール看板設置 */
-			if(event.getLine(0).trim().equalsIgnoreCase("[FlagHeal]")){
-				event.setLine(0, "&6[FlagHeal]");
+			if(event.getLine(0).trim().toLowerCase().endsWith("[FlagHeal]")){
+				// 権限チェック
+				if (!player.hasPermission("flag.admin.sign")){
+					event.setLine(0, "Denied!");
+					Actions.message(null, player, "&cYou don't have permission to do this!");
+					return;
+				}
+				//event.setLine(0, "&)
 			}
 		}
 	}

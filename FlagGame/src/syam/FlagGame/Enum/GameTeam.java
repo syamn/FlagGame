@@ -1,4 +1,5 @@
-package syam.FlagGame.Game;
+package syam.FlagGame.Enum;
+
 
 /**
  * ゲームを行うためのチーム

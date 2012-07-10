@@ -3,8 +3,8 @@ package syam.FlagGame.Command;
 import java.util.Map;
 import java.util.Set;
 
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
 
 public class InfoCommand extends BaseCommand {

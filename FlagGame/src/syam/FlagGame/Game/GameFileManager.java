@@ -15,6 +15,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.FlagType;
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Util.Cuboid;
 
 public class GameFileManager {

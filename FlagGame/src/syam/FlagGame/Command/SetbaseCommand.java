@@ -3,9 +3,9 @@ package syam.FlagGame.Command;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
-import syam.FlagGame.Game.GameTeam;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.WorldEditHandler;
 

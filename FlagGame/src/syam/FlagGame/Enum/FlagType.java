@@ -1,4 +1,4 @@
-package syam.FlagGame.Game;
+package syam.FlagGame.Enum;
 
 public enum FlagType {
 	NORMAL (0, "ノーマル", "&7"), // ノーマルフラッグ

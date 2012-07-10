@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.FlagType;
 
 public class Flag {
 	// Logger

@@ -1,4 +1,5 @@
-package syam.FlagGame.Game;
+package syam.FlagGame.Enum;
+
 
 /**
  * フラッグの現在状態を表すクラス
