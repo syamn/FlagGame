@@ -81,9 +81,9 @@ public class Actions {
 					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
 					.replaceAll("%version", FlagGame.getInstance().getDescription().getVersion());
 			for(Player player: world.getPlayers()){
-				log.info("[Worldcast]["+world.getName()+"]: " + message);
 				player.sendMessage(message);
 			}
+			log.info("[Worldcast]["+world.getName()+"]: " + message);
 		}
 	}
 	/**

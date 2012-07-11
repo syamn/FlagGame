@@ -218,7 +218,9 @@ public class FGPlayerListener implements Listener{
 			// チームに所属していてこの設定が有効なら、アナウンスしてHPをゼロにする
 			if (team != null && plugin.getConfigs().deathWhenLogout){
 				player.setHealth(0);
-				game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+				//game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),
+						msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
 				game.log(" Player "+player.getName()+" Died because Logged out!");
 			}
 		}
@@ -309,8 +311,11 @@ public class FGPlayerListener implements Listener{
 			// 同じチームの場合そのゲームに
 			if (dTeam != null && aTeam != null){
 				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
-				for (Player player : Bukkit.getOnlinePlayers())
-					Actions.message(null, player, deathMsg);
+
+				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),deathMsg);
+
+				//for (Player player : Bukkit.getOnlinePlayers())
+				//	Actions.message(null, player, deathMsg);
 
 				//Actions.broadcastMessage(deathMsg); // 死亡したプレイヤーには送信されない？
 				//game.message(deathMsg); ブロードキャストがうるさそうならこっちでゲーム参加者にだけキャスト

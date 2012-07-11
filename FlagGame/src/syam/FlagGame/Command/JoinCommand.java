@@ -20,6 +20,11 @@ public class JoinCommand extends BaseCommand {
 			return true;
 		}
 
+		if (game.isStarting()){
+			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は既に始まっています！");
+			return true;
+		}
+
 		if (!game.isReady()){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は現在参加受付中ではありません");
 			return true;

@@ -26,6 +26,9 @@ DisableCommands:
 - /sethome
 - /warp
 - /tp
+- /pot
+- /flymode
+- /fm
 
 #====================#
 #   Logging Config   #

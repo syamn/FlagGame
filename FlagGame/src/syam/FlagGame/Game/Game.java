@@ -17,6 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagState;
@@ -197,7 +198,7 @@ public class Game {
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
 		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+Actions.getTimeString(gameTimeInSeconds)+"&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
 
-		// 全プレイヤーを回す
+		// 試合に参加する全プレイヤーを回す
 		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
 			GameTeam team = entry.getKey();
 			for (String name : entry.getValue()){
@@ -212,6 +213,20 @@ public class Game {
 				// 回復させる
 				player.setHealth(20);
 				player.setFoodLevel(20);
+
+				// 効果のあるポーションをすべて消す
+				if (player.hasPotionEffect(PotionEffectType.JUMP))
+					player.removePotionEffect(PotionEffectType.JUMP);
+				if (player.hasPotionEffect(PotionEffectType.SPEED))
+					player.removePotionEffect(PotionEffectType.SPEED);
+				if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE))
+					player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+				if (player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
+					player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+				if (player.hasPotionEffect(PotionEffectType.BLINDNESS))
+					player.removePotionEffect(PotionEffectType.BLINDNESS);
+				if (player.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE))
+					player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
 
 				// メッセージ通知
 				Actions.message(null, player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
@@ -334,6 +349,19 @@ public class Game {
 
 		// ログの終わり
 		GameID = null;
+
+		// 参加プレイヤーをスポーン地点に移動させる
+		tpSpawnLocation();
+
+		// 同じワールドにいる人のアイテムクリア
+		for (Player player : Bukkit.getWorld(plugin.getConfigs().gameWorld).getPlayers()){
+			// アイテムクリア
+			player.getInventory().clear();
+			player.getInventory().setHelmet(null);
+			player.getInventory().setChestplate(null);
+			player.getInventory().setLeggings(null);
+			player.getInventory().setBoots(null);
+		}
 
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();

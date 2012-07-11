@@ -80,7 +80,7 @@ public class InfoCommand extends BaseCommand {
 			else players = "&7参加プレイヤーなし";
 
 			String s1 = "&6 "+game.getName()+"&7("+game.getFileName()+")"+"&b: 状態=&f"+status+"&b 制限時間=&6"+Actions.getTimeString(game.getGameTime())+"&b フラッグ数=&6"+game.getFlags().size();
-			String s2 = "&b 参加料=&6"+game.getEntryFee()+"&b 賞金=&6"+game.getAward();
+			String s2 = "&b 参加料=&6"+game.getEntryFee()+"&b 賞金=&6"+game.getAward()+"&b チェスト数=&6"+game.getChests().size();
 			String s3 = "&b チーム毎人数制限=&6"+game.getTeamLimit()+"&b 赤チームスポーン="+chksp_red+"&b 青チームスポーン="+chksp_blue;
 			String s4 = "&b プレイヤーリスト&7("+cnt_players+"人)&b: "+players;
 
@@ -97,6 +97,6 @@ public class InfoCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin");
+		return sender.hasPermission("flag.user.info");
 	}
 }
