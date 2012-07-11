@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
@@ -150,11 +151,10 @@ public class FGPlayerListener implements Listener{
 				// クリックしたブロックがドア関係
 				if (type == Material.WOODEN_DOOR || type == Material.IRON_DOOR || type == Material.FENCE_GATE){
 					// 使用可能かチェック
-					if (!canUseBlock(player, block)){
+					if (!canUseBlock(player, block, true)){
 						event.setUseInteractedBlock(Result.DENY);
 						event.setUseItemInHand(Result.DENY);
 						event.setCancelled(true);
-						Actions.message(null, player, msgPrefix+ "&cここは相手の拠点です！");
 					}
 					return;
 				}
@@ -165,11 +165,10 @@ public class FGPlayerListener implements Listener{
 				// ブロックがコンテナ関係か看板関係
 				if (type == Material.CHEST || type == Material.FURNACE || type == Material.DISPENSER || type == Material.JUKEBOX){
 					// 使用可能かチェック
-					if (!canUseBlock(player, block)){
+					if (!canUseBlock(player, block, true)){
 						event.setUseInteractedBlock(Result.DENY);
 						event.setUseItemInHand(Result.DENY);
 						event.setCancelled(true);
-						Actions.message(null, player, msgPrefix+ "&cここは相手の拠点です！");
 					}
 					return;
 				}
@@ -182,6 +181,13 @@ public class FGPlayerListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerRespawn(final PlayerRespawnEvent event){
 		Player player = event.getPlayer();
+
+		// プレイヤーがフラッグワールド以外なら何もしない
+		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+			return;
+		}
+
+		// ゲーム参加チェック
 		for (Game game : plugin.games.values()){
 			// 開始されていないゲームはチェックしない
 			if (!game.isStarting()) continue;
@@ -194,15 +200,21 @@ public class FGPlayerListener implements Listener{
 					// 所属チームのスポーン地点設定なし
 					Actions.message(null, player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
 					log.warning(logPrefix+ "Player "+player.getName()+" died, But undefined spawn-location. Game: " + game.getName() + " Team: " +team.name());
+					// ワールドスポーンに戻す
+					event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().gameWorld).getSpawnLocation());
 					return;
 				}else{
 					// 設定あり
 					event.setRespawnLocation(loc);
 					Actions.message(null, player, msgPrefix+ "&6このゲームはあと "+Actions.getTimeString(game.getRemainTime())+" 残っています！");
+					player.getInventory().setHelmet(new ItemStack(team.getBlockID(), 1, (short)0, team.getBlockData()));
 				}
 				return; // 複数ゲーム所属はあり得ないのでここで返す
 			}
 		}
+
+		// フラッグゲームワールドスポーンに戻す
+		event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().gameWorld).getSpawnLocation());
 	}
 
 	// プレイヤーがログアウトした
@@ -311,8 +323,10 @@ public class FGPlayerListener implements Listener{
 			// 同じチームの場合そのゲームに
 			if (dTeam != null && aTeam != null){
 				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
-
 				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),deathMsg);
+
+				// チームキル数追加
+				game.addKillCount(aTeam);
 
 				//for (Player player : Bukkit.getOnlinePlayers())
 				//	Actions.message(null, player, deathMsg);
@@ -328,20 +342,17 @@ public class FGPlayerListener implements Listener{
 
 	/* methods */
 
-	private boolean canUseBlock(Player player, Block block){
+	private boolean canUseBlock(Player player, Block block, Boolean sendFalseMessage){
 		// ワールドがゲーム用ワールドでなければ常にtrueを返す
 		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
 			return true;
 
+		GameTeam playerTeam = null;
 		Location loc = block.getLocation();
+		boolean pub = true;
+
 		// 開始中のゲームを回す
 		for (Game game : plugin.games.values()){
-			if (!game.isStarting()) continue;
-
-			// プレイヤーのチーム取得
-			GameTeam playerTeam = game.getPlayerTeam(player);
-			if (playerTeam == null) continue;
-
 			GameTeam blockTeam = null;
 			// 拠点マップを回してブロックの所属拠点チームを取得
 			for (Map.Entry<GameTeam, Cuboid> entry : game.getBases().entrySet()){
@@ -350,16 +361,36 @@ public class FGPlayerListener implements Listener{
 					break;
 				}
 			}
-			// パブリックなものは何もしない
-			if (blockTeam == null) continue;
+			// このゲームではパブリックでも次は違うかも continue
+			if (blockTeam == null){
+				continue;
+			}else{
+				pub = false;
+			}
+
+			// プレイヤーのチーム取得
+			playerTeam = game.getPlayerTeam(player);
+			if (playerTeam == null) continue;
 
 			// プレイヤーとブロックのチームが違えばイベントをキャンセルする
 			if (playerTeam != blockTeam){
+				if (sendFalseMessage) Actions.message(null, player, msgPrefix+"&cここは相手の拠点です！");
 				return false; // 開けない
 			}
+			else{
+				return true;
+			}
 		}
-		// 開ける
-		return true;
+
+		// pub = true → どのゲームにも所属していないパブリックなブロック
+		if (pub){
+			return true; // 開ける
+		}
+		// パブリックでなく、プレイヤーがチーム無所属(＝ゲーム参加していない)
+		else{
+			if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
+			return false; // 開けなくする
+		}
 	}
 
 	private void clickFlagSign(Player player, Block block){

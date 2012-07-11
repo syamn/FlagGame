@@ -66,6 +66,9 @@ public class Game {
 	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
 	private Map<GameTeam, Cuboid> baseMap = new HashMap<GameTeam, Cuboid>();
 
+	// 殺害記録
+	private Map<GameTeam, Integer> teamKilledCount = new HashMap<GameTeam, Integer>();
+
 	/**
 	 * コンストラクタ
 	 * @param plugin
@@ -205,7 +208,9 @@ public class Game {
 				Player player = Bukkit.getPlayer(name);
 				// アイテムクリア
 				player.getInventory().clear();
-				player.getInventory().setHelmet(null);
+				// 頭だけ羊毛に変える
+				player.getInventory().setHelmet(new ItemStack(team.getBlockID(), 1, (short)0, team.getBlockData()));
+				//player.getInventory().setHelmet(null);
 				player.getInventory().setChestplate(null);
 				player.getInventory().setLeggings(null);
 				player.getInventory().setBoots(null);
@@ -313,6 +318,7 @@ public class Game {
 		}else{
 			Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けです！ &7(&c"+redP+"&7 - &b"+blueP+"&7)");
 		}
+		Actions.broadcastMessage("&c赤チームKill数: &6"+getKillCount(GameTeam.RED)+"&b 青チームKill数: &6"+getKillCount(GameTeam.BLUE));
 
 		log("========================================");
 
@@ -353,14 +359,20 @@ public class Game {
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
 
-		// 同じワールドにいる人のアイテムクリア
-		for (Player player : Bukkit.getWorld(plugin.getConfigs().gameWorld).getPlayers()){
-			// アイテムクリア
-			player.getInventory().clear();
-			player.getInventory().setHelmet(null);
-			player.getInventory().setChestplate(null);
-			player.getInventory().setLeggings(null);
-			player.getInventory().setBoots(null);
+		// 同じゲーム参加者のインベントリをクリア
+		for (Set<String> names : playersMap.values()){
+			for (String name : names){
+				Player player = Bukkit.getPlayer(name);
+				// オンラインチェック
+				if (player != null && player.isOnline()){
+					// アイテムクリア
+					player.getInventory().clear();
+					player.getInventory().setHelmet(null);
+					player.getInventory().setChestplate(null);
+					player.getInventory().setLeggings(null);
+					player.getInventory().setBoots(null);
+				}
+			}
 		}
 
 		// フラッグブロックロールバック 終了時はロールバックしない
@@ -800,6 +812,22 @@ public class Game {
 		this.spawnMap.clear();
 		// セット
 		this.spawnMap.putAll(spawns);
+	}
+
+	/* ***** Kill/Death関係 ***** */
+	public void addKillCount(GameTeam team){
+		if (!teamKilledCount.containsKey(team)){
+			teamKilledCount.put(team, 1);
+		}else{
+			teamKilledCount.put(team, teamKilledCount.get(team) + 1);
+		}
+	}
+	public int getKillCount(GameTeam team){
+		if (!teamKilledCount.containsKey(team)){
+			return 0;
+		}else{
+			return teamKilledCount.get(team);
+		}
 	}
 
 	/* ***** 拠点関係 ***** */
