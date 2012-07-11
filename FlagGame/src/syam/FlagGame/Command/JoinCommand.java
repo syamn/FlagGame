@@ -73,6 +73,11 @@ public class JoinCommand extends BaseCommand {
 		// 所属チーム取得
 		GameTeam team = game.getPlayerTeam(player);
 		Actions.broadcastMessage(msgPrefix+"&aプレイヤー'&6"+player.getName()+"&a'が"+team.getColor()+team.getTeamName()+"チーム&aに参加しました！");
+
+		// 参加後に人数チェックして定員通知
+		if ((game.getPlayersSet(GameTeam.RED).size() >= limit) && (game.getPlayersSet(GameTeam.BLUE).size() >= limit)){
+			Actions.message(null, player, "&aゲーム'"+game.getName()+"'が定員("+limit*2+"人)に達しました！");
+		}
 		return true;
 	}
 
