@@ -23,12 +23,15 @@ permissions:
     flag.admin.sign:
         default: op
         description: Allow place FlagGame sign
-    flag.ignoreWorldProtect:
-        default: op
-        description: Allow Break/Place protected game-world
     flag.admin.reload:
         default: op
         description: Allow reload configuration
     flag.admin.save:
         default: op
         description: Allow save map data
+    flag.ignoreWorldProtect:
+        default: op
+        description: Allow Break/Place protected game-world
+    flag.ignoreInteractEvent:
+        default: op
+        description: Allow Open/Close all doors/chests in game-world
