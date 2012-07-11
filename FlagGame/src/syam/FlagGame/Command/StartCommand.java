@@ -5,7 +5,7 @@ import syam.FlagGame.Util.Actions;
 
 public class StartCommand extends BaseCommand{
 	public StartCommand(){
-		bePlayer = true;
+		bePlayer = false;
 		name = "start";
 		argLength = 1;
 		usage = "<game> <- start game";

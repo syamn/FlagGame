@@ -8,7 +8,7 @@ public class ReadyCommand extends BaseCommand {
 		bePlayer = false;
 		name = "ready";
 		argLength = 1;
-		usage = "<name> <- ready game";
+		usage = "<game> <- ready game";
 	}
 
 	@Override
