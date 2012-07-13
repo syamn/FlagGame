@@ -154,6 +154,16 @@ public class FlagGame extends JavaPlugin{
 	 * プラグイン停止処理
 	 */
 	public void onDisable(){
+		// 開始中のゲームをすべて終わらせる
+		for (Game game : games.values()){
+			if (game.isStarting()){
+				game.cancelTimerTask();
+				game.finish();
+				game.log("Game finished because disabling plugin..");
+			}
+		}
+
+
 		// ゲームデータ保存
 		if (gfm != null){
 			gfm.saveGames();
