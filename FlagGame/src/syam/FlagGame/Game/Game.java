@@ -623,14 +623,15 @@ public class Game {
 		starttimerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
 			public void run(){
 				/* 1秒ごとに呼ばれる */
+				message(msgPrefix+ "&aあと" +starttimerInSec+ "秒でこのゲームが始まります！");
 
 				// 残り時間がゼロになった
-				if (remainSec <= 0){
+				if (starttimerInSec <= 0){
 					cancelTimerTask(); // タイマー停止
 					start(sender); // ゲーム開始
 					return;
 				}
-				remainSec--;
+				starttimerInSec--;
 			}
 		}, 0L, 20L);
 	}
