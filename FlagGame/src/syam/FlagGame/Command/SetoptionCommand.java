@@ -63,10 +63,11 @@ public class SetoptionCommand extends BaseCommand {
 						Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
 						return true;
 					}
-
 					game.setGameTime(num);
 
-					Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のゲーム時間は "+num+"秒("+Actions.getTimeString(num)+") に設定されました！");
+					String sec = num+"秒";
+					if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
+					Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
 					break;
 				// チーム毎の人数上限変更
 				case TEAMLIMIT:

@@ -49,7 +49,7 @@ public class FlagGame extends JavaPlugin{
 	 *
 	 *  順位表
 	 *
-	 *  スタート時のカウントダウン
+	 *
 	 *
 	 *  定期的な状況告知
 	 *
@@ -73,6 +73,8 @@ public class FlagGame extends JavaPlugin{
 	 *  → チーム毎も必須か 現状維持で HashMap<List,List>を使う
 	 *
 	 * WorldEdit/Guard連携、イベントワールド全域保護、試合中はステージ外への移動を禁止 → onMoveでチェックすると重そうなので使わない
+	 *
+	 * スタート時のカウントダウン
 	 *
 	 */
 

@@ -151,7 +151,7 @@ public class FGPlayerListener implements Listener{
 				// クリックしたブロックがドア関係
 				if (type == Material.WOODEN_DOOR || type == Material.IRON_DOOR || type == Material.FENCE_GATE){
 					// 使用可能かチェック
-					if (!canUseBlock(player, block, true)){
+					if (!canUseBlock(player, block, true, true)){
 						event.setUseInteractedBlock(Result.DENY);
 						event.setUseItemInHand(Result.DENY);
 						event.setCancelled(true);
@@ -165,7 +165,7 @@ public class FGPlayerListener implements Listener{
 				// ブロックがコンテナ関係か看板関係
 				if (type == Material.CHEST || type == Material.FURNACE || type == Material.DISPENSER || type == Material.JUKEBOX){
 					// 使用可能かチェック
-					if (!canUseBlock(player, block, true)){
+					if (!canUseBlock(player, block, true, false)){
 						event.setUseInteractedBlock(Result.DENY);
 						event.setUseItemInHand(Result.DENY);
 						event.setCancelled(true);
@@ -342,7 +342,7 @@ public class FGPlayerListener implements Listener{
 
 	/* methods */
 
-	private boolean canUseBlock(Player player, Block block, Boolean sendFalseMessage){
+	private boolean canUseBlock(Player player, Block block, Boolean sendFalseMessage, Boolean door){
 		// ワールドがゲーム用ワールドでなければ常にtrueを返す
 		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
 			return true;
@@ -388,6 +388,9 @@ public class FGPlayerListener implements Listener{
 		}
 		// パブリックでなく、プレイヤーがチーム無所属(＝ゲーム参加していない)
 		else{
+			// ドアなら試合外の場合開閉可能にする
+			if (door) return true;
+
 			if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
 			return false; // 開けなくする
 		}
