@@ -43,6 +43,7 @@ public class ConfigurationManager {
 	public String gameWorld = defaultWorldName;
 	public boolean isProtected = new Boolean(true);
 	/* Games Configs */
+	public int startCountdownInSec = new Integer(10);
 	public boolean deathWhenLogout = new Boolean(true);
 	public boolean disableTeamPVP = new Boolean(true);
 	public List<String> disableCommands = new ArrayList<String>();
@@ -81,6 +82,7 @@ public class ConfigurationManager {
 		gameWorld = plugin.getConfig().getString("WorldName", defaultWorldName);
 		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
 		/* Games Configs */
+		startCountdownInSec = plugin.getConfig().getInt("StartCountdownInSec", 10);
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
 		disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
 		disableCommands = plugin.getConfig().getStringList("DisableCommands");

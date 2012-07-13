@@ -31,7 +31,8 @@ public class StartCommand extends BaseCommand{
 		}
 
 		// start
-		game.start(sender);
+		//game.start(sender);
+		game.start_timer(sender);
 		return true;
 	}
 

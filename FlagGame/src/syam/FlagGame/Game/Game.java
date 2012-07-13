@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -43,6 +44,8 @@ public class Game {
 	private int gameTimeInSeconds = 600; // 1ゲームの制限時間
 	private int remainSec = gameTimeInSeconds; // 1ゲームの制限時間
 	private int timerThreadID = -1; // タイマータスクのID
+	private int starttimerInSec = 10;
+	private int starttimerThreadID = -1;
 	private boolean ready = false; // 待機状態フラグ
 	private boolean started = false; // 開始状態フラグ
 
@@ -256,7 +259,7 @@ public class Game {
 	/**
 	 * タイマー終了によって呼ばれるゲーム終了処理
 	 */
-	private void finish(){
+	public void finish(){
 		// ポイントチェック
 		int redP = 0, blueP = 0, noneP = 0;
 		String redS = "", blueS = "", noneS = "";
@@ -604,6 +607,35 @@ public class Game {
 	/* ***** タイマー関係 ***** */
 
 	/**
+	 * 開始時のカウントダウンタイマータスクを開始する
+	 */
+	public void start_timer(final CommandSender sender){
+		// カウントダウン秒をリセット
+		starttimerInSec = plugin.getConfigs().startCountdownInSec;
+		if (starttimerInSec <= 0){
+			start(sender);
+			return;
+		}
+
+		Actions.broadcastMessage(msgPrefix+"&6まもなくゲーム'"+getName()+"'が始まります！");
+
+		// タイマータスク
+		starttimerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+			public void run(){
+				/* 1秒ごとに呼ばれる */
+
+				// 残り時間がゼロになった
+				if (remainSec <= 0){
+					cancelTimerTask(); // タイマー停止
+					start(sender); // ゲーム開始
+					return;
+				}
+				remainSec--;
+			}
+		}, 0L, 20L);
+	}
+
+	/**
 	 * メインのタイマータスクを開始する
 	 */
 	public void timer(){
@@ -640,7 +672,10 @@ public class Game {
 	/**
 	 * タイマータスクが稼働中の場合停止する
 	 */
-	private void cancelTimerTask(){
+	public void cancelTimerTask(){
+		if (ready && starttimerThreadID != -1){
+			plugin.getServer().getScheduler().cancelTask(starttimerThreadID);
+		}
 		if (started && timerThreadID != -1){
 			// タスクキャンセル
 			plugin.getServer().getScheduler().cancelTask(timerThreadID);
