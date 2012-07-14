@@ -209,6 +209,10 @@ public class Game {
 			GameTeam team = entry.getKey();
 			for (String name : entry.getValue()){
 				Player player = Bukkit.getPlayer(name);
+				// オフラインプレイヤーをスキップ
+				if (player == null || !player.isOnline())
+					continue;
+
 				// アイテムクリア
 				player.getInventory().clear();
 				// 頭だけ羊毛に変える
@@ -819,7 +823,7 @@ public class Game {
 			}
 
 			InventoryHolder toContainer = (InventoryHolder) toBlock.getState();
-			InventoryHolder fromContainer = (InventoryHolder) fromBlock.getState();
+			InventoryHolder fromContainer = (InventoryHolder) fromBlock.getState(); // TODO: チェストでなければここで例外 修正予定
 
 			ItemStack[] is = fromContainer.getInventory().getContents();
 			toContainer.getInventory().setContents(is);
