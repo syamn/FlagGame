@@ -27,9 +27,6 @@ import syam.FlagGame.Command.ReloadCommand;
 import syam.FlagGame.Command.SaveCommand;
 import syam.FlagGame.Command.SelectGameCommand;
 import syam.FlagGame.Command.SetCommand;
-import syam.FlagGame.Command.SetbaseCommand;
-import syam.FlagGame.Command.SetoptionCommand;
-import syam.FlagGame.Command.SetspawnCommand;
 import syam.FlagGame.Command.StartCommand;
 import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Game.Game;
@@ -245,9 +242,6 @@ public class FlagGame extends JavaPlugin{
 		commands.add(new SelectGameCommand());
 		commands.add(new SetCommand());
 		commands.add(new TpCommand());
-		commands.add(new SetspawnCommand());
-		commands.add(new SetbaseCommand());
-		commands.add(new SetoptionCommand());
 		commands.add(new SaveCommand());
 		commands.add(new ReloadCommand());
 	}

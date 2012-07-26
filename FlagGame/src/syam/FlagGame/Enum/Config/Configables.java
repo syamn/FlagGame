@@ -5,10 +5,18 @@ package syam.FlagGame.Enum.Config;
  * @author syam
  */
 public enum Configables {
+	// 一般
 	STAGE("ステージエリア", ConfigType.AREA), // エリア保護を行うステージ全体の領域設定
 	BASE("拠点エリア", ConfigType.AREA), // 各チーム拠点の領域設定
+	SPAWN("スポーン地点", ConfigType.POINT), // スポーン地点
 	FLAG("フラッグ", ConfigType.MANAGER), // 各チーム拠点の領域設定
 	CHEST("チェスト", ConfigType.MANAGER), // 各チーム拠点の領域設定
+
+	// オプション
+	GAMETIME ("ゲームの制限時間(秒)", ConfigType.SIMPLE),
+	TEAMLIMIT ("チーム毎の人数制限", ConfigType.SIMPLE),
+	AWARD ("勝利チームへの賞金", ConfigType.SIMPLE),
+	ENTRYFEE ("参加料", ConfigType.SIMPLE),
 	;
 
 	private String configName;
