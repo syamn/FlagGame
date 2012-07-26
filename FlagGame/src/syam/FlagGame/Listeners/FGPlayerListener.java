@@ -22,6 +22,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -409,6 +410,44 @@ public class FGPlayerListener implements Listener{
 		}
 	}
 
+	// プレイヤーがログインした
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onPlayerJoin(final PlayerJoinEvent event){
+		final Player player = event.getPlayer();
+
+		// ログイン時のMOTDなどの最後に表示別スレッドで実行する
+		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (Game game : plugin.games.values()){
+					if (!game.isStarting() && !game.isReady()) continue;
+
+					GameTeam team = game.getPlayerTeam(player);
+					// ゲーム参加ユーザは何もしない
+					if (team != null)
+						return;
+				}
+
+				// 待機中
+				for (Game game : plugin.games.values()){
+					if (!game.isReady()) continue;
+
+					// 賞金系メッセージ
+					String entryFeeMsg = String.valueOf(game.getEntryFee()) + "Coin";
+					String awardMsg = String.valueOf(game.getAward()) +"Coin";
+					if (game.getEntryFee() <= 0)
+						entryFeeMsg = "&7FREE!";
+					if (game.getAward() <= 0)
+						awardMsg = "&7なし";
+
+					// アナウンス
+					Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
+					Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+					Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
+				}
+			}
+		}, 20L);
+	}
 
 	/* methods */
 

@@ -55,10 +55,6 @@ public class FGBlockListener implements Listener{
 
 		// フラッグブロックかチェックする
 		for (Game game : plugin.games.values()){
-			// 開始状態チェック
-			if (!game.isStarting())
-				continue;
-
 			// フラッグチェック
 			Flag flag = game.getFlag(loc);
 			if (flag == null){
@@ -72,6 +68,10 @@ public class FGBlockListener implements Listener{
 				}
 				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
 			}
+
+			// 開始状態チェック
+			if (!game.isStarting())
+				continue;
 
 			/* フラッグが壊された */
 
@@ -139,12 +139,7 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		Collection<Game> col = plugin.games.values();
-		for (Game game : col){
-			// 開始状態チェック
-			if (!game.isStarting())
-				continue;
-
+		for (Game game : plugin.games.values()){
 			// フラッグチェック
 			Flag flag = game.getFlag(loc);
 			if (flag == null){
@@ -158,6 +153,10 @@ public class FGBlockListener implements Listener{
 				}
 				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
 			}
+
+			// 開始状態チェック
+			if (!game.isStarting())
+				continue;
 
 			// プレイヤーと設置したブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);

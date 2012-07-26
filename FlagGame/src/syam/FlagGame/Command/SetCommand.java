@@ -62,7 +62,8 @@ public class SetCommand extends BaseCommand {
 		Configables conf = null;
 		for (Configables check : Configables.values()){
 			if (check.name().equalsIgnoreCase(args.get(0))){
-				conf = check; break;
+				conf = check;
+				break;
 			}
 		}
 		if (conf == null){
@@ -155,11 +156,13 @@ public class SetCommand extends BaseCommand {
 		// チーム取得
 		GameTeam team = null;
 		for (GameTeam tm : GameTeam.values()){
-			if (tm.name().toLowerCase().equalsIgnoreCase(args.get(0)))
-				team = tm; break;
+			if (tm.name().toLowerCase().equalsIgnoreCase(args.get(1))){
+				team = tm;
+				break;
+			}
 		}
 		if (team == null){
-			Actions.message(null, player, "&cチーム'"+args.get(0)+"'が見つかりません！");
+			Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
 			return true;
 		}
 
@@ -198,11 +201,13 @@ public class SetCommand extends BaseCommand {
 		// チーム取得
 		GameTeam team = null;
 		for (GameTeam tm : GameTeam.values()){
-			if (tm.name().toLowerCase().equalsIgnoreCase(args.get(0)))
-				team = tm; break;
+			if (tm.name().toLowerCase().equalsIgnoreCase(args.get(1))){
+				team = tm;
+				break;
+			}
 		}
 		if (team == null){
-			Actions.message(null, player, "&cチーム'"+args.get(0)+"'が見つかりません！");
+			Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
 			return true;
 		}
 
@@ -364,7 +369,7 @@ public class SetCommand extends BaseCommand {
 	 * 設定可能な設定とヘルプをsenderに送信する
 	 */
 	private void sendAvailableConf(){
-		Actions.message(sender, null, "message here");
+		Actions.message(sender, null, "&6 stage / base / spawn / flag / chest / gametime / teamlimit / award / entryfee / protect");
 	}
 
 	@Override

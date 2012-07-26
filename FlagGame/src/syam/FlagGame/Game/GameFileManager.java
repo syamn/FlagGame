@@ -44,7 +44,8 @@ public class GameFileManager {
 			File file = new File(fileDir + game.getName() + ".yml");
 
 			// マップデータをリストに変換
-			String stage = convertStageCuboidToString(game.getStage());
+			String stage = null;
+			if (game.getStage() != null) stage = convertStageCuboidToString(game.getStage());
 			List<String> flagList = convertFlagMapToList(game.getFlags());
 			List<String> spawnList = convertSpawnMapToList(game.getSpawns());
 			List<String> baseList = convertBaseMapToList(game.getBases());

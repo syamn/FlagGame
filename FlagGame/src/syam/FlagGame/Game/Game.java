@@ -10,6 +10,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -131,6 +132,12 @@ public class Game {
 		// 再マッピング
 		mappingPlayersList();
 
+		// ステージエリアチェック
+		if (stageArea == null){
+			Actions.message(sender, null, "&cステージエリアが正しく設定されていません");
+			return;
+		}
+
 		// スポーン地点チェック
 		if (spawnMap.size() != playersMap.size()){
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
@@ -185,6 +192,12 @@ public class Game {
 			return;
 		}
 
+		// ステージエリアチェック
+		if (stageArea == null){
+			Actions.message(sender, null, "&cステージエリアが正しく設定されていません");
+			return;
+		}
+
 		// スポーン地点の再チェック
 		if (spawnMap.size() != playersMap.size()){
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
@@ -214,6 +227,9 @@ public class Game {
 				// オフラインプレイヤーをスキップ
 				if (player == null || !player.isOnline())
 					continue;
+
+				// ゲームモード強制変更
+				player.setGameMode(GameMode.SURVIVAL);
 
 				// アイテムクリア
 				player.getInventory().clear();
