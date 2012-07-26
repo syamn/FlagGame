@@ -419,7 +419,6 @@ public class FGPlayerListener implements Listener{
 
 		GameTeam playerTeam = null;
 		Location loc = block.getLocation();
-		boolean pub = true;
 
 		// 開始中のゲームを回す
 		for (Game game : plugin.games.values()){
@@ -431,11 +430,8 @@ public class FGPlayerListener implements Listener{
 					break;
 				}
 			}
-			// このゲームではパブリックでも次は違うかも continue
 			if (blockTeam == null){
 				continue;
-			}else{
-				pub = false;
 			}
 
 			// プレイヤーのチーム取得
@@ -448,22 +444,31 @@ public class FGPlayerListener implements Listener{
 				return false; // 開けない
 			}
 			else{
-				return true;
+				return true; // 自分の拠点のブロックは使用可能
 			}
 		}
 
-		// pub = true → どのゲームにも所属していないパブリックなブロック
-		if (pub){
-			return true; // 開ける
-		}
-		// パブリックでなく、プレイヤーがチーム無所属(＝ゲーム参加していない)
-		else{
-			// ドアなら試合外の場合開閉可能にする
-			if (door) return true;
+		// そのブロックがどのゲームのチーム拠点にも所属していない
 
-			if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
-			return false; // 開けなくする
+		// ドアなら自由に開閉可能にする
+		if (door) return true;
+
+		for (Game game : plugin.games.values()){
+			Cuboid stage = game.getStage();
+			// ステージ領域内かどうか
+			if (stage.isIn(loc)){
+				// ゲーム保護があるかどうか
+				if (game.stageProtected()){
+					if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
+					return false;
+				}else{
+					return true;
+				}
+			}
 		}
+
+		// どのゲームステージにも所属していない
+		return true; // 開ける
 	}
 
 	private void clickFlagSign(Player player, Block block){

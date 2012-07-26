@@ -10,7 +10,7 @@ ToolID: 269
 # FlagGame World
 WorldName: 'flag'
 # If it true, Gameworld will be protected by player
-WorldProtect: true
+WorldProtect: false
 
 #==================#
 #   Games Config   #
