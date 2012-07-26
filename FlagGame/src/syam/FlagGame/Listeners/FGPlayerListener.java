@@ -431,9 +431,17 @@ public class FGPlayerListener implements Listener{
 					// そのゲームに参加しているプレイヤーかどうか取得
 					playerTeam = game.getPlayerTeam(player);
 					if (playerTeam != null){
-						return true; // ゲームに参加しているプレイヤーは開閉可能
+						// チェスト登録されているものか取得
+						if (game.getChest(loc) != null){
+							return true;
+						}
+						// 未登録チェストはダミー扱いで開閉禁止
+						else{
+							if (sendFalseMessage) Actions.message(null, player, msgPrefix+"&cこれはダミーブロックです！");
+							return false;
+						}
 					}else{
-						if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
+						if (sendFalseMessage) Actions.message(null, player, msgPrefix+"&cあなたはこのゲームに参加していません！");
 						return false;
 					}
 				}else{
