@@ -24,6 +24,7 @@ import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
+import syam.FlagGame.Util.Cuboid;
 
 public class FGBlockListener implements Listener{
 	public static final Logger log = FlagGame.log;
@@ -37,7 +38,10 @@ public class FGBlockListener implements Listener{
 	}
 
 	/* 登録するイベントはここから下に */
-
+	/**
+	 * ブロックを破壊した
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event){
 		Block block = event.getBlock();
@@ -57,8 +61,18 @@ public class FGBlockListener implements Listener{
 
 			// フラッグチェック
 			Flag flag = game.getFlag(loc);
-			if (flag == null)
-				continue;
+			if (flag == null){
+				// フラッグブロックでなければ、ステージエリア外かチェックする 7/26追加
+				Cuboid stage = game.getStage();
+				// ステージエリア内なら破壊を禁止
+				if (stage.isIn(loc)){
+					event.setCancelled(true);
+					return; // ステージエリアの被りが無い前提で返す
+				}
+				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
+			}
+
+			/* フラッグが壊された */
 
 			// プレイヤーと壊されたブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
@@ -93,6 +107,7 @@ public class FGBlockListener implements Listener{
 				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
 			}
 			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag!");
+
 			return;
 		}
 
@@ -107,6 +122,10 @@ public class FGBlockListener implements Listener{
 		}
 	}
 
+	/**
+	 * ブロックを設置した
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockPlace(final BlockPlaceEvent event){
 		Block block = event.getBlock();
@@ -127,8 +146,16 @@ public class FGBlockListener implements Listener{
 
 			// フラッグチェック
 			Flag flag = game.getFlag(loc);
-			if (flag == null)
-				continue;
+			if (flag == null){
+				// フラッグブロックでなければ、ステージエリア外かチェックする 7/26追加
+				Cuboid stage = game.getStage();
+				// ステージエリア内なら破壊を禁止
+				if (stage.isIn(loc)){
+					event.setCancelled(true);
+					return; // ステージエリアの被りが無い前提で返す
+				}
+				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
+			}
 
 			// プレイヤーと設置したブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
