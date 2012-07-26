@@ -841,7 +841,13 @@ public class Game {
 			}
 
 			InventoryHolder toContainer = (InventoryHolder) toBlock.getState();
-			InventoryHolder fromContainer = (InventoryHolder) fromBlock.getState(); // TODO: チェストでなければここで例外 修正予定
+			InventoryHolder fromContainer = null; // TODO: チェストでなければここで例外 修正予定
+			try{
+				fromContainer = (InventoryHolder) fromBlock.getState();
+			}catch(ClassCastException ex){
+				log.warning(logPrefix+ "FromContainer setup error!Skipping.. "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+				continue;
+			}
 
 			ItemStack[] is = fromContainer.getInventory().getContents();
 			toContainer.getInventory().setContents(is);

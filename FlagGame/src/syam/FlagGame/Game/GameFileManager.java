@@ -139,6 +139,9 @@ public class GameFileManager {
 		return ret;
 	}
 	private Cuboid convertStageStringToCuboid(String stage) {
+		if (stage == null)
+			return null;
+
 		String[] data;
 		String[] pos1;
 		String[] pos2;
