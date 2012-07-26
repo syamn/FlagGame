@@ -27,8 +27,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Enum.SignAction;
+import syam.FlagGame.Enum.Config.Configables;
+import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
@@ -54,74 +57,141 @@ public class FGPlayerListener implements Listener{
 		Block block = event.getClickedBlock();
 
 		if(block != null){
-			// フラッグ管理モード
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isFlagManager(player)){
-				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
-					/* 管理モードで特定のアイテムを持ったままブロックを右クリックした */
-					Game game = GameManager.getSelectedGame(player);
-					if (game == null){
-						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
-						return;
-					}
-					Location loc = block.getLocation();
+			// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.getManager(player) != null &&
+					player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
+				Configables conf = GameManager.getManager(player);
 
-					// ゲーム用ワールドでなければ返す
-					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
-						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
-						return;
-					}
-
-					// 既にフラッグブロックになっているか判定
-					if (game.getFlag(loc) == null){
-						// 選択
-						GameManager.setSelectedBlock(player, block.getLocation());
-						Actions.message(null, player, "&aブロックを選択しました！");
-					}else{
-						// 削除
-						game.removeFlag(loc);
-						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
-					}
+				Game game = GameManager.getSelectedGame(player);
+				if (game == null){
+					Actions.message(null, player, "&c先に編集するゲームを選択してください！");
+					return;
 				}
-				return;
-			}
-			// チェスト管理モード
-			else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isChestManager(player)){
-				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
-					Game game = GameManager.getSelectedGame(player);
-					if (game == null){
-						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
-						return;
-					}
 
-					Location loc = block.getLocation();
+				Location loc = block.getLocation();
 
-					// ゲーム用ワールドでなければ返す
-					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
-						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
-						return;
-					}
-
-					// チェスト、かまど、ディスペンサーのどれかでなければ返す
-					if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
-						return;
-					}
-
-					// 既にフラッグブロックになっているか判定
-					if (game.getChest(loc) == null){
-						// 選択
-						game.setChest(loc);
-						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを設定しました！");
-					}else{
-						// 削除
-						game.removeChest(loc);
-						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを削除しました！");
-					}
-					event.setCancelled(true);
-					event.setUseInteractedBlock(Result.DENY);
-					event.setUseItemInHand(Result.DENY);
+				// ゲーム用ワールドでなければ返す
+				if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+					Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
+					return;
 				}
-				return;
+
+				// 設定によって処理を分ける
+				switch (conf){
+					// フラッグモード
+					case FLAG:
+						// 既にフラッグブロックなら解除する
+						if (game.getFlag(loc) != null){
+							game.removeFlag(loc);
+							Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
+							return;
+						}
+
+						// フラッグタイプを取得
+						FlagType type = GameManager.getSelectedFlagType(player);
+						if (type == null){
+							Actions.message(null, player, "&cフラッグタイプが指定されていません！");
+							return;
+						}
+
+						// 新規フラッグ登録 TODO: とりあえずロールバックブロックをAirにする
+						new Flag(plugin, game, loc, type, 0, (byte) 0);
+						Actions.message(null, player, "&aゲーム'"+game.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
+						break;
+
+					// チェストモード
+					case CHEST:
+						// チェスト、かまど、ディスペンサーのどれかでなければ返す
+						if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
+							Actions.message(null, player, "&cこのブロックはコンテナインターフェースを持っていません！");
+							return;
+						}
+						// 既にフラッグブロックになっているか判定
+						if (game.getChest(loc) == null){
+							// 選択
+							game.setChest(loc);
+							Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを設定しました！");
+						}else{
+							// 削除
+							game.removeChest(loc);
+							Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを削除しました！");
+						}
+						break;
+				}
+
+				event.setCancelled(true);
+				event.setUseInteractedBlock(Result.DENY);
+				event.setUseItemInHand(Result.DENY);
 			}
+
+//			// フラッグ管理モード
+//			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isFlagManager(player)){
+//				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
+//					/* 管理モードで特定のアイテムを持ったままブロックを右クリックした */
+//					Game game = GameManager.getSelectedGame(player);
+//					if (game == null){
+//						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
+//						return;
+//					}
+//					Location loc = block.getLocation();
+//
+//					// ゲーム用ワールドでなければ返す
+//					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+//						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
+//						return;
+//					}
+//
+//					// 既にフラッグブロックになっているか判定
+//					if (game.getFlag(loc) == null){
+//						// 選択
+//						GameManager.setSelectedBlock(player, block.getLocation());
+//						Actions.message(null, player, "&aブロックを選択しました！");
+//					}else{
+//						// 削除
+//						game.removeFlag(loc);
+//						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
+//					}
+//				}
+//				return;
+//			}
+//			// チェスト管理モード
+//			else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isChestManager(player)){
+//				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
+//					Game game = GameManager.getSelectedGame(player);
+//					if (game == null){
+//						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
+//						return;
+//					}
+//
+//					Location loc = block.getLocation();
+//
+//					// ゲーム用ワールドでなければ返す
+//					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+//						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
+//						return;
+//					}
+//
+//					// チェスト、かまど、ディスペンサーのどれかでなければ返す
+//					if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
+//						return;
+//					}
+//
+//					// 既にフラッグブロックになっているか判定
+//					if (game.getChest(loc) == null){
+//						// 選択
+//						game.setChest(loc);
+//						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを設定しました！");
+//					}else{
+//						// 削除
+//						game.removeChest(loc);
+//						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを削除しました！");
+//					}
+//					event.setCancelled(true);
+//					event.setUseInteractedBlock(Result.DENY);
+//					event.setUseItemInHand(Result.DENY);
+//				}
+//				return;
+//			}
 
 			// 看板を右クリックした
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){

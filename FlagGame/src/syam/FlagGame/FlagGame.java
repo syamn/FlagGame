@@ -26,9 +26,8 @@ import syam.FlagGame.Command.ReadyCommand;
 import syam.FlagGame.Command.ReloadCommand;
 import syam.FlagGame.Command.SaveCommand;
 import syam.FlagGame.Command.SelectGameCommand;
+import syam.FlagGame.Command.SetCommand;
 import syam.FlagGame.Command.SetbaseCommand;
-import syam.FlagGame.Command.SetchestCommand;
-import syam.FlagGame.Command.SetflagCommand;
 import syam.FlagGame.Command.SetoptionCommand;
 import syam.FlagGame.Command.SetspawnCommand;
 import syam.FlagGame.Command.StartCommand;
@@ -49,12 +48,22 @@ public class FlagGame extends JavaPlugin{
 	 *
 	 *  順位表
 	 *
-	 *
+	 * タイマー、状況表示用の看板
 	 *
 	 *  定期的な状況告知
 	 *
 	 *  設定コマンドの見直し
 	 *  フラッグ設定方法の見直し
+	 *
+	 *  参加申請後の取り消し
+	 *
+	 *  3チーム以上のゲーム
+	 *
+	 *  受付中のゲームを定期アナウンス(プレイヤーログイン時など)
+	 *
+	 *  参加チームの選択
+	 *
+	 *
 	 *
 	 */
 
@@ -234,8 +243,7 @@ public class FlagGame extends JavaPlugin{
 		commands.add(new CreateCommand());
 		commands.add(new DeleteCommand());
 		commands.add(new SelectGameCommand());
-		commands.add(new SetflagCommand());
-		commands.add(new SetchestCommand());
+		commands.add(new SetCommand());
 		commands.add(new TpCommand());
 		commands.add(new SetspawnCommand());
 		commands.add(new SetbaseCommand());

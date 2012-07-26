@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
@@ -18,17 +19,9 @@ public class SelectGameCommand extends BaseCommand {
 			// flag game (ゲーム名) - 選択
 			Game game = plugin.getGame(args.get(0));
 			if (game != null){
-				if (GameManager.getSelectedGame(player) != null){
-					if (GameManager.getSelectedGame(player) != game){
-						if (GameManager.isFlagManager(player)){
-							GameManager.setFlagManager(player, false);
-							Actions.message(null, player, "&aフラッグ管理モードを終了しました！");
-						}
-						if (GameManager.isChestManager(player)){
-							GameManager.setChestManager(player, false);
-							Actions.message(null, player, "&aチェスト管理モードを終了しました！");
-						}
-					}
+				// 既に選択中のゲームと別のゲームを選択した場合は管理モードを終了する
+				if (GameManager.getSelectedGame(player) != null && GameManager.getSelectedGame(player) != game){
+					GameManager.removeManager(player, false);
 				}
 				GameManager.setSelectedGame(player, game);
 				Actions.message(null, player, "&aゲーム'"+game.getName()+"'を選択しました！");
@@ -41,14 +34,7 @@ public class SelectGameCommand extends BaseCommand {
 			if (GameManager.getSelectedGame(player) != null){
 				GameManager.setSelectedGame(player, null);
 			}
-			if (GameManager.isFlagManager(player)){
-				GameManager.setFlagManager(player, false);
-				Actions.message(null, player, "&aフラッグ管理モードを終了しました！");
-			}
-			if (GameManager.isChestManager(player)){
-				GameManager.setChestManager(player, false);
-				Actions.message(null, player, "&aチェスト管理モードを終了しました！");
-			}
+			GameManager.removeManager(player, false);
 			Actions.message(null, player, "&aゲームの選択を解除しました！");
 		}
 		return true;

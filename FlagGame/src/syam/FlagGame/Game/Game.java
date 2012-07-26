@@ -553,7 +553,7 @@ public class Game {
 		for (Set<String> set : playersMap.values()){
 			for (String name : set){
 				if (name == null) continue;
-				Player player = Bukkit.getServer().getPlayer(name);
+				Player player = Bukkit.getPlayer(name);
 				if (player != null && player.isOnline())
 					Actions.message(null, player, message);
 			}

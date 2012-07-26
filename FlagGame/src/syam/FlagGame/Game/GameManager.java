@@ -10,6 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import syam.FlagGame.FlagGame;
+import syam.FlagGame.Enum.FlagType;
+import syam.FlagGame.Enum.Config.Configables;
+import syam.FlagGame.Util.Actions;
 
 public class GameManager {
 	// Logger
@@ -26,10 +29,13 @@ public class GameManager {
 	private static Map<String, Game> selectedGame = new HashMap<String, Game>();
 	// 選択中のブロック
 	private static Map<String, Location> selectedBlock = new HashMap<String, Location>();
+	// 選択中のフラッグ種類
+	private static Map<String, FlagType> selectedFlagType = new HashMap<String, FlagType>();
 
 	// ゲームマネージャモードのリスト
-	private static List<String> fgFlagManager = new ArrayList<String>();
-	private static List<String> fgChestManager = new ArrayList<String>();
+	//private static List<String> fgFlagManager = new ArrayList<String>();
+	//private static List<String> fgChestManager = new ArrayList<String>();
+	private static Map<String, Configables> managersMap = new HashMap<String, Configables>();
 
 	/* getter/setter */
 
@@ -76,56 +82,129 @@ public class GameManager {
 	}
 
 	/**
-	 * プレイヤーをフラッグマネージモードにする/しない
-	 * @param player 対象のプレイヤー
-	 * @param state true = 管理モードにする/false = しない
+	 * 指定したフラッグタイプを選択中にする
+	 * @param player プレイヤー
+	 * @param loc 設定するフラッグタイプ
 	 */
-	public static void setFlagManager(Player player, boolean state){
-		if (state){
-			if (!fgFlagManager.contains(player.getName()))
-				fgFlagManager.add(player.getName());
-		}else{
-			if (fgFlagManager.contains(player.getName()))
-				fgFlagManager.remove(player.getName());
+	public static void setSelectedFlagType(Player player, FlagType type){
+		if (type == null){
+			if (selectedFlagType.containsKey(player.getName()))
+				selectedFlagType.remove(player.getName());
+		}
+		else{
+			selectedFlagType.put(player.getName(), type);
 		}
 	}
 	/**
-	 * プレイヤーがゲームマネージモードかどうか返す
-	 * @param player チェックするプレイヤー
-	 * @return trueなら管理モード、falseなら管理モードでない
+	 * 選択中のフラッグタイプを返す
+	 * @param player 対象プレイヤー
+	 * @return null またはフラッグタイプ
 	 */
-	public static boolean isFlagManager(Player player){
-		if(player != null && fgFlagManager.contains(player.getName())){
-			return true;
+	public static FlagType getSelectedFlagType(Player player){
+		if (player == null || !selectedFlagType.containsKey(player.getName())){
+			return null;
 		}else{
-			return false;
+			return selectedFlagType.get(player.getName());
 		}
 	}
 
 	/**
-	 * プレイヤーをチェストマネージモードにする/しない
+	 * プレイヤーをマネージモードにする/しない
 	 * @param player 対象のプレイヤー
 	 * @param state true = 管理モードにする/false = しない
 	 */
-	public static void setChestManager(Player player, boolean state){
-		if (state){
-			if (!fgChestManager.contains(player.getName()))
-				fgChestManager.add(player.getName());
-		}else{
-			if (fgChestManager.contains(player.getName()))
-				fgChestManager.remove(player.getName());
+	public static void setManager(Player player, Configables conf){
+		// conf == null ならマネージモード解除
+		if (conf == null){
+			if (managersMap.containsKey(player.getName()))
+				managersMap.remove(player.getName());
+		}
+		// マネージモード設定
+		else{
+			managersMap.put(player.getName(), conf);
 		}
 	}
 	/**
-	 * プレイヤーがチェストマネージモードかどうか返す
+	 * プレイヤーがマネージモードかどうか、またその設定種類を返す
 	 * @param player チェックするプレイヤー
-	 * @return trueなら管理モード、falseなら管理モードでない
+	 * @return nullなら管理モードでない
 	 */
-	public static boolean isChestManager(Player player){
-		if(player != null && fgChestManager.contains(player.getName())){
-			return true;
+	public static Configables getManager(Player player){
+		if (player == null || !managersMap.containsKey(player.getName())){
+			return null;
 		}else{
-			return false;
+			return managersMap.get(player.getName());
 		}
 	}
+
+	/**
+	 * プレイヤーをすべての管理モードマップから削除する
+	 * @param player
+	 * @param silent
+	 */
+	public static void removeManager(Player player, boolean silent){
+		Configables conf = getManager(player);
+		if (conf != null){
+			setManager(player, null);
+			if (!silent)
+				Actions.message(null, player, "&a"+conf.getConfigName()+"管理モードを解除しました！");
+		}
+		if (getSelectedFlagType(player) != null){
+			setSelectedFlagType(player, null);
+		}
+	}
+
+//	/**
+//	 * プレイヤーをフラッグマネージモードにする/しない
+//	 * @param player 対象のプレイヤー
+//	 * @param state true = 管理モードにする/false = しない
+//	 */
+//	public static void setFlagManager(Player player, boolean state){
+//		if (state){
+//			if (!fgFlagManager.contains(player.getName()))
+//				fgFlagManager.add(player.getName());
+//		}else{
+//			if (fgFlagManager.contains(player.getName()))
+//				fgFlagManager.remove(player.getName());
+//		}
+//	}
+//	/**
+//	 * プレイヤーがゲームマネージモードかどうか返す
+//	 * @param player チェックするプレイヤー
+//	 * @return trueなら管理モード、falseなら管理モードでない
+//	 */
+//	public static boolean isFlagManager(Player player){
+//		if(player != null && fgFlagManager.contains(player.getName())){
+//			return true;
+//		}else{
+//			return false;
+//		}
+//	}
+//
+//	/**
+//	 * プレイヤーをチェストマネージモードにする/しない
+//	 * @param player 対象のプレイヤー
+//	 * @param state true = 管理モードにする/false = しない
+//	 */
+//	public static void setChestManager(Player player, boolean state){
+//		if (state){
+//			if (!fgChestManager.contains(player.getName()))
+//				fgChestManager.add(player.getName());
+//		}else{
+//			if (fgChestManager.contains(player.getName()))
+//				fgChestManager.remove(player.getName());
+//		}
+//	}
+//	/**
+//	 * プレイヤーがチェストマネージモードかどうか返す
+//	 * @param player チェックするプレイヤー
+//	 * @return trueなら管理モード、falseなら管理モードでない
+//	 */
+//	public static boolean isChestManager(Player player){
+//		if(player != null && fgChestManager.contains(player.getName())){
+//			return true;
+//		}else{
+//			return false;
+//		}
+//	}
 }

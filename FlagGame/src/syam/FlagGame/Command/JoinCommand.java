@@ -9,7 +9,7 @@ public class JoinCommand extends BaseCommand {
 		bePlayer = true;
 		name = "join";
 		argLength = 1;
-		usage = "<game> <- join game";
+		usage = "<game> <- join the game";
 	}
 
 	@Override
