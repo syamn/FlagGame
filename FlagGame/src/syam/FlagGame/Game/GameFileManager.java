@@ -44,6 +44,7 @@ public class GameFileManager {
 			File file = new File(fileDir + game.getName() + ".yml");
 
 			// マップデータをリストに変換
+			String stage = convertStageCuboidToString(game.getStage());
 			List<String> flagList = convertFlagMapToList(game.getFlags());
 			List<String> spawnList = convertSpawnMapToList(game.getSpawns());
 			List<String> baseList = convertBaseMapToList(game.getBases());
@@ -55,6 +56,8 @@ public class GameFileManager {
 			confFile.set("TeamLimit", game.getTeamLimit());
 			confFile.set("Award", game.getAward());
 			confFile.set("EntryFee", game.getEntryFee());
+
+			confFile.set("Stage", stage);
 			confFile.set("Spawns", spawnList);
 			confFile.set("Flags", flagList);
 			confFile.set("Bases", baseList);
@@ -68,6 +71,7 @@ public class GameFileManager {
 			}
 		}
 	}
+
 	public void loadGames(){
 		FileConfiguration confFile = new YamlConfiguration();
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "gameData";
@@ -102,9 +106,12 @@ public class GameFileManager {
 				game.setTeamLimit(confFile.getInt("TeamLimit", 8));
 				game.setAward(confFile.getInt("Award", 1000));
 				game.setEntryFee(confFile.getInt("EntryFee", 100));
+
+				Cuboid stage = convertStageStringToCuboid(confFile.getString("Stage")); // ステージエリア
+				if (stage != null) game.setStage(stage);
 				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
 				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game)); // フラッグ
-				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点
+				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点エリア
 				game.setChests(convertChestListToMap(confFile.getStringList("Chests"))); // チェスト
 
 				log.info(logPrefix+ "Loaded Game: "+file.getName()+" ("+name+")");
@@ -113,6 +120,52 @@ public class GameFileManager {
 				ex.printStackTrace();
 			}
 		}
+	}
+
+	/* ステージ領域を変換 */
+	private String convertStageCuboidToString(Cuboid stage) {
+		String ret = "";
+
+		// x,y,z@x,y,z
+		Location pos1 = stage.getPos1();
+		Location pos2 = stage.getPos2();
+
+		ret = pos1.getBlockX()+","+pos1.getBlockY()+","+pos1.getBlockZ()+"@";
+		ret = ret + pos2.getBlockX()+","+pos2.getBlockY()+","+pos2.getBlockZ();
+
+		return ret;
+	}
+	private Cuboid convertStageStringToCuboid(String stage) {
+		String[] data;
+		String[] pos1;
+		String[] pos2;
+
+		// デリミタ分割
+		data = stage.split("@");
+		if (data.length != 2){
+			log.warning(logPrefix+ "Skipping StageLine: incorrect format (@)");
+			return null;
+		}
+
+		// data[0] : 座標形式チェック
+		pos1 = data[0].split(",");
+		if (pos1.length != 3){
+			log.warning(logPrefix+ "Skipping StageLine: incorrect 1st coord format (,)");
+			return null;
+		}
+
+		// data[1] : 座標形式チェック
+		pos2 = data[1].split(",");
+		if (pos1.length != 3){
+			log.warning(logPrefix+ "Skipping StageLine: incorrect 2nd coord format (,)");
+			return null;
+		}
+
+		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+		return new Cuboid(
+				new Location(world, Double.parseDouble(pos1[0]), Double.parseDouble(pos1[1]), Double.parseDouble(pos1[2])),
+				new Location(world, Double.parseDouble(pos2[0]), Double.parseDouble(pos2[1]), Double.parseDouble(pos2[2]))
+				);
 	}
 
 	/* フラッグデータを変換 */

@@ -65,7 +65,8 @@ public class Game {
 	private Set<String> redPlayers = new HashSet<String>();
 	private Set<String> bluePlayers = new HashSet<String>();
 
-	// スポーン地点と拠点マップ
+	// ステージ全体、スポーン地点と拠点マップ
+	private Cuboid stageArea = null;
 	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
 	private Map<GameTeam, Cuboid> baseMap = new HashMap<GameTeam, Cuboid>();
 
@@ -870,8 +871,19 @@ public class Game {
 		}
 	}
 
-	/* ***** 拠点関係 ***** */
+	/* ***** エリア関係 ***** */
 
+	// ステージ
+	public void setStage(Location pos1, Location pos2){
+		stageArea = new Cuboid(pos1, pos2);
+	}
+	public void setStage(Cuboid cuboid){
+		this.stageArea = cuboid;
+	}
+	public Cuboid getStage(){
+		return this.stageArea;
+	}
+	// 拠点
 	public void setBase(GameTeam team, Location pos1, Location pos2){
 		baseMap.put(team, new Cuboid(pos1, pos2));
 	}

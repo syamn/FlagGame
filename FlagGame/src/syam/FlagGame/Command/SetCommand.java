@@ -83,7 +83,7 @@ public class SetCommand extends BaseCommand {
 		switch (conf){
 			/* 一般 */
 			case STAGE: // ステージ設定
-				break;
+				return setStage(game);
 			case BASE: // 拠点設定
 				return setBase(game);
 			case SPAWN: // スポーン地点設定
@@ -117,6 +117,27 @@ public class SetCommand extends BaseCommand {
 	/* ***** ここから各設定関数 ****************************** */
 
 	// 一般
+	private boolean setStage(Game game){
+		// WorldEdit選択領域取得
+		Block[] corners = WorldEditHandler.getWorldEditRegion(player);
+		// エラー プレイヤーへのメッセージ送信はWorldEditHandlerクラスで処理
+		if (corners == null || corners.length != 2) return true;
+
+		Block block1 = corners[0];
+		Block block2 = corners[1];
+
+		// ワールドチェック
+		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
+			return true;
+		}
+
+		// ステージ設定
+		game.setStage(block1.getLocation(), block2.getLocation());
+
+		Actions.message(null, player, "&aゲーム'"+game.getName()+"'のステージエリアを設定しました！");
+		return true;
+	}
 	/**
 	 * 拠点エリア設定
 	 * @param game
