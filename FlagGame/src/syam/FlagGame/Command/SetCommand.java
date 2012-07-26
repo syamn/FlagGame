@@ -102,6 +102,8 @@ public class SetCommand extends BaseCommand {
 				return setAward(game);
 			case ENTRYFEE: // 参加料
 				return setEntryFee(game);
+			case PROTECT: // ステージ保護
+				return setStageProtect(game);
 
 
 			// 定義漏れ
@@ -329,8 +331,29 @@ public class SetCommand extends BaseCommand {
 		}
 
 		game.setEntryFee(entryfee);
-
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
+
+		return true;
+	}
+	private boolean setStageProtect(Game game){
+		Boolean protect = true; // デフォルトtrue
+		String value = args.get(1).trim();
+
+		if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes")){
+			protect = true;
+		}else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("no")){
+			protect = false;
+		}else{
+			Actions.message(sender, null, "&c値が不正です！true または false を指定してください！");
+			return true;
+		}
+
+		String result = "";
+		if (protect) result = "&a有効";
+		else result = "&c無効";
+
+		game.setStageProtected(protect);
+		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のステージ保護は "+result+" &aに設定されました！");
 
 		return true;
 	}

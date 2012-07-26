@@ -67,6 +67,7 @@ public class Game {
 
 	// ステージ全体、スポーン地点と拠点マップ
 	private Cuboid stageArea = null;
+	private boolean stageProtect = true;
 	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
 	private Map<GameTeam, Cuboid> baseMap = new HashMap<GameTeam, Cuboid>();
 
@@ -882,6 +883,12 @@ public class Game {
 	}
 	public Cuboid getStage(){
 		return this.stageArea;
+	}
+	public void setStageProtected(boolean protect){
+		this.stageProtect = protect;
+	}
+	public boolean stageProtected(){
+		return this.stageProtect;
 	}
 	// 拠点
 	public void setBase(GameTeam team, Location pos1, Location pos2){

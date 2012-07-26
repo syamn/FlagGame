@@ -56,6 +56,7 @@ public class GameFileManager {
 			confFile.set("TeamLimit", game.getTeamLimit());
 			confFile.set("Award", game.getAward());
 			confFile.set("EntryFee", game.getEntryFee());
+			confFile.set("StageProtected", game.stageProtected());
 
 			confFile.set("Stage", stage);
 			confFile.set("Spawns", spawnList);
@@ -106,6 +107,7 @@ public class GameFileManager {
 				game.setTeamLimit(confFile.getInt("TeamLimit", 8));
 				game.setAward(confFile.getInt("Award", 1000));
 				game.setEntryFee(confFile.getInt("EntryFee", 100));
+				game.setStageProtected(confFile.getBoolean("StageProtected", true));
 
 				Cuboid stage = convertStageStringToCuboid(confFile.getString("Stage")); // ステージエリア
 				if (stage != null) game.setStage(stage);

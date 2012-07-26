@@ -17,6 +17,7 @@ public enum Configables {
 	TEAMLIMIT ("チーム毎の人数制限", ConfigType.SIMPLE),
 	AWARD ("勝利チームへの賞金", ConfigType.SIMPLE),
 	ENTRYFEE ("参加料", ConfigType.SIMPLE),
+	PROTECT ("ステージ保護", ConfigType.SIMPLE),
 	;
 
 	private String configName;

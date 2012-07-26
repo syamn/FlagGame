@@ -337,4 +337,8 @@ public class Actions {
 			r.appendLine("[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + "] " + line);
 		} catch (IOException ex) {}
 	}
+
+	/****************************************/
+	/* その他 */
+	/****************************************/
 }
