@@ -124,76 +124,6 @@ public class FGPlayerListener implements Listener{
 				event.setUseInteractedBlock(Result.DENY);
 				event.setUseItemInHand(Result.DENY);
 			}
-
-//			// フラッグ管理モード
-//			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isFlagManager(player)){
-//				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
-//					/* 管理モードで特定のアイテムを持ったままブロックを右クリックした */
-//					Game game = GameManager.getSelectedGame(player);
-//					if (game == null){
-//						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
-//						return;
-//					}
-//					Location loc = block.getLocation();
-//
-//					// ゲーム用ワールドでなければ返す
-//					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
-//						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
-//						return;
-//					}
-//
-//					// 既にフラッグブロックになっているか判定
-//					if (game.getFlag(loc) == null){
-//						// 選択
-//						GameManager.setSelectedBlock(player, block.getLocation());
-//						Actions.message(null, player, "&aブロックを選択しました！");
-//					}else{
-//						// 削除
-//						game.removeFlag(loc);
-//						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
-//					}
-//				}
-//				return;
-//			}
-//			// チェスト管理モード
-//			else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.isChestManager(player)){
-//				if (player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
-//					Game game = GameManager.getSelectedGame(player);
-//					if (game == null){
-//						Actions.message(null, player, "&c先に編集するゲームを選択してください！");
-//						return;
-//					}
-//
-//					Location loc = block.getLocation();
-//
-//					// ゲーム用ワールドでなければ返す
-//					if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
-//						Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
-//						return;
-//					}
-//
-//					// チェスト、かまど、ディスペンサーのどれかでなければ返す
-//					if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
-//						return;
-//					}
-//
-//					// 既にフラッグブロックになっているか判定
-//					if (game.getChest(loc) == null){
-//						// 選択
-//						game.setChest(loc);
-//						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを設定しました！");
-//					}else{
-//						// 削除
-//						game.removeChest(loc);
-//						Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを削除しました！");
-//					}
-//					event.setCancelled(true);
-//					event.setUseInteractedBlock(Result.DENY);
-//					event.setUseItemInHand(Result.DENY);
-//				}
-//				return;
-//			}
-
 			// 看板を右クリックした
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){
 				Sign sign = (Sign) block.getState();
@@ -495,12 +425,19 @@ public class FGPlayerListener implements Listener{
 		for (Game game : plugin.games.values()){
 			Cuboid stage = game.getStage();
 			// ステージ領域内かどうか
-			if (stage.isIn(loc)){
+			if (stage != null && stage.isIn(loc)){
 				// ゲーム保護があるかどうか
 				if (game.stageProtected()){
-					if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
-					return false;
+					// そのゲームに参加しているプレイヤーかどうか取得
+					playerTeam = game.getPlayerTeam(player);
+					if (playerTeam != null){
+						return true; // ゲームに参加しているプレイヤーは開閉可能
+					}else{
+						if (sendFalseMessage) Actions.message(null, player, msgPrefix+"あなたはこのゲームに参加していません！");
+						return false;
+					}
 				}else{
+					// 保護無効なら開閉可能
 					return true;
 				}
 			}
