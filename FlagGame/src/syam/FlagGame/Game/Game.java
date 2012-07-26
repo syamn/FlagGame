@@ -1,11 +1,13 @@
 package syam.FlagGame.Game;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
@@ -56,24 +58,26 @@ public class Game {
 
 	// フラッグ・チェストデータ
 	//private ArrayList<Flag> flags = new ArrayList<Flag>();
-	private Map<Location, Flag> flags = new HashMap<Location, Flag>();
+	private Map<Location, Flag> flags = new ConcurrentHashMap<Location, Flag>();
 	//private Map<Location, Block> chests = new HashMap<Location, Block>();
-	private Set<Location> chests = new HashSet<Location>();
+	private Set<Location> chests = Collections.newSetFromMap(new ConcurrentHashMap<Location, Boolean>());
 
 	// 参加プレイヤー
-	// 7/7 Map<GameTeam, Set<Player>> → Map<GameTeam, Set<String>> に変更
-	private Map<GameTeam, Set<String>> playersMap = new HashMap<GameTeam, Set<String>>();
-	private Set<String> redPlayers = new HashSet<String>();
-	private Set<String> bluePlayers = new HashSet<String>();
+	// 7/7  Map<GameTeam, Set<Player>> → Map<GameTeam, Set<String>> に変更
+	// 7/27 HashMap → ConcurrentHashMap に変更 (同期化)
+	//      new HashSet<String>() → Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>()) に変更
+	private Map<GameTeam, Set<String>> playersMap = new ConcurrentHashMap<GameTeam, Set<String>>();
+	private Set<String> redPlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	private Set<String> bluePlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
 	// ステージ全体、スポーン地点と拠点マップ
 	private Cuboid stageArea = null;
 	private boolean stageProtect = true;
-	private Map<GameTeam, Location> spawnMap = new HashMap<GameTeam, Location>();
-	private Map<GameTeam, Cuboid> baseMap = new HashMap<GameTeam, Cuboid>();
+	private Map<GameTeam, Location> spawnMap = new ConcurrentHashMap<GameTeam, Location>();
+	private Map<GameTeam, Cuboid> baseMap = new ConcurrentHashMap<GameTeam, Cuboid>();
 
 	// 殺害記録
-	private Map<GameTeam, Integer> teamKilledCount = new HashMap<GameTeam, Integer>();
+	private Map<GameTeam, Integer> teamKilledCount = new ConcurrentHashMap<GameTeam, Integer>();
 
 	/**
 	 * コンストラクタ
@@ -142,6 +146,12 @@ public class Game {
 		if (spawnMap.size() != playersMap.size()){
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
 			return;
+		}
+
+		// 保護チェック
+		if (!isStageProtected()){
+			setStageProtected(true);
+			Actions.message(sender, null, "&1ステージ保護が自動で有効になりました！");
 		}
 
 		// 待機
@@ -213,6 +223,7 @@ public class Game {
 
 		// 開始
 		timer(); // タイマースタート
+		ready = false;
 		started = true;
 
 		// アナウンス
@@ -609,7 +620,7 @@ public class Game {
 				if (name == null) continue;
 				Player player = Bukkit.getServer().getPlayer(name);
 				if (player != null && player.isOnline())
-					player.teleport(loc);
+					player.teleport(loc); // TODO: ううむ…。ここでスレッドアクセス例外…？
 			}
 		}
 	}
@@ -639,13 +650,12 @@ public class Game {
 			return;
 		}
 
-		Actions.broadcastMessage(msgPrefix+"&6まもなくゲーム'"+getName()+"'が始まります！");
+		Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6"+getName()+"'&2が始まります！");
 
 		// タイマータスク
 		starttimerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
 			public void run(){
 				/* 1秒ごとに呼ばれる */
-				message(msgPrefix+ "&aあと" +starttimerInSec+ "秒でこのゲームが始まります！");
 
 				// 残り時間がゼロになった
 				if (starttimerInSec <= 0){
@@ -653,6 +663,8 @@ public class Game {
 					start(sender); // ゲーム開始
 					return;
 				}
+
+				message(msgPrefix+ "&aあと" +starttimerInSec+ "秒でこのゲームが始まります！");
 				starttimerInSec--;
 			}
 		}, 0L, 20L);
@@ -826,29 +838,29 @@ public class Game {
 			Block toBlock = loc.getBlock();
 			Block fromBlock = toBlock.getRelative(BlockFace.DOWN, 2);
 
-			// 対象ブロックがコンテナブロックかチェック チェスト、かまど、ディスペンサーじゃなければ何もしない
-			/*if (toBlock.getType() != Material.CHEST && toBlock.getType() != Material.FURNACE && toBlock.getType() != Material.DISPENSER){
-				return;
-			}*/
-
-			// インベントリインターフェースを持たないブロックは返す
+			// インベントリインターフェースを持たないブロックはスキップ
 			if (!(toBlock.getState() instanceof InventoryHolder)){
-				return;
+				log.warning(logPrefix+ "Block is not InventoryHolder!Rollback skipping.. Block: "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+				continue;
 			}
-			// 2ブロック下とブロックIDが違えば何もしない
-			if (toBlock.getTypeId() != toBlock.getTypeId()){
-				return;
-			}
-
-			InventoryHolder toContainer = (InventoryHolder) toBlock.getState();
-			InventoryHolder fromContainer = null; // TODO: チェストでなければここで例外 修正予定
-			try{
-				fromContainer = (InventoryHolder) fromBlock.getState();
-			}catch(ClassCastException ex){
-				log.warning(logPrefix+ "FromContainer setup error!Skipping.. "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+			// 2ブロック下とブロックIDが違えばスキップ
+			if (toBlock.getTypeId() != fromBlock.getTypeId()){
+				log.warning(logPrefix+ "BlockID unmatched!Rollback skipping.. Block: "+ Actions.getBlockLocationString(fromBlock.getLocation()));
 				continue;
 			}
 
+			// 各チェストがインベントリホルダにキャスト出来ない場合例外にならないようtryで囲う
+			InventoryHolder toContainer = null;
+			InventoryHolder fromContainer = null; // TODO: チェストでなければここで例外 修正予定 → 7/22修正済み
+			try{
+				toContainer = (InventoryHolder) toBlock.getState();
+				fromContainer = (InventoryHolder) fromBlock.getState();
+			}catch(ClassCastException ex){
+				log.warning(logPrefix+ "Container can't cast to InventoryHolder! Rollback skipping.. ToBlock: "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+				continue;
+			}
+
+			// チェスト内容コピー
 			ItemStack[] is = fromContainer.getInventory().getContents();
 			toContainer.getInventory().setContents(is);
 		}
@@ -909,7 +921,7 @@ public class Game {
 	public void setStageProtected(boolean protect){
 		this.stageProtect = protect;
 	}
-	public boolean stageProtected(){
+	public boolean isStageProtected(){
 		return this.stageProtect;
 	}
 	// 拠点
