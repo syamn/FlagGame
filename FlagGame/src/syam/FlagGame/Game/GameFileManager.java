@@ -57,7 +57,7 @@ public class GameFileManager {
 			confFile.set("TeamLimit", game.getTeamLimit());
 			confFile.set("Award", game.getAward());
 			confFile.set("EntryFee", game.getEntryFee());
-			confFile.set("StageProtected", game.stageProtected());
+			confFile.set("StageProtected", game.isStageProtected());
 
 			confFile.set("Stage", stage);
 			confFile.set("Spawns", spawnList);

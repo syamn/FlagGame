@@ -62,7 +62,7 @@ public class FGBlockListener implements Listener{
 				Cuboid stage = game.getStage();
 				// ステージエリア内なら破壊を禁止
 				if (stage != null && stage.isIn(loc)){
-					if (game.stageProtected())
+					if (game.isStageProtected())
 						event.setCancelled(true);
 					return; // ステージエリアの被りが無い前提で返す
 				}
@@ -147,7 +147,7 @@ public class FGBlockListener implements Listener{
 				Cuboid stage = game.getStage();
 				// ステージエリア内なら破壊を禁止
 				if (stage != null && stage.isIn(loc)){
-					if (game.stageProtected())
+					if (game.isStageProtected())
 						event.setCancelled(true);
 					return; // ステージエリアの被りが無い前提で返す
 				}
