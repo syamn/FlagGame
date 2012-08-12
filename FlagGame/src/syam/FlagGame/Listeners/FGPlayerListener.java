@@ -371,9 +371,11 @@ public class FGPlayerListener implements Listener{
 						awardMsg = "&7なし";
 
 					// アナウンス
+					Actions.message(null, player, "&b* ===================================");
 					Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
 					Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
 					Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
+					Actions.message(null, player, "&b* ===================================");
 				}
 			}
 		}, 20L);
@@ -427,7 +429,7 @@ public class FGPlayerListener implements Listener{
 			// ステージ領域内かどうか
 			if (stage != null && stage.isIn(loc)){
 				// ゲーム保護があるかどうか
-				if (game.stageProtected()){
+				if (game.isStageProtected()){
 					// そのゲームに参加しているプレイヤーかどうか取得
 					playerTeam = game.getPlayerTeam(player);
 					if (playerTeam != null){

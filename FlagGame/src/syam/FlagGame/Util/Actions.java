@@ -341,4 +341,10 @@ public class Actions {
 	/****************************************/
 	/* その他 */
 	/****************************************/
+
+	public static void tpPlayer(Player player, Location loc){
+		if (player == null || loc == null || !player.isOnline())
+			return;
+		player.teleport(loc);
+	}
 }

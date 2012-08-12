@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +20,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -220,6 +222,10 @@ public class Game {
 
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
+
+		// チャンクロード
+		//getSpawnLocation(GameTeam.RED).getChunk().load();
+		//getSpawnLocation(GameTeam.BLUE).getChunk().load();
 
 		// 開始
 		timer(); // タイマースタート
@@ -618,9 +624,9 @@ public class Game {
 			// チームの全プレイヤー(null/オフラインを除く)をスポーン地点にテレポート
 			for (String name : entry.getValue()){
 				if (name == null) continue;
-				Player player = Bukkit.getServer().getPlayer(name);
+				final Player player = Bukkit.getServer().getPlayer(name);
 				if (player != null && player.isOnline())
-					player.teleport(loc); // TODO: ううむ…。ここでスレッドアクセス例外…？
+					player.teleport(loc, TeleportCause.PLUGIN); // TODO: ううむ…。ここでスレッドアクセス例外…？
 			}
 		}
 	}
@@ -652,7 +658,7 @@ public class Game {
 
 		Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6"+getName()+"'&2が始まります！");
 
-		// タイマータスク
+		// タイマータスク起動
 		starttimerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
 			public void run(){
 				/* 1秒ごとに呼ばれる */
@@ -851,7 +857,7 @@ public class Game {
 
 			// 各チェストがインベントリホルダにキャスト出来ない場合例外にならないようtryで囲う
 			InventoryHolder toContainer = null;
-			InventoryHolder fromContainer = null; // TODO: チェストでなければここで例外 修正予定 → 7/22修正済み
+			InventoryHolder fromContainer = null; // チェストでなければここで例外 修正予定 → 7/22修正済み
 			try{
 				toContainer = (InventoryHolder) toBlock.getState();
 				fromContainer = (InventoryHolder) fromBlock.getState();
