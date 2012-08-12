@@ -93,6 +93,8 @@ public class SetCommand extends BaseCommand {
 				return setFlag(game);
 			case CHEST: // チェスト設定
 				return setChest(game);
+			case SPECSPAWN: // 観戦者スポーン設定
+				return setSpecSpawn(game);
 
 			/* オプション */
 			case GAMETIME: // 制限時間
@@ -258,6 +260,18 @@ public class SetCommand extends BaseCommand {
 		String tool = Material.getMaterial(plugin.getConfigs().toolID).name();
 		Actions.message(null, player, "&aチェスト管理モードを開始しました。選択ツール: " + tool);
 
+		return true;
+	}
+	/**
+	 * 観戦者スポーン地点
+	 * @param game 設定対象のゲームイン寸タンス
+	 * @return
+	 */
+	private boolean setSpecSpawn(Game game){
+		// 観戦者スポーン地点設定
+		game.setSpecSpawn(player.getLocation());
+
+		Actions.message(null, player, "&aゲーム'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
 		return true;
 	}
 

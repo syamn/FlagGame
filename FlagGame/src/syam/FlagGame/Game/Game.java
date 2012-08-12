@@ -77,6 +77,7 @@ public class Game {
 	private boolean stageProtect = true;
 	private Map<GameTeam, Location> spawnMap = new ConcurrentHashMap<GameTeam, Location>();
 	private Map<GameTeam, Cuboid> baseMap = new ConcurrentHashMap<GameTeam, Cuboid>();
+	private Location specSpawn = null;
 
 	// 殺害記録
 	private Map<GameTeam, Integer> teamKilledCount = new ConcurrentHashMap<GameTeam, Integer>();
@@ -296,7 +297,7 @@ public class Game {
 		log("========================================");
 	}
 	/**
-	 * タイマー終了によって呼ばれるゲーム終了処理
+	 * タイマー終了によって呼ばれるゲーム終了処理 別スレッドで実行される
 	 */
 	public void finish(){
 		// ポイントチェック
@@ -894,6 +895,12 @@ public class Game {
 		this.spawnMap.clear();
 		// セット
 		this.spawnMap.putAll(spawns);
+	}
+	public Location getSpecSpawn(){
+		return this.specSpawn;
+	}
+	public void setSpecSpawn(Location loc){
+		this.specSpawn = loc;
 	}
 
 	/* ***** Kill/Death関係 ***** */

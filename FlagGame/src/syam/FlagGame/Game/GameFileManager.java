@@ -61,6 +61,7 @@ public class GameFileManager {
 
 			confFile.set("Stage", stage);
 			confFile.set("Spawns", spawnList);
+			confFile.set("SpecSpawn", convertPlayerLocation(game.getSpecSpawn()));
 			confFile.set("Flags", flagList);
 			confFile.set("Bases", baseList);
 			confFile.set("Chests", chestList);
@@ -113,6 +114,7 @@ public class GameFileManager {
 				Cuboid stage = convertStageStringToCuboid(confFile.getString("Stage")); // ステージエリア
 				if (stage != null) game.setStage(stage);
 				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
+				game.setSpecSpawn(convertPlayerLocation(confFile.getString("SpecSpawn"))); // 観戦者スポーン地点
 				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game)); // フラッグ
 				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点エリア
 				game.setChests(convertChestListToMap(confFile.getStringList("Chests"))); // チェスト
@@ -435,5 +437,25 @@ public class GameFileManager {
 		}
 
 		return ret;
+	}
+
+	// プレイヤーのLocationオブジェクトから文字列に変換
+	private String convertPlayerLocation(Location loc){
+		if (loc == null) return null;
+		return loc.getX()+","+loc.getY()+","+loc.getZ()+","+loc.getYaw()+","+loc.getPitch();
+	}
+	// convertPlayerLocationToStringで変換したプレイヤーLocationに戻す
+	private Location convertPlayerLocation(String loc){
+		if (loc == null) return null;
+		String[] coord = loc.split(",");
+		if (coord.length != 5) return null;
+		return new Location(
+				Bukkit.getWorld(plugin.getConfigs().gameWorld),
+				Double.valueOf(coord[0]),
+				Double.valueOf(coord[1]),
+				Double.valueOf(coord[2]),
+				Float.valueOf(coord[3]),
+				Float.valueOf(coord[4])
+				);
 	}
 }

@@ -49,9 +49,6 @@ public class FlagGame extends JavaPlugin{
 	 *
 	 *  定期的な状況告知
 	 *
-	 *  設定コマンドの見直し
-	 *  フラッグ設定方法の見直し
-	 *
 	 *  参加申請後の取り消し
 	 *
 	 *  3チーム以上のゲーム
@@ -60,7 +57,9 @@ public class FlagGame extends JavaPlugin{
 	 *
 	 *  参加チームの選択
 	 *
+	 * BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
 	 *
+	 * 観戦席設置
 	 *
 	 */
 
@@ -74,6 +73,9 @@ public class FlagGame extends JavaPlugin{
 	 * 死亡メッセージをワールド外で非表示にする (DeathNotify開発)
 	 *
 	 * Valut連携、お金の概念にフック
+	 *
+	 * 設定コマンドの見直し
+	 * フラッグ設定方法の見直し
 	 *
 	 * ゲーム参加者だけにメッセージキャストする等で使うので、一つの変数(リスト？マップ？配列はナシ)に参加プレイヤーを格納したい
 	 *  → チーム毎も必須か 現状維持で HashMap<List,List>を使う

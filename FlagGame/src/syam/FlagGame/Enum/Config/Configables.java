@@ -8,9 +8,11 @@ public enum Configables {
 	// 一般
 	STAGE("ステージエリア", ConfigType.AREA), // エリア保護を行うステージ全体の領域設定
 	BASE("拠点エリア", ConfigType.AREA), // 各チーム拠点の領域設定
-	SPAWN("スポーン地点", ConfigType.POINT), // スポーン地点
+	SPAWN("スポーン地点", ConfigType.POINT), // 各チームのスポーン地点
 	FLAG("フラッグ", ConfigType.MANAGER), // 各チーム拠点の領域設定
 	CHEST("チェスト", ConfigType.MANAGER), // 各チーム拠点の領域設定
+
+	SPECSPAWN("観戦者スポーン地点", ConfigType.POINT), // 観戦時にテレポートする位置 SPECTATE / SPEC / SSPAWN ..etc?
 
 	// オプション
 	GAMETIME ("ゲームの制限時間(秒)", ConfigType.SIMPLE),
