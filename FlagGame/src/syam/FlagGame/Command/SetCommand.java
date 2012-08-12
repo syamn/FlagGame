@@ -1,5 +1,8 @@
 package syam.FlagGame.Command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +15,7 @@ import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
+import syam.FlagGame.Util.Util;
 import syam.FlagGame.Util.WorldEditHandler;
 
 public class SetCommand extends BaseCommand {
@@ -383,7 +387,13 @@ public class SetCommand extends BaseCommand {
 	 * 設定可能な設定とヘルプをsenderに送信する
 	 */
 	private void sendAvailableConf(){
-		Actions.message(sender, null, "&6 stage / base / spawn / flag / chest / gametime / teamlimit / award / entryfee / protect");
+		List<String> col = new ArrayList<String>();
+		for (Configables conf : Configables.values()){
+			col.add(conf.name());
+		}
+
+		Actions.message(sender, null, "&6 " + Util.join(col, "/").toLowerCase());
+		//Actions.message(sender, null, "&6 stage / base / spawn / flag / chest / gametime / teamlimit / award / entryfee / protect");
 	}
 
 	@Override
