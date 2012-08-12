@@ -358,24 +358,32 @@ public class FGPlayerListener implements Listener{
 						return;
 				}
 
-				// 待機中
 				for (Game game : plugin.games.values()){
-					if (!game.isReady()) continue;
+					// 待機中ゲーム
+					if (game.isReady()){
+						// 賞金系メッセージ
+						String entryFeeMsg = String.valueOf(game.getEntryFee()) + "Coin";
+						String awardMsg = String.valueOf(game.getAward()) +"Coin";
+						if (game.getEntryFee() <= 0)
+							entryFeeMsg = "&7FREE!";
+						if (game.getAward() <= 0)
+							awardMsg = "&7なし";
 
-					// 賞金系メッセージ
-					String entryFeeMsg = String.valueOf(game.getEntryFee()) + "Coin";
-					String awardMsg = String.valueOf(game.getAward()) +"Coin";
-					if (game.getEntryFee() <= 0)
-						entryFeeMsg = "&7FREE!";
-					if (game.getAward() <= 0)
-						awardMsg = "&7なし";
-
-					// アナウンス
-					Actions.message(null, player, "&b* ===================================");
-					Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
-					Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
-					Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
-					Actions.message(null, player, "&b* ===================================");
+						// アナウンス
+						Actions.message(null, player, "&b* ===================================");
+						Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
+						Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+						Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
+						Actions.message(null, player, "&b* ===================================");
+					}
+					// 開始中ゲーム
+					else if (game.isStarting()){
+						// 観戦アナウンス
+						Actions.message(null, player, "&b* ===================================");
+						Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'が始まっています！");
+						Actions.message(null, player, msgPrefix+"&2 '&6/flag watch "+game.getName()+"&2' コマンドで観戦することができます！");
+						Actions.message(null, player, "&b* ===================================");
+					}
 				}
 			}
 		}, 20L);

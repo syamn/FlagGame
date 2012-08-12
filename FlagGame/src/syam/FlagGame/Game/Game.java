@@ -236,6 +236,9 @@ public class Game {
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
 		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+Actions.getTimeString(gameTimeInSeconds)+"&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
+		if (getSpecSpawn() != null){
+			Actions.broadcastMessage(msgPrefix+"&2 '&6/flag watch "+getName()+"&2' コマンドで観戦することができます！");
+		}
 
 		// 試合に参加する全プレイヤーを回す
 		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
