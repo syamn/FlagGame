@@ -29,6 +29,7 @@ import syam.FlagGame.Command.SelectGameCommand;
 import syam.FlagGame.Command.SetCommand;
 import syam.FlagGame.Command.StartCommand;
 import syam.FlagGame.Command.TpCommand;
+import syam.FlagGame.Command.WatchCommand;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
@@ -233,6 +234,7 @@ public class FlagGame extends JavaPlugin{
 		commands.add(new HelpCommand());
 		commands.add(new InfoCommand());
 		commands.add(new JoinCommand());
+		commands.add(new WatchCommand());
 
 		// Start Commands
 		commands.add(new ReadyCommand());
