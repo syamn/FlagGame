@@ -79,7 +79,8 @@ public class LeaveCommand extends BaseCommand{
 					Entry<GameTeam, Set<String>> entry = entryIte.next();
 					if (entry.getValue().size() <= 0){
 						GameTeam t = entry.getKey();
-						game.finish(GameResult.STOP, null, "&6"+t.getColor()+t.getTeamName()+" &6の参加者が居なくなりました");
+						game.finish(GameResult.STOP, null, "&6"+t.getColor()+t.getTeamName()+"チーム &6の参加者が居なくなりました");
+						break;
 					}
 				}
 			}
