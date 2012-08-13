@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 
+import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -46,28 +47,28 @@ public class CheckCommand extends BaseCommand{
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&bステージエリア: &c未設定");
 			if (help == null)
-				help = "&6* ステージエリアを設定してください！ *\n" +
+				help = "&6 * ステージエリアを設定してください！ *\n" +
 						"&6 WorldEditでステージエリアを選択して、\n" +
 						"&6 '&a/flag set stage&6'コマンドを実行してください";
 		}
 		else Actions.message(sender, null, msgPrefix+ "&6[*]&bステージエリア: &6設定済み");
 
 		// チームスポーン
-		if (game.getSpawns().size() != game.getPlayersMap().size()){
+		if (game.getSpawns().size() != GameTeam.values().length){
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーン地点: &c未設定");
 			if (help == null)
-				help = "&6* 各チームのスポーン地点を設定してください！ *\n" +
+				help = "&6 * 各チームのスポーン地点を設定してください！ *\n" +
 						"&6 スポーン地点で'&a/flag set spawn <チーム名>&6'コマンドを実行してください";
 		}
 		else Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーン地点: &6設定済み");
 
 		// チームエリア
-		if (game.getBases().size() != game.getPlayersMap().size()){
+		if (game.getBases().size() != GameTeam.values().length){
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーンエリア: &c未設定");
 			if (help == null)
-				help = "&6* 各チームのスポーンエリアを設定してください！ *\n" +
+				help = "&6 * 各チームのスポーンエリアを設定してください！ *\n" +
 						"&6 WorldEditでスポーンエリアを選択して、\n" +
 						"&6 '&a/flag set base <チーム名>&6'コマンドを実行してください";
 		}
@@ -78,7 +79,7 @@ public class CheckCommand extends BaseCommand{
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&bフラッグ: &c未設定");
 			if (help == null)
-				help = "&6* ゲームで使うフラッグを設定してください！ *\n" +
+				help = "&6 * ゲームで使うフラッグを設定してください！ *\n" +
 						"&6 '&a/flag set flag <フラッグ種類>&6'コマンドで管理モードになります";
 		}
 		else Actions.message(sender, null, msgPrefix+ "&6[*]&bフラッグ: &6"+game.getFlags().size()+"個");
@@ -115,8 +116,8 @@ public class CheckCommand extends BaseCommand{
 			Actions.message(sender, null, msgPrefix+ "&6   &b観戦者スポーン地点: &6設定済み");
 
 		Actions.message(sender, null, "&a ===========================================");
-		if (error) Actions.message(sender, null, "&6 設定が完了していません。[*]の設定は必須項目です。");
-		else Actions.message(sender, null, "&a 必須項目は正しく設定されています。");
+		if (error) Actions.message(sender, null, "&6 設定が完了していません。[*]の設定は必須項目です");
+		else Actions.message(sender, null, "&a 必須項目は正しく設定されています");
 
 		if (help != null){
 			String[] ma = help.split("\n");
