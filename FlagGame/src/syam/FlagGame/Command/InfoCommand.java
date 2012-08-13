@@ -44,6 +44,7 @@ public class InfoCommand extends BaseCommand {
 			Actions.message(sender, null, "&a ===========================================");
 			return true;
 		}
+
 		// 引数があれば指定したゲームについての詳細情報を表示する
 		else {
 			Game game = plugin.getGame(args.get(0));
