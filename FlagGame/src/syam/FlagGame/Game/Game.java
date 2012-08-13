@@ -444,13 +444,13 @@ public class Game {
 		// 指定した結果で追加処理
 		switch(result){
 			case TEAM_WIN:
-				Actions.broadcastMessage(msgPrefix+"&6このゲームは"+team.getColor()+team.getTeamName()+"の勝ちになりました");
+				Actions.broadcastMessage(msgPrefix+"&2このゲームは"+team.getColor()+team.getTeamName()+"チームの勝ちになりました");
 				break;
 			case DRAW:
-				Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けになりました");
+				Actions.broadcastMessage(msgPrefix+"&2このゲームは引き分けになりました");
 				break;
 			case STOP:
-				Actions.broadcastMessage(msgPrefix+"&6このゲームは&c無効&2になりました");
+				Actions.broadcastMessage(msgPrefix+"&2このゲームは&c無効&2になりました");
 				break;
 			default:
 				log.warning(logPrefix+ "Undefined GameResult! Please report this!");
@@ -458,7 +458,7 @@ public class Game {
 		}
 
 		if (reason != null && reason != ""){
-			Actions.broadcastMessage(msgPrefix+"&6理由: "+reason);
+			Actions.broadcastMessage(msgPrefix+"&2理由: "+reason);
 		}
 
 
