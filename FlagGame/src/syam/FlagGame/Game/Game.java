@@ -444,7 +444,7 @@ public class Game {
 		// 指定した結果で追加処理
 		switch(result){
 			case TEAM_WIN:
-				Actions.broadcastMessage(msgPrefix+"&2このゲームは"+team.getColor()+team.getTeamName()+"チームの勝ちになりました");
+				Actions.broadcastMessage(msgPrefix+"&2このゲームは"+team.getColor()+team.getTeamName()+"チーム&2の勝ちになりました");
 				break;
 			case DRAW:
 				Actions.broadcastMessage(msgPrefix+"&2このゲームは引き分けになりました");
