@@ -2,9 +2,8 @@ package syam.FlagGame.Enum;
 
 
 /**
- * ゲームを行うためのチーム
+ * ゲームチーム
  * @author syam
- *
  */
 public enum GameTeam {
 	RED ("赤", 35, 14, FlagState.RED, "&c"), // 赤チーム

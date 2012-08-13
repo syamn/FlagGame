@@ -1,9 +1,15 @@
 package syam.FlagGame.Command;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
@@ -66,6 +72,16 @@ public class LeaveCommand extends BaseCommand{
 
 				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aから途中退場しました！");
 				Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
+
+				// 参加者チェック 全員抜けたらゲーム終了
+				Iterator<Entry<GameTeam, Set<String>>> entryIte = game.getPlayersMap().entrySet().iterator();
+				while(entryIte.hasNext()){
+					Entry<GameTeam, Set<String>> entry = entryIte.next();
+					if (entry.getValue().size() <= 0){
+						GameTeam t = entry.getKey();
+						game.finish(GameResult.STOP, null, "&6"+t.getColor()+t.getTeamName()+" &6の参加者が居なくなりました");
+					}
+				}
 			}
 			// ゲーム待機中
 			else if (game.isReady()){

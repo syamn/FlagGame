@@ -5,7 +5,7 @@ package syam.FlagGame.Enum;
  * @author syam
  */
 public enum GameResult {
-	NORMAL,
+	TEAM_WIN,
 	DRAW,
 	STOP,
 	;

@@ -28,6 +28,7 @@ import org.bukkit.potion.PotionEffectType;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagState;
 import syam.FlagGame.Enum.FlagType;
+import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
@@ -423,6 +424,75 @@ public class Game {
 
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();
+		// 初期化
+		init();
+	}
+
+	/**
+	 * 結果を指定してゲームを終了する
+	 * @param result 結果
+	 * @param team GameResult.TEAM_WIN の場合の勝利チーム
+	 */
+	public void finish(GameResult result, GameTeam team, String reason){
+		if (result == null || (result == GameResult.TEAM_WIN && team == null)){
+			log.warning(logPrefix + "Error on method finish(GameResult, GameTeam)! Please report this!");
+			return;
+		}
+
+		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'は中断されました");
+
+		// 指定した結果で追加処理
+		switch(result){
+			case TEAM_WIN:
+				Actions.broadcastMessage(msgPrefix+"&6このゲームは"+team.getColor()+team.getTeamName()+"の勝ちになりました");
+				break;
+			case DRAW:
+				Actions.broadcastMessage(msgPrefix+"&6このゲームは引き分けになりました");
+				break;
+			case STOP:
+				Actions.broadcastMessage(msgPrefix+"&6このゲームは&c無効&2になりました");
+				break;
+			default:
+				log.warning(logPrefix+ "Undefined GameResult! Please report this!");
+				return;
+		}
+
+		if (reason != null && reason != ""){
+			Actions.broadcastMessage(msgPrefix+"&6理由: "+reason);
+		}
+
+
+		// Logging
+		log("========================================");
+		log(" * FlagGame Finished (Manually)");
+		log(" Result: "+result.name());
+		if (result == GameResult.TEAM_WIN){
+			log("WinTeam: "+team.name());
+		}
+		log(" Reason: "+reason);
+		log("========================================");
+
+		// ログの終わり
+		GameID = null;
+
+		// 参加プレイヤーをスポーン地点に移動させる
+		tpSpawnLocation();
+		// 同じゲーム参加者のインベントリをクリア
+		for (Set<String> names : playersMap.values()){
+			for (String name : names){
+				Player player = Bukkit.getPlayer(name);
+				// オンラインチェック
+				if (player != null && player.isOnline()){
+					// アイテムクリア
+					player.getInventory().clear();
+					player.getInventory().setHelmet(null);
+					player.getInventory().setChestplate(null);
+					player.getInventory().setLeggings(null);
+					player.getInventory().setBoots(null);
+				}
+			}
+		}
+
 		// 初期化
 		init();
 	}

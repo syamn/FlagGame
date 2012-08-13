@@ -1,5 +1,7 @@
 package syam.FlagGame.Command;
 
+import java.util.Set;
+
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -28,6 +30,13 @@ public class StartCommand extends BaseCommand{
 		if (!game.isReady()){
 			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'は参加受付状態ではありません");
 			return true;
+		}
+
+		for (Set<String> teamSet : game.getPlayersMap().values()){
+			if (teamSet.size() <= 0){
+				Actions.message(sender, null, "&cプレイヤーが参加していないチームがあります");
+				return true;
+			}
 		}
 
 		// start
