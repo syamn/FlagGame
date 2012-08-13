@@ -28,6 +28,13 @@ public class WatchCommand extends BaseCommand{
 			return true;
 		}
 
+		for (Game check : plugin.games.values()){
+			if (check.getPlayerTeam(player) != null){
+				Actions.message(null, player, "&cあなたはゲーム'"+check.getName()+"'に参加しているため移動できません！");
+				return true;
+			}
+		}
+
 		// テレポート
 		player.teleport(specSpawn, TeleportCause.PLUGIN);
 		Actions.message(null, player, "&aゲーム'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
