@@ -60,7 +60,7 @@ public class FGPlayerListener implements Listener{
 		if(block != null){
 			// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.getManager(player) != null &&
-					player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin")){
+					player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin.setup.set")){
 				Configables conf = GameManager.getManager(player);
 
 				Game game = GameManager.getSelectedGame(player);

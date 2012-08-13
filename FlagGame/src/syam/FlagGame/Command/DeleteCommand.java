@@ -58,6 +58,6 @@ public class DeleteCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin");
+		return sender.hasPermission("flag.admin.setup.delete");
 	}
 }

@@ -31,7 +31,7 @@ public class WatchCommand extends BaseCommand{
 		// テレポート
 		player.teleport(specSpawn, TeleportCause.PLUGIN);
 		Actions.message(null, player, "&aゲーム'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
-		
+
 		return true;
 	}
 

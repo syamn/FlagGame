@@ -47,6 +47,6 @@ public class StartCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin");
+		return sender.hasPermission("flag.admin.start");
 	}
 }

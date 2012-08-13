@@ -17,15 +17,42 @@ permissions:
     flag.user.join:
         default: op
         description: Allow join the game
-    flag.admin:
+    flag.admin.setup.check:
         default: op
-        description: Allow all of administer commands
+        description: Allow check command
+    flag.admin.setup.create:
+        default: op
+        description: Allow create command
+    flag.admin.setup.delete:
+        default: op
+        description: Allow delete command
+    flag.admin.setup.set:
+        default: op
+        description: Allow set command
+    flag.admin.select:
+        default: op
+        description: Allow select command
+    flag.admin.tp:
+        default: op
+        description: Allow tp command
+    flag.admin.start:
+        default: op
+        description: Allow start command
+    flag.admin.ready:
+        default: op
+        description: Allow ready command
+    flag.admin.reload:
+        default: op
+        description: Allow reload command
     flag.admin.sign:
         default: op
         description: Allow place FlagGame sign
-    flag.admin.reload:
+    flag.user.watch:
         default: op
-        description: Allow reload configuration
+        description: Allow watch command
+    flag.user.info:
+        default: op
+        description: Allow info command
     flag.admin.save:
         default: op
         description: Allow save map data

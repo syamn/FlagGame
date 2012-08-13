@@ -68,6 +68,6 @@ public class TpCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin");
+		return sender.hasPermission("flag.admin.tp");
 	}
 }
