@@ -20,6 +20,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import syam.FlagGame.FlagGame;
 
@@ -341,10 +343,34 @@ public class Actions {
 	/****************************************/
 	/* その他 */
 	/****************************************/
-
+	// プレイヤーがオンラインかチェックしてテレポートさせる
 	public static void tpPlayer(Player player, Location loc){
 		if (player == null || loc == null || !player.isOnline())
 			return;
 		player.teleport(loc);
+	}
+
+	// プレイヤーのインベントリをその場にドロップさせる
+	public static void dropInventoryItems(Player player){
+		if (player == null) return;
+
+		PlayerInventory inv = player.getInventory();
+		Location loc = player.getLocation();
+
+		// インベントリアイテム
+		for (ItemStack i : inv.getContents()) {
+			if (i != null && i.getType() != Material.AIR) {
+				inv.remove(i);
+				player.getWorld().dropItemNaturally(loc, i);
+			}
+		}
+
+		// 防具アイテム
+		for (ItemStack i : inv.getArmorContents()){
+			if (i != null && i.getType() != Material.AIR) {
+				inv.remove(i);
+				player.getWorld().dropItemNaturally(loc, i);
+			}
+		}
 	}
 }

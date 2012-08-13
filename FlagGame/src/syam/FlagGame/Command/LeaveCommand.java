@@ -67,7 +67,11 @@ public class LeaveCommand extends BaseCommand{
 				}
 
 				game.remPlayer(player, team);
-				// TODO: テレポート前に所持アイテムをすべてドロップさせる
+
+				// アイテムをすべてその場にドロップさせる
+				player.getInventory().setHelmet(null);
+				Actions.dropInventoryItems(player);
+
 				player.teleport(world.getSpawnLocation(), TeleportCause.PLUGIN);
 
 				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aから途中退場しました！");
