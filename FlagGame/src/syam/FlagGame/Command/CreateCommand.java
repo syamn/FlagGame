@@ -28,6 +28,11 @@ public class CreateCommand extends BaseCommand {
 		game = new Game(plugin, args.get(0));
 		GameManager.setSelectedGame(player, game);
 
+		// update dynmap
+		plugin.getDynmap().updateRegions();
+		// save project
+		plugin.getFileManager().saveGames();
+
 		Actions.message(sender, null, "&a新規ゲーム'"+game.getName()+"'を登録して選択しました！");
 		return true;
 	}

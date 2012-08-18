@@ -39,6 +39,7 @@ import syam.FlagGame.Listeners.DeathNotifierListener;
 import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGEntityListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
+import syam.FlagGame.Util.DynmapHandler;
 
 public class FlagGame extends JavaPlugin{
 
@@ -119,6 +120,7 @@ public class FlagGame extends JavaPlugin{
 	public boolean usingDeathNotifier = false;
 	public static Vault vault = null;
 	public static Economy economy = null;
+	private DynmapHandler dynmap = null;
 
 	/**
 	 * プラグイン起動処理
@@ -167,6 +169,9 @@ public class FlagGame extends JavaPlugin{
 		// ゲーム読み込み
 		gfm.loadGames();
 
+		// dynmapフック
+		setupDynmap();
+
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is enabled!");
@@ -185,10 +190,14 @@ public class FlagGame extends JavaPlugin{
 			}
 		}
 
-
 		// ゲームデータ保存
 		if (gfm != null){
 			gfm.saveGames();
+		}
+
+		// dynmapフック解除
+		if (getDynmap() != null){
+			getDynmap().disableDynmap();
 		}
 
 		// メッセージ表示
@@ -226,6 +235,15 @@ public class FlagGame extends JavaPlugin{
 	        getPluginLoader().disablePlugin(this);
 	        return;
 	    }
+	}
+
+	private void setupDynmap(){
+		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+			public void run(){
+				dynmap = new DynmapHandler(FlagGame.getInstance());
+				dynmap.init();
+			}
+		}, 20L * 3);
 	}
 
 	/**
@@ -313,13 +331,20 @@ public class FlagGame extends JavaPlugin{
 		return gfm;
 	}
 
-
 	/**
 	 * 設定マネージャを返す
 	 * @return ConfigurationManager
 	 */
 	public ConfigurationManager getConfigs() {
 		return config;
+	}
+
+	/**
+	 * dynmapハンドラを返す
+	 * @return DynmapHandler
+	 */
+	public DynmapHandler getDynmap(){
+		return dynmap;
 	}
 
 	/**
