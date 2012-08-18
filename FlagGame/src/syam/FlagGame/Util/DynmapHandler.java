@@ -108,9 +108,9 @@ public class DynmapHandler{
 		// Set markers
 		set = markerapi.getMarkerSet(dynmapID);
 		if (set == null){
-			set = markerapi.createMarkerSet(dynmapID, "フラッグ", null, false);
+			set = markerapi.createMarkerSet(dynmapID, "フラッグゲーム", null, false);
 		}else{
-			set.setMarkerSetLabel("フラッグ");
+			set.setMarkerSetLabel("フラッグゲーム");
 		}
 
 		if (set == null){
@@ -242,12 +242,12 @@ public class DynmapHandler{
 		s = s.replaceAll("%teamlimit%", game.getTeamLimit() + "人");
 
 		// Build Award/EntryFee
-		String entryFeeMsg = String.valueOf(game.getEntryFee()) + "Coin";
-		String awardMsg = String.valueOf(game.getAward()) +"Coin";
+		String entryFeeMsg = String.valueOf(game.getEntryFee()) + " Coin";
+		String awardMsg = String.valueOf(game.getAward()) +" Coin";
 		if (game.getEntryFee() <= 0) entryFeeMsg = "&7FREE";
 		if (game.getAward() <= 0) awardMsg = "&7なし";
 		s = s.replaceAll("%entryfee%", entryFeeMsg);
-		s = s.replaceAll("%award%", game.getTeamLimit() + "人");
+		s = s.replaceAll("%award%", awardMsg);
 
 		// Build specspawn
 		if (game.getSpecSpawn() == null){
