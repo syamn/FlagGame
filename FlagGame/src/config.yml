@@ -8,7 +8,7 @@
 # ItemID, used to create/remove Flag blocks
 ToolID: 269
 # FlagGame World
-WorldName: 'flag'
+WorldName: flag
 # If it true, Gameworld will be protected by player
 WorldProtect: false
 
@@ -31,6 +31,19 @@ DisableCommands:
 - /pot
 - /flymode
 - /fm
+
+#==================#
+#   MySQL Config   #
+#==================#
+MySQL:
+  Server:
+    Address: localhost
+    Port: 3306
+  Database:
+    Name: DatabaseName
+    User_Name: UserName
+    User_Password: UserPassword
+    TablePrefix: flaggame_
 
 #====================#
 #   Logging Config   #

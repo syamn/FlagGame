@@ -47,6 +47,13 @@ public class ConfigurationManager {
 	public boolean deathWhenLogout = new Boolean(true);
 	public boolean disableTeamPVP = new Boolean(true);
 	public List<String> disableCommands = new ArrayList<String>();
+	/* MySQL Configs */
+	public String mysqlAddress = "localhost";
+	public int mysqlPort = 3306;
+	public String mysqlDBName = "DatabaseName";
+	public String mysqlUserName = "UserName";
+	public String mysqlUserPass = "UserPassword";
+	public String mysqlTablePrefix = "flaggame_";
 	/* Logging Configs */
 	public String detailDirectory = defaultDetailDirectory;
 
@@ -86,6 +93,13 @@ public class ConfigurationManager {
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
 		disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
 		disableCommands = plugin.getConfig().getStringList("DisableCommands");
+		/* MySQL Configs */
+		mysqlAddress = plugin.getConfig().getString("MySQL.Server.Address", "localhost");
+		mysqlPort = plugin.getConfig().getInt("MySQL.Server.Port", 3306);
+		mysqlDBName = plugin.getConfig().getString("MySQL.Database.Name", "DatabaseName");
+		mysqlUserName = plugin.getConfig().getString("MySQL.Database.User_Name", "Username");
+		mysqlUserPass = plugin.getConfig().getString("MySQL.Database.User_Password", "UserPassword");
+		mysqlTablePrefix = plugin.getConfig().getString("MySQL.Database.TablePrefix", "flaggame_");
 		/* Logging Configs */
 		detailDirectory = plugin.getConfig().getString("DetailDirectory", defaultDetailDirectory);
 
