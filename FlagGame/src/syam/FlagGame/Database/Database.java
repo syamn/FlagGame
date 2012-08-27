@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -65,24 +67,65 @@ public class Database {
 		}
 	}
 
+	/**
+	 * データベース構造を構築する
+	 */
 	public void createStructure(){
+		// ユーザーデータテーブル
+		write("CREATE TABLE IF NOT EXISTS `" + tablePrefix + "users` (" +
+				"`player_id` int(10) unsigned NOT NULL AUTO_INCREMENT," +	// 割り当てるID
+				"`player_name` varchar(32) NOT NULL," +						// プレイヤー名
+				"`lastjoingame` int(32) unsigned NOT NULL DEFAULT '0'," +	// 最後にゲームに参加した時間
+				"`status` int(2) NOT NULL DEFAULT '0'," +					// ステータスデータ
+				"PRIMARY KEY (`player_id`)," +
+				"UNIQUE KEY `player_name` (`player_name`)" +
+				") ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
+		// 成績データテーブル
+		write("CREATE TABLE IF NOT EXISTS `" + tablePrefix + "records` (" +
+				"`player_id` int(10) unsigned NOT NULL," +					// 割り当てられたプレイヤーID
+				"`played` int(12) unsigned NOT NULL DEFAULT '0'," +			// ゲーム参加回数
+				"`exit` int(12) unsigned NOT NULL DEFAULT '0'," +			// ゲーム途中離脱回数
+				"`win` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルwin数
+				"`lose` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルlose数
+				"`draw` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルdraw数
+				"`kill` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルkill数
+				"`death` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルdeath数
+				"PRIMARY KEY (`player_id`)" +
+				") ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+		// ステージデータテーブル
+		write("CREATE TABLE IF NOT EXISTS `" + tablePrefix + "stages` (" +
+				"`stage_id` int(10) unsigned NOT NULL AUTO_INCREMENT," +	// 割り当てるステージID
+				"`stage_name` varchar(32) NOT NULL," +						// プレイヤー名
+				"`lastplayed` int(32) unsigned NOT NULL DEFAULT '0'," +		// 最後にステージを開始した時間
+				"`played` int(12) unsigned NOT NULL DEFAULT '0'," +			// ステージ開始回数
+				"`kill` int(12) unsigned NOT NULL DEFAULT '0'," +			// ステージkill数
+				"`death` int(12) unsigned NOT NULL DEFAULT '0'," +			// ステージdeath数
+				"PRIMARY KEY (`stage_id`)," +
+				"UNIQUE KEY `stage_name` (`stage_name`)" +
+				") ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 	}
 
 	/**
-	 * SQLクエリーを発行する
+	 * 書き込みのSQLクエリーを発行する
 	 * @param sql 発行するSQL文
 	 * @return クエリ成功ならtrue、他はfalse
 	 */
 	public boolean write(String sql){
+		// 接続確認
 		if (isConnected()){
 			try{
 				PreparedStatement statement = connection.prepareStatement(sql);
-				statement.executeUpdate();
+				statement.executeUpdate(); // 実行
+
+				// 後処理
 				statement.close();
+
 				return true;
 			}catch (SQLException ex){
 				printErrors(ex);
+
 				return false;
 			}
 		}
@@ -95,7 +138,50 @@ public class Database {
 	}
 
 	/**
-	 * int型の値を取得します。
+	 * 読み出しのSQLクエリーを発行する
+	 * @param sql 発行するSQL文
+	 * @return SQLクエリで得られたデータ
+	 */
+	public HashMap<Integer, ArrayList<String>> read(String sql){
+		ResultSet resultSet;
+		HashMap<Integer, ArrayList<String>> rows = new HashMap<Integer, ArrayList<String>>();
+
+		// 接続確認
+		if (isConnected()){
+			try{
+				PreparedStatement statement = connection.prepareStatement(sql);
+				resultSet = statement.executeQuery(); // 実行
+
+				// 結果のレコード数だけ繰り返す
+				while (resultSet.next()){
+					ArrayList<String> column = new ArrayList<String>();
+
+					// カラム内のデータを順にリストに追加
+					for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++){
+						column.add(resultSet.getString(i));
+					}
+
+					// 返すマップにレコード番号とリストを追加
+					rows.put(resultSet.getRow(), column);
+				}
+
+				// 後処理
+				resultSet.close();
+				statement.close();
+			}catch (SQLException ex){
+				printErrors(ex);
+			}
+		}
+		// 未接続
+		else{
+			attemptReconnect();
+		}
+
+		return rows;
+	}
+
+	/**
+	 * int型の値を取得します
 	 * @param sql 発行するSQL文
 	 * @return 最初のローにある数値
 	 */
@@ -103,27 +189,35 @@ public class Database {
 		ResultSet resultSet;
 		int result = 0;
 
+		// 接続確認
 		if (isConnected()){
 			try{
 				PreparedStatement statement = connection.prepareStatement(sql);
-				resultSet = statement.executeQuery();
+				resultSet = statement.executeQuery(); // 実行
 
 				if (resultSet.next()){
 					result = resultSet.getInt(1);
 				}else{
+					// 結果がなければ0を返す
 					result = 0;
 				}
 
+				// 後処理
+				resultSet.close();
 				statement.close();
 			}catch (SQLException ex){
 				printErrors(ex);
 			}
-		}else{
+		}
+		// 未接続
+		else{
 			attemptReconnect();
 		}
 
 		return result;
 	}
+
+
 
 	/**
 	 * 接続状況を返す
