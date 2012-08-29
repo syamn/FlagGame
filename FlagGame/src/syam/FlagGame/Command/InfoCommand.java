@@ -1,10 +1,13 @@
 package syam.FlagGame.Command;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.PlayerFile;
 import syam.FlagGame.Util.Actions;
 
 public class InfoCommand extends BaseCommand {
@@ -70,9 +73,9 @@ public class InfoCommand extends BaseCommand {
 
 			// プレイヤーリスト構築
 			String players = ""; int cnt_players = 0;
-			for (Map.Entry<GameTeam, Set<String>> entry : game.getPlayersMap().entrySet()){
+			for (Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> entry : game.getPlayersMap().entrySet()){
 				String color = entry.getKey().getColor();
-				for (String name : entry.getValue()){
+				for (String name : entry.getValue().keySet()){
 					players = players + color + name + "&f, ";
 					cnt_players++;
 				}

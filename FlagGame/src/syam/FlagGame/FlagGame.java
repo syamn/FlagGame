@@ -32,6 +32,7 @@ import syam.FlagGame.Command.SetCommand;
 import syam.FlagGame.Command.StartCommand;
 import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Command.WatchCommand;
+import syam.FlagGame.Database.Database;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
@@ -57,13 +58,11 @@ public class FlagGame extends JavaPlugin{
 	 *
 	 *  3チーム以上のゲーム
 	 *
-	 *  受付中のゲームを定期アナウンス(プレイヤーログイン時など)
+	 *  受付中のゲームを定期アナウンス(など)
 	 *
 	 *  参加チームの選択
 	 *
-	 * BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
-	 *
-	 * 観戦席設置
+	 *  BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
 	 *
 	 */
 
@@ -87,6 +86,10 @@ public class FlagGame extends JavaPlugin{
 	 * WorldEdit/Guard連携、イベントワールド全域保護、試合中はステージ外への移動を禁止 → onMoveでチェックすると重そうなので使わない
 	 *
 	 * スタート時のカウントダウン
+	 *
+	 * プレイヤーログイン時の待機ゲームアナウンス
+	 *
+	 * 観戦席設置
 	 *
 	 */
 
@@ -112,6 +115,8 @@ public class FlagGame extends JavaPlugin{
 	// ** Variable **
 	// 存在するゲーム <String 一意のゲームID, Game>
 	public HashMap<String, Game> games = new HashMap<String, Game>();
+	// プレイヤーデータベース
+	private static Database database;
 
 	// ** Instance **
 	private static FlagGame instance;
@@ -166,8 +171,12 @@ public class FlagGame extends JavaPlugin{
 		gm = new GameManager(this);
 		gfm = new GameFileManager(this);
 
-		// ゲーム読み込み
+		// ゲームデータ読み込み
 		gfm.loadGames();
+
+		// プレイヤーデータ読み込み
+		database = new Database(this);
+		database.createStructure();
 
 		// dynmapフック
 		setupDynmap();
@@ -345,6 +354,10 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public DynmapHandler getDynmap(){
 		return dynmap;
+	}
+
+	public static Database getPlayerDatabase(){
+		return database;
 	}
 
 	/**

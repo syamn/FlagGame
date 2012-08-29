@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.PlayerFile;
 import syam.FlagGame.Util.Actions;
 
 public class LeaveCommand extends BaseCommand{
@@ -78,9 +80,9 @@ public class LeaveCommand extends BaseCommand{
 				Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
 
 				// 参加者チェック 全員抜けたらゲーム終了
-				Iterator<Entry<GameTeam, Set<String>>> entryIte = game.getPlayersMap().entrySet().iterator();
+				Iterator<Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>>> entryIte = game.getPlayersMap().entrySet().iterator();
 				while(entryIte.hasNext()){
-					Entry<GameTeam, Set<String>> entry = entryIte.next();
+					Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> entry = entryIte.next();
 					if (entry.getValue().size() <= 0){
 						GameTeam t = entry.getKey();
 						game.finish(GameResult.STOP, null, "&6"+t.getColor()+t.getTeamName()+"チーム &6の参加者が居なくなりました");

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -69,9 +70,16 @@ public class Game {
 	// 7/7  Map<GameTeam, Set<Player>> → Map<GameTeam, Set<String>> に変更
 	// 7/27 HashMap → ConcurrentHashMap に変更 (同期化)
 	//      new HashSet<String>() → Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>()) に変更
-	private Map<GameTeam, Set<String>> playersMap = new ConcurrentHashMap<GameTeam, Set<String>>();
-	private Set<String> redPlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-	private Set<String> bluePlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	//private Map<GameTeam, Set<String>> playersMap = new ConcurrentHashMap<GameTeam, Set<String>>();
+	//private Set<String> redPlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	//private Set<String> bluePlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+	private Map<GameTeam, ConcurrentHashMap<String, PlayerFile>> playersMap = new ConcurrentHashMap<GameTeam, ConcurrentHashMap<String, PlayerFile>>();
+	private ConcurrentHashMap<String, PlayerFile> redPlayers = new ConcurrentHashMap<String, PlayerFile>();
+	private ConcurrentHashMap<String, PlayerFile> bluePlayers = new ConcurrentHashMap<String, PlayerFile>();
+
+	// プレイヤーのデータファイル
+
+
 
 	// ステージ全体、スポーン地点と拠点マップ
 	private Cuboid stageArea = null;
@@ -147,7 +155,7 @@ public class Game {
 		}
 
 		// スポーン地点チェック
-		if (spawnMap.size() != playersMap.size()){
+		if (spawnMap.size() != 2){
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
 			return;
 		}
@@ -213,7 +221,7 @@ public class Game {
 		}
 
 		// スポーン地点の再チェック
-		if (spawnMap.size() != playersMap.size()){
+		if (spawnMap.size() != 2){
 			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
 			return;
 		}
@@ -242,9 +250,9 @@ public class Game {
 		}
 
 		// 試合に参加する全プレイヤーを回す
-		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
+		for (Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> entry : playersMap.entrySet()){
 			GameTeam team = entry.getKey();
-			for (String name : entry.getValue()){
+			for (String name : entry.getValue().keySet()){
 				Player player = Bukkit.getPlayer(name);
 				// オフラインプレイヤーをスキップ
 				if (player == null || !player.isOnline())
@@ -285,10 +293,10 @@ public class Game {
 			}
 		}
 		String blue = "", red = "";
-		for (String name : bluePlayers){
+		for (String name : bluePlayers.keySet()){
 			blue = blue + name + ", ";
 		}
-		for (String name : redPlayers){
+		for (String name : redPlayers.keySet()){
 			red = red + name + ", ";
 		}
 		if (blue != "") blue = blue.substring(0, blue.length() - 2);
@@ -371,12 +379,12 @@ public class Game {
 
 		// 賞金支払い
 		if (winTeam != null && award > 0){
-			for (String name : playersMap.get(winTeam)){
+			for (String name : playersMap.get(winTeam).keySet()){
 				Player player = Bukkit.getPlayer(name);
 				if (player != null && player.isOnline()){
 					// 入金
 					if (Actions.addMoney(name, award)){
-						Actions.message(null, player, "&aおめでとうございます！賞金として "+award+"Coin を得ました！");
+						Actions.message(null, player, "&a[+]おめでとうございます！賞金として"+award+"Coinを得ました！");
 						log("+ Player "+name+" received "+award+ "Coin!");
 					}else{
 						Actions.message(null, player, "&c報酬受け取りにエラーが発生しました。管理人までご連絡ください。");
@@ -407,8 +415,8 @@ public class Game {
 		tpSpawnLocation();
 
 		// 同じゲーム参加者のインベントリをクリア
-		for (Set<String> names : playersMap.values()){
-			for (String name : names){
+		for (ConcurrentHashMap<String, PlayerFile> names : playersMap.values()){
+			for (String name : names.keySet()){
 				Player player = Bukkit.getPlayer(name);
 				// オンラインチェック
 				if (player != null && player.isOnline()){
@@ -421,6 +429,9 @@ public class Game {
 				}
 			}
 		}
+
+		// プレイヤーデータ保存
+		savePlayers();
 
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();
@@ -478,8 +489,8 @@ public class Game {
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
 		// 同じゲーム参加者のインベントリをクリア
-		for (Set<String> names : playersMap.values()){
-			for (String name : names){
+		for (ConcurrentHashMap<String, PlayerFile> names : playersMap.values()){
+			for (String name : names.keySet()){
 				Player player = Bukkit.getPlayer(name);
 				// オンラインチェック
 				if (player != null && player.isOnline()){
@@ -492,6 +503,9 @@ public class Game {
 				}
 			}
 		}
+
+		// プレイヤーデータ保存
+		savePlayers();
 
 		// 初期化
 		init();
@@ -597,7 +611,7 @@ public class Game {
 			return false;
 		}
 		// 追加
-		playersMap.get(team).add(player.getName());
+		playersMap.get(team).put(player.getName(), new PlayerFile(player.getName()));
 		log("+ Player "+player.getName()+" joined "+team.name()+" Team!");
 		return true;
 	}
@@ -613,11 +627,17 @@ public class Game {
 
 		// 削除
 		if (team != null){
-			playersMap.get(team).remove(player.getName());
+			if (playersMap.get(team).containsKey(player.getName())){
+				playersMap.get(team).get(player.getName()).save();
+				playersMap.get(team).remove(player.getName());
+			}
 		}else{
 			// チームがnullなら全チームから削除
-			for(Set<String> set : playersMap.values()){
-				set.remove(player.getName());
+			for(ConcurrentHashMap<String, PlayerFile> set : playersMap.values()){
+				if (set.containsKey(player.getName())){
+					set.get(player.getName()).save();
+					set.remove(player.getName());
+				}
 			}
 		}
 		return true;
@@ -629,9 +649,9 @@ public class Game {
 	 */
 	public GameTeam getPlayerTeam(Player player){
 		String name = player.getName();
-		for(Map.Entry<GameTeam, Set<String>> ent : playersMap.entrySet()){
+		for(Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> ent : playersMap.entrySet()){
 			// すべてのチームセットを回す
-			if(ent.getValue().contains(name)){
+			if(ent.getValue().keySet().contains(name)){
 				return ent.getKey();
 			}
 		}
@@ -642,7 +662,7 @@ public class Game {
 	 * プレイヤーマップを返す
 	 * @return
 	 */
-	public Map<GameTeam, Set<String>> getPlayersMap(){
+	public Map<GameTeam, ConcurrentHashMap<String, PlayerFile>> getPlayersMap(){
 		return playersMap;
 	}
 
@@ -659,8 +679,8 @@ public class Game {
 		//Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld), msg);
 
 		// 全チームメンバーにメッセージを送る
-		for (Set<String> set : playersMap.values()){
-			for (String name : set){
+		for (ConcurrentHashMap<String, PlayerFile> set : playersMap.values()){
+			for (String name : set.keySet()){
 				if (name == null) continue;
 				Player player = Bukkit.getPlayer(name);
 				if (player != null && player.isOnline())
@@ -678,7 +698,7 @@ public class Game {
 			return;
 
 		// チームメンバーでループさせてメッセージを送る
-		for (String name : playersMap.get(team)){
+		for (String name : playersMap.get(team).keySet()){
 			if (name == null) continue;
 			Player player = Bukkit.getServer().getPlayer(name);
 			if (player != null && player.isOnline())
@@ -690,17 +710,17 @@ public class Game {
 	 */
 	public void tpSpawnLocation(){
 		// 参加プレイヤーマップを回す
-		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
+		for (Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> entry : playersMap.entrySet()){
 			GameTeam team = entry.getKey();
 			Location loc = getSpawnLocation(team);
 			// チームのスポーン地点が未設定の場合何もしない
 			if (loc == null) continue;
 			// チームの全プレイヤー(null/オフラインを除く)をスポーン地点にテレポート
-			for (String name : entry.getValue()){
+			for (String name : entry.getValue().keySet()){
 				if (name == null) continue;
 				final Player player = Bukkit.getServer().getPlayer(name);
 				if (player != null && player.isOnline())
-					player.teleport(loc, TeleportCause.PLUGIN); // TODO: ううむ…。ここでスレッドアクセス例外…？
+					player.teleport(loc, TeleportCause.PLUGIN);
 			}
 		}
 	}
@@ -713,7 +733,25 @@ public class Game {
 		if (team == null || !playersMap.containsKey(team))
 			return null;
 
-		return playersMap.get(team);
+		return playersMap.get(team).keySet();
+	}
+
+	/**
+	 * 参加中のプレイヤーデータを書き込む
+	 */
+	public void savePlayers(){
+		// 別スレッドで書き込む
+		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
+			public void run(){
+				// 参加プレイヤーマップを回す
+				for (Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> entry : playersMap.entrySet()){
+					// チームの全プレイヤー(null/オフラインを除く)をスポーン地点にテレポート
+					for (Entry<String, PlayerFile> playerEntry : entry.getValue().entrySet()){
+						playerEntry.getValue().save();
+					}
+				}
+			}
+		}, 0L);
 	}
 
 
