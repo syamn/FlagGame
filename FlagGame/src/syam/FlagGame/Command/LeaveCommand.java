@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -77,6 +78,9 @@ public class LeaveCommand extends BaseCommand{
 
 				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aから途中退場しました！");
 				Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
+
+				// exit++
+				PlayerManager.getProfile(player.getName()).addExit();
 
 				// 参加者チェック 全員抜けたらゲーム終了
 				Iterator<Entry<GameTeam, Set<String>>> entryIte = game.getPlayersMap().entrySet().iterator();

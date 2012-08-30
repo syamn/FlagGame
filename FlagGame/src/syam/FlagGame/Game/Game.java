@@ -1,10 +1,12 @@
 package syam.FlagGame.Game;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -31,6 +33,8 @@ import syam.FlagGame.Enum.FlagState;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.FGPlayer.PlayerManager;
+import syam.FlagGame.FGPlayer.PlayerProfile;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 
@@ -285,6 +289,10 @@ public class Game {
 				if (player.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE))
 					player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
 
+				// 参加カウント追加
+				PlayerManager.getProfile(player.getName()).updateLastJoinedGame();
+				PlayerManager.getProfile(player.getName()).addPlayed();
+
 				// メッセージ通知
 				Actions.message(null, player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
 			}
@@ -352,10 +360,14 @@ public class Game {
 
 		// 勝敗判定
 		GameTeam winTeam = null;
-		if (redP > blueP)
+		GameTeam loseTeam = null;
+		if (redP > blueP){
 			winTeam = GameTeam.RED;
-		else if(blueP > redP)
+			loseTeam = GameTeam.BLUE;
+		}else if(blueP > redP){
 			winTeam = GameTeam.BLUE;
+			loseTeam = GameTeam.RED;
+		}
 
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が終わりました！");
@@ -390,6 +402,12 @@ public class Game {
 				}
 			}
 		}
+
+		// カウント
+		if (winTeam != null)
+			addPlayerResultCounts(GameResult.TEAM_WIN, winTeam);
+		else
+			addPlayerResultCounts(GameResult.DRAW, null);
 
 		// Logging
 		log("========================================");
@@ -436,10 +454,10 @@ public class Game {
 	/**
 	 * 結果を指定してゲームを終了する
 	 * @param result 結果
-	 * @param team GameResult.TEAM_WIN の場合の勝利チーム
+	 * @param winTeam GameResult.TEAM_WIN の場合の勝利チーム
 	 */
-	public void finish(GameResult result, GameTeam team, String reason){
-		if (result == null || (result == GameResult.TEAM_WIN && team == null)){
+	public void finish(GameResult result, GameTeam winTeam, String reason){
+		if (result == null || (result == GameResult.TEAM_WIN && winTeam == null)){
 			log.warning(logPrefix + "Error on method finish(GameResult, GameTeam)! Please report this!");
 			return;
 		}
@@ -449,13 +467,16 @@ public class Game {
 		// 指定した結果で追加処理
 		switch(result){
 			case TEAM_WIN:
-				Actions.broadcastMessage(msgPrefix+"&2このゲームは"+team.getColor()+team.getTeamName()+"チーム&2の勝ちになりました");
+				Actions.broadcastMessage(msgPrefix+"&2このゲームは"+winTeam.getColor()+winTeam.getTeamName()+"チーム&2の勝ちになりました");
+				addPlayerResultCounts(GameResult.TEAM_WIN, winTeam);
 				break;
 			case DRAW:
 				Actions.broadcastMessage(msgPrefix+"&2このゲームは引き分けになりました");
+				addPlayerResultCounts(GameResult.DRAW, null);
 				break;
 			case STOP:
 				Actions.broadcastMessage(msgPrefix+"&2このゲームは&c無効&2になりました");
+				addPlayerResultCounts(GameResult.STOP, null);
 				break;
 			default:
 				log.warning(logPrefix+ "Undefined GameResult! Please report this!");
@@ -472,7 +493,7 @@ public class Game {
 		log(" * FlagGame Finished (Manually)");
 		log(" Result: "+result.name());
 		if (result == GameResult.TEAM_WIN){
-			log("WinTeam: "+team.name());
+			log("WinTeam: "+winTeam.name());
 		}
 		log(" Reason: "+reason);
 		log("========================================");
@@ -500,6 +521,75 @@ public class Game {
 
 		// 初期化
 		init();
+	}
+
+	/**
+	 * プレイヤーのプロフィールのゲーム成績を更新する
+	 * @param result 結果
+	 * @param winTeam 勝利チーム
+	 */
+	private void addPlayerResultCounts(GameResult result, GameTeam winTeam){
+		// オフラインプレイヤーリスト
+		List<String> offlines = new ArrayList<String>();
+		offlines.clear();
+
+		if (result == GameResult.STOP){
+			for (Set<String> names : playersMap.values()){
+				for (String name : names){
+					PlayerProfile prof = PlayerManager.getProfile(name);
+					prof.setPlayed(prof.getPlayed() - 1);
+				}
+			}
+			return;
+		}
+		else if (result == GameResult.DRAW){
+			// 引き分け
+			for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
+				for (String name : entry.getValue()){
+					Player player = Bukkit.getPlayer(name);
+					if (player != null && player.isOnline()){
+						PlayerManager.getProfile(name).addDraw(); // draw++
+					}else{
+						offlines.add(name);
+					}
+				}
+			}
+		}
+		else if (result == GameResult.TEAM_WIN){
+			// Set Lose team
+			GameTeam loseTeam = null;
+			if (winTeam.equals(GameTeam.RED))
+				loseTeam = GameTeam.BLUE;
+			else if (winTeam.equals(GameTeam.BLUE))
+				loseTeam = GameTeam.RED;
+
+			// Win team
+			for (String name : playersMap.get(winTeam)){
+				Player player = Bukkit.getPlayer(name);
+				if (player != null && player.isOnline()){
+					PlayerManager.getProfile(name).addWin(); // win++
+				}else{
+					offlines.add(name);
+				}
+			}
+
+			// Lose team
+			if (loseTeam != null){
+				for (String name : playersMap.get(loseTeam)){
+					Player player = Bukkit.getPlayer(name);
+					if (player != null && player.isOnline()){
+						PlayerManager.getProfile(name).addLose(); // win++
+					}else{
+						offlines.add(name);
+					}
+				}
+			}
+		}
+
+		// オフラインユーザーは途中退場カウント追加
+		for (String name : offlines){
+			PlayerManager.getProfile(name).addExit(); // exit++
+		}
 	}
 
 	/**
