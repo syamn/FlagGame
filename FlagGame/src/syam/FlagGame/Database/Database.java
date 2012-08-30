@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import javax.swing.table.TableStringConverter;
+
 import syam.FlagGame.FlagGame;
 
 public class Database {
@@ -20,9 +22,8 @@ public class Database {
 
 	private static FlagGame plugin;
 
-	private static String connectionString = "jdbc:mysql://" + plugin.getConfigs().mysqlAddress + ":" + plugin.getConfigs().mysqlPort
-			+ "/" + plugin.getConfigs().mysqlDBName + "?user=" + plugin.getConfigs().mysqlUserName + "&password=" + plugin.getConfigs().mysqlUserPass;
-	private static String tablePrefix = plugin.getConfigs().mysqlTablePrefix;
+	private static String connectionString = null;
+	private static String tablePrefix = null;
 	private static Connection connection = null;
 	private static long reconnectTimestamp = 0;
 
@@ -32,6 +33,11 @@ public class Database {
 	 */
 	public Database(final FlagGame plugin){
 		this.plugin = plugin;
+
+		// 接続情報読み込み
+		connectionString = "jdbc:mysql://" + plugin.getConfigs().mysqlAddress + ":" + plugin.getConfigs().mysqlPort
+				+ "/" + plugin.getConfigs().mysqlDBName + "?user=" + plugin.getConfigs().mysqlUserName + "&password=" + plugin.getConfigs().mysqlUserPass;
+		tablePrefix = plugin.getConfigs().mysqlTablePrefix;
 
 		conncet(); // 接続
 
