@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import syam.FlagGame.FlagGame;
 
+@Deprecated
 public class PlayerFile {
 	// Logger
 	public static final Logger log = FlagGame.log;

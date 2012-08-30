@@ -3,7 +3,6 @@ package syam.FlagGame.Command;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import syam.FlagGame.FGPlayer.PlayerFile;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -34,7 +33,7 @@ public class StartCommand extends BaseCommand{
 			return true;
 		}
 
-		for (ConcurrentHashMap<String, PlayerFile> teamSet : game.getPlayersMap().values()){
+		for (Set<String> teamSet : game.getPlayersMap().values()){
 			if (teamSet.size() <= 0){
 				Actions.message(sender, null, "&cプレイヤーが参加していないチームがあります");
 				return true;

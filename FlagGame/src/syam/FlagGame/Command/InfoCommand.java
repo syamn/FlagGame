@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.FGPlayer.PlayerFile;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -73,9 +72,9 @@ public class InfoCommand extends BaseCommand {
 
 			// プレイヤーリスト構築
 			String players = ""; int cnt_players = 0;
-			for (Entry<GameTeam, ConcurrentHashMap<String, PlayerFile>> entry : game.getPlayersMap().entrySet()){
+			for (Map.Entry<GameTeam, Set<String>> entry : game.getPlayersMap().entrySet()){
 				String color = entry.getKey().getColor();
-				for (String name : entry.getValue().keySet()){
+				for (String name : entry.getValue()){
 					players = players + color + name + "&f, ";
 					cnt_players++;
 				}
