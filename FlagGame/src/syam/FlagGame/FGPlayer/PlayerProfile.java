@@ -56,7 +56,7 @@ public class PlayerProfile {
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
 		// プレイヤーID(DB割り当て)を読み出す
-		playerID = database.getInt("SELECT id FROM " + tablePrefix + "users WHERE player_name = '" + playerName + "'");
+		playerID = database.getInt("SELECT player_id FROM " + tablePrefix + "users WHERE player_name = '" + playerName + "'");
 
 		// プレイヤー基本テーブルにデータがなければ何もしない
 		if (playerID == 0){
@@ -79,7 +79,7 @@ public class PlayerProfile {
 
 
 		/* *** recordsテーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT played, exit, win, lose, draw, kill, death FROM " + tablePrefix + "records WHERE player_id = " + playerID);
+		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `kill`, `death` FROM " + tablePrefix + "records WHERE player_id = " + playerID);
 		dataValues = recordsDatas.get(1);
 
 		if (dataValues == null){
