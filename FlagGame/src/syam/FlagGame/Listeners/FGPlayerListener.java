@@ -294,23 +294,29 @@ public class FGPlayerListener implements Listener{
 			}
 		}
 
-		// プレイヤーによって倒されてない場合は何もしない
-		if (killer == null) return;
-
 		// 存在するゲームを回す
 		for (Game game : plugin.games.values()){
 			if (!game.isStarting()) continue;
 
+			// ダメージを受けたプレイヤーがゲームに参加しているプレイヤーか
 			GameTeam dTeam = game.getPlayerTeam(deader);
-			GameTeam aTeam = game.getPlayerTeam(killer);
+			if (dTeam != null){
+				PlayerManager.getProfile(deader.getName()).addDeath(); // death数追加
+			}else{
+				continue;
+			}
 
-			// 同じチームの場合そのゲームに
-			if (dTeam != null && aTeam != null){
+			// プレイヤーによって殺され、そのプレイヤーが同じゲームに参加しているか
+			if (killer == null) continue;
+			GameTeam aTeam = game.getPlayerTeam(killer);
+			if (aTeam != null){
 				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
 				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),deathMsg);
 
 				// チームキル数追加
 				game.addKillCount(aTeam);
+
+				PlayerManager.getProfile(killer.getName()).addKill(); // kill数追加
 
 				//for (Player player : Bukkit.getOnlinePlayers())
 				//	Actions.message(null, player, deathMsg);
