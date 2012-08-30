@@ -12,7 +12,7 @@ public class MySQLReconnect implements Runnable{
 	@Override
 	public void run(){
 		if (!Database.isConnected()){
-			Database.conncet();
+			Database.connect();
 			if (Database.isConnected()){
 				/**
 				 * TODO:

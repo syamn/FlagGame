@@ -39,7 +39,7 @@ public class Database {
 				+ "/" + plugin.getConfigs().mysqlDBName + "?user=" + plugin.getConfigs().mysqlUserName + "&password=" + plugin.getConfigs().mysqlUserPass;
 		tablePrefix = plugin.getConfigs().mysqlTablePrefix;
 
-		conncet(); // 接続
+		connect(); // 接続
 
 		// ドライバを読み込む
 		try{
@@ -56,7 +56,7 @@ public class Database {
 	/**
 	 * データベースに接続する
 	 */
-	public static void conncet(){
+	public static void connect(){
 		try{
 			log.info(logPrefix+ "Attempting connection to MySQL..");
 
