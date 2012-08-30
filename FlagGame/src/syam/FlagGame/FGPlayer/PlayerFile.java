@@ -1,4 +1,4 @@
-package syam.FlagGame.Game;
+package syam.FlagGame.FGPlayer;
 
 import java.io.File;
 import java.util.logging.Logger;

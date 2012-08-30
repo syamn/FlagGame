@@ -31,6 +31,7 @@ import syam.FlagGame.Enum.FlagState;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.FGPlayer.PlayerFile;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 

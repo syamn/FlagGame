@@ -12,8 +12,8 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.FGPlayer.PlayerFile;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.PlayerFile;
 import syam.FlagGame.Util.Actions;
 
 public class LeaveCommand extends BaseCommand{
