@@ -20,7 +20,7 @@ public class PlayerProfile {
 	private int playerID;
 
 	/* Data */
-	private long lastjoingame = 0;	// 最終ゲーム参加日時
+	private Long lastjoingame = 0L;	// 最終ゲーム参加日時
 	private int status = 0;			// プレイヤーステータス
 
 	private int played = 0;			// プレイ回数
@@ -121,7 +121,27 @@ public class PlayerProfile {
 	public void save(){
 		Long timestamp = System.currentTimeMillis() / 1000;
 
+		Database database = FlagGame.getPlayerDatabase();
+		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
+		// データベースupdate
+
+		/* usersテーブル */
+		database.write("UPDATE " + tablePrefix + "users SET " +
+				"`lastjoingame` = " + lastjoingame.intValue() +
+				", `status` = " + status +
+				" WHERE player_id = " + playerID);
+
+		/* recordsテーブル */
+		database.write("UPDATE " + tablePrefix + "records SET " +
+				"`played` = " + played +
+				", `exit` = " + exit +
+				", `win` = " + win +
+				", `lose` = " + lose +
+				", `draw` = " + draw +
+				", `kill` = " + kill +
+				", `death` = " + death +
+				" WHERE player_id = " + playerID);
 	}
 
 	/* getter / setter */

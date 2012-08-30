@@ -206,10 +206,16 @@ public class FlagGame extends JavaPlugin{
 			}
 		}
 
+		// プレイヤーデータを保存
+		PlayerManager.saveAll();
+
 		// ゲームデータ保存
 		if (gfm != null){
 			gfm.saveGames();
 		}
+
+		// タスクをすべて止める
+		getServer().getScheduler().cancelTasks(this);
 
 		// dynmapフック解除
 		if (getDynmap() != null){
