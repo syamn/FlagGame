@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +33,7 @@ import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Enum.SignAction;
 import syam.FlagGame.Enum.Config.Configables;
+import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
@@ -218,26 +220,7 @@ public class FGPlayerListener implements Listener{
 		event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().gameWorld).getSpawnLocation());
 	}
 
-	// プレイヤーがログアウトした
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void onPlayerQuit(final PlayerQuitEvent event){
-		Player player = event.getPlayer();
 
-		for (Game game : plugin.games.values()){
-			if (!game.isStarting()) continue;
-
-			GameTeam team = game.getPlayerTeam(player);
-
-			// チームに所属していてこの設定が有効なら、アナウンスしてHPをゼロにする
-			if (team != null && plugin.getConfigs().deathWhenLogout){
-				player.setHealth(0);
-				//game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
-				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),
-						msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
-				game.log(" Player "+player.getName()+" Died because Logged out!");
-			}
-		}
-	}
 
 	// プレイヤーがコマンドを使おうとした
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -340,6 +323,29 @@ public class FGPlayerListener implements Listener{
 		}
 	}
 
+	// プレイヤーがログアウトした
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onPlayerQuit(final PlayerQuitEvent event){
+		Player player = event.getPlayer();
+
+		/* TODO: GC here */
+
+		for (Game game : plugin.games.values()){
+			if (!game.isStarting()) continue;
+
+			GameTeam team = game.getPlayerTeam(player);
+
+			// チームに所属していてこの設定が有効なら、アナウンスしてHPをゼロにする
+			if (team != null && plugin.getConfigs().deathWhenLogout){
+				player.setHealth(0);
+				//game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),
+						msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+				game.log(" Player "+player.getName()+" Died because Logged out!");
+			}
+		}
+	}
+
 	// プレイヤーがログインした
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerJoin(final PlayerJoinEvent event){
@@ -387,6 +393,13 @@ public class FGPlayerListener implements Listener{
 				}
 			}
 		}, 20L);
+	}
+
+	// プレイヤーがログインしようとした
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerLogin(final PlayerLoginEvent event){
+		// プレイヤー追加
+		PlayerManager.addPlayer(event.getPlayer());
 	}
 
 	/* methods */

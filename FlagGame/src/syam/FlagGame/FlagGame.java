@@ -10,6 +10,7 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -33,6 +34,7 @@ import syam.FlagGame.Command.StartCommand;
 import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Command.WatchCommand;
 import syam.FlagGame.Database.Database;
+import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
@@ -174,9 +176,14 @@ public class FlagGame extends JavaPlugin{
 		// ゲームデータ読み込み
 		gfm.loadGames();
 
-		// プレイヤーデータ読み込み
+		// データベース連携
 		database = new Database(this);
 		database.createStructure();
+
+		// プレイヤー追加
+		for (Player player : getServer().getOnlinePlayers()){
+			PlayerManager.addPlayer(player);
+		}
 
 		// dynmapフック
 		setupDynmap();

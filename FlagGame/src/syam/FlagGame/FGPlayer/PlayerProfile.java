@@ -20,16 +20,18 @@ public class PlayerProfile {
 	private int playerID;
 
 	/* Data */
-	private int kill = 0; // Kill数
-	private int death = 0; // Death数
+	private long lastjoingame = 0;	// 最終ゲーム参加日時
+	private int status = 0;			// プレイヤーステータス
 
-	private int played = 0; // プレイ回数
-	private int exit = 0; // 途中退場回数
+	private int played = 0;			// プレイ回数
+	private int exit = 0;			// 途中退場回数
 
-	private int win = 0; // win
-	private int lose = 0; // lose
-	private int draw = 0; // draw
+	private int win = 0;			// win
+	private int lose = 0;			// lose
+	private int draw = 0;			// draw
 
+	private int kill = 0;			// Kill数
+	private int death = 0;			// Death数
 
 	/**
 	 * コンストラクタ
@@ -45,6 +47,10 @@ public class PlayerProfile {
 		}
 	}
 
+	/**
+	 * データベースからプレイヤーデータを読み込み
+	 * @return 正常終了すればtrue、基本データテーブルにデータがなければfalse
+	 */
 	public boolean loadMySQL(){
 		Database database = FlagGame.getPlayerDatabase();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
@@ -57,11 +63,24 @@ public class PlayerProfile {
 			return false;
 		}
 
-		//
+		/* *** usersテーブルデータ読み込み *************** */
+		HashMap<Integer, ArrayList<String>> usersDatas = database.read("SELECT lastjoingame, status FROM " + tablePrefix + "users WHERE player_id = " + playerID);
+		ArrayList<String> dataValues = usersDatas.get(1);
 
-		// recordsデータ読み込み
+		if (dataValues == null){
+			log.severe(playerName + "does not exist in the users table! (user: " + playerName + ")");
+			return false;
+		}else{
+			// データ読み出し
+			this.lastjoingame = Long.valueOf(dataValues.get(0));
+			this.status = Integer.valueOf(dataValues.get(1));
+		}
+		dataValues.clear();
+
+
+		/* *** recordsテーブルデータ読み込み *************** */
 		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT played, exit, win, lose, draw, kill, death FROM " + tablePrefix + "records WHERE player_id = " + playerID);
-		ArrayList<String> dataValues = recordsDatas.get(1);
+		dataValues = recordsDatas.get(1);
 
 		if (dataValues == null){
 			// 新規レコード追加
@@ -77,13 +96,130 @@ public class PlayerProfile {
 			this.kill = Integer.valueOf(dataValues.get(5));
 			this.death = Integer.valueOf(dataValues.get(6));
 		}
+		dataValues.clear();
 
-
+		// 読み込み正常終了
+		loaded = true;
 		return true;
 	}
 
+	/**
+	 * 新規ユーザーデータをMySQLデータベースに追加
+	 */
 	private void addMySQLPlayer(){
+		Database database = FlagGame.getPlayerDatabase();
+		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
+		database.write("INSERT INTO " + tablePrefix + "users (player_name) VALUES ('" + playerName + "')"); // usersテーブル
+		playerID = database.getInt("SELECT player_id FROM "+tablePrefix + "users WHERE player_name = '" + playerName + "'");
+		database.write("INSERT INTO " + tablePrefix + "records (player_id) VALUES (" + playerID + ")"); // recordsテーブル
+	}
+
+	/**
+	 * プレイヤーデータをMySQLデータベースに保存
+	 */
+	public void save(){
+		Long timestamp = System.currentTimeMillis() / 1000;
+
+
+	}
+
+	/* getter / setter */
+	public int getPlayerID(){
+		return playerID;
+	}
+	public boolean isLoaded(){
+		return loaded;
+	}
+
+	/* Data */
+
+	// lastjoingame
+	public void updateLastJoinedGame(){
+		this.lastjoingame = System.currentTimeMillis() / 1000;
+	}
+	public long getLastJoinedGame(){
+		return this.lastjoingame;
+	}
+	// status
+	public void setStatus(int status){
+		this.status = status;
+	}
+	public int getStatus(){
+		return this.status;
+	}
+
+	// played
+	public void setPlayed(int played){
+		this.played = played;
+	}
+	public int getPlayed(){
+		return this.played;
+	}
+	public void addPlayed(){
+		this.played = this.played + 1;
+	}
+	// exit
+	public void setExit(int exit){
+		this.exit = exit;
+	}
+	public int getExit(){
+		return this.exit;
+	}
+	public void addExit(){
+		this.exit = this.exit + 1;
+	}
+
+	// win
+	public void setWin(int win){
+		this.win = win;
+	}
+	public int getWin(){
+		return this.win;
+	}
+	public void addWin(){
+		this.win = this.win + 1;
+	}
+	// lose
+	public void setLose(int lose){
+		this.lose = lose;
+	}
+	public int getLose(){
+		return this.lose;
+	}
+	public void addLose(){
+		this.lose = this.lose + 1;
+	}
+	// draw
+	public void setDraw(int draw){
+		this.draw = draw;
+	}
+	public int getDraw(){
+		return this.draw;
+	}
+	public void addDraw(){
+			this.draw = this.draw + 1;
+		}
+
+	// kill
+	public void setKill(int kill){
+		this.kill = kill;
+	}
+	public int getKill(){
+		return this.kill;
+	}
+	public void addKill(){
+		this.kill = this.kill + 1;
+	}
+	// death
+	public void setDeath(int death){
+		this.death = death;
+	}
+	public int getDeath(){
+		return this.death;
+	}
+	public void addDeath(){
+		this.death = this.death + 1;
 	}
 
 }
