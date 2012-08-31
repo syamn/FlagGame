@@ -53,6 +53,21 @@ permissions:
     flag.user.info:
         default: op
         description: Allow info command
+    flag.user.leave.spectate:
+        default: op
+        description: Allow leave from spectate area
+    flag.user.leave.game:
+        default: op
+        description: Allow leave from game
+    flag.user.leave.ready:
+        default: op
+        description: Allow leave from ready game
+    flag.user.stats.self:
+        default: op
+        description: Allow show self stats
+    flag.user.stats.other:
+        default: op
+        description: Allow show other player stats
     flag.admin.save:
         default: op
         description: Allow save map data

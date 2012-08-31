@@ -23,7 +23,7 @@ public abstract class BaseCommand {
 	public int argLength = 0;
 	public String usage;
 	public boolean bePlayer = true;
-	public Player player;
+	public Player player = null;
 	public String command;
 	public FlagGame plugin;
 
