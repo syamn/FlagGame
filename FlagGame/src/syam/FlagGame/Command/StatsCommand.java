@@ -3,6 +3,8 @@ package syam.FlagGame.Command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.entity.Player;
+
 import syam.FlagGame.FGPlayer.FGPlayer;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
@@ -24,7 +26,7 @@ public class StatsCommand extends BaseCommand{
 		// 自分の情報表示
 		if (args.size() <= 0){
 			// check console
-			if (player == null){
+			if (!(sender instanceof Player)){
 				Actions.message(sender, null, "&c情報を表示するユーザ名を入力してください");
 				return true;
 			}
@@ -71,27 +73,29 @@ public class StatsCommand extends BaseCommand{
 		}
 
 		// メッセージ送信
-		for (String line : buildStrings(prof)){
+		for (String line : buildStrings(prof, other)){
 			Actions.message(sender, null, line);
 		}
 
 		return true;
 	}
 
-	private List<String> buildStrings(PlayerProfile prof){
+	private List<String> buildStrings(PlayerProfile prof, boolean other){
 		List<String> l = new ArrayList<String>();
 		l.clear();
 
 		// ヘッダー
-		l.add("&a[FlagGame] Stats");
+		l.add("&a[FlagGame] プレイヤー情報");
+		if (other)
+			l.add("&aプレイヤー: &6" + prof.getPlayerName());
 
 		// 一般
 		l.add("&6-= 一般 =-");
-		l.add("&e    ゲーム参加: &a" + prof.getPlayed() + " 回");
+		l.add("&eゲーム参加: &a" + prof.getPlayed() + " 回");
 		if (prof.getExit() == 0)
-			l.add("&eゲーム途中退場: &a0 回");
+			l.add("&e  途中退場: &a0 回");
 		else
-			l.add("&eゲーム途中退場: &c" + prof.getExit() + " 回");
+			l.add("&e  途中退場: &c" + prof.getExit() + " 回");
 
 		// 勝敗
 		l.add("&6-= 勝敗 =-");
@@ -103,7 +107,16 @@ public class StatsCommand extends BaseCommand{
 		l.add("&6-= 個人 =-");
 		l.add("&e Kill数: &a" + prof.getKill() + " Kill");
 		l.add("&eDeath数: &a" + prof.getDeath() + " Death");
-		l.add("&e    K/D: &a" + String.format("%.3f", prof.getKD()));
+
+		double kd = prof.getKD();
+		String cc = "&7"; // 灰色 (1.0 or 0.0)
+		if (kd > 1.0D){
+			cc = "&a";	// 緑色 (1+)
+		}else if (kd < 1.0D && kd != 0.0D){
+			cc = "&c";	// 赤色 (1-)
+		}
+
+		l.add("&e    K/D: &a" + cc + String.format("%.3f", prof.getKD()));
 
 		return l;
 	}
