@@ -119,7 +119,7 @@ public class PlayerProfile {
 	 * プレイヤーデータをMySQLデータベースに保存
 	 */
 	public void save(){
-		Long timestamp = System.currentTimeMillis() / 1000;
+		//Long timestamp = System.currentTimeMillis() / 1000;
 
 		Database database = FlagGame.getPlayerDatabase();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
@@ -142,6 +142,17 @@ public class PlayerProfile {
 				", `kill` = " + kill +
 				", `death` = " + death +
 				" WHERE player_id = " + playerID);
+	}
+
+	/* 特殊データ算出 */
+	public double getKD(){
+		// kill, death どちらかが0ならk/dは0を返す
+		if (kill <= 0 || death <= 0){
+			return 0.0D;
+		}else{
+			double kd = kill/death;
+			return kd;
+		}
 	}
 
 	/* getter / setter */
