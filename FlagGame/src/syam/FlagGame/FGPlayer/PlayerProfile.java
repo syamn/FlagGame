@@ -30,11 +30,11 @@ public class PlayerProfile {
 	private int lose = 0;			// lose
 	private int draw = 0;			// draw
 
-	private int kill = 0;			// Kill数
-	private int death = 0;			// Death数
-
 	private int flag_place = 0;		// Place数
 	private int flag_break = 0;		// Break数
+
+	private int kill = 0;			// Kill数
+	private int death = 0;			// Death数
 
 	/**
 	 * コンストラクタ
@@ -82,7 +82,7 @@ public class PlayerProfile {
 
 
 		/* *** recordsテーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `kill`, `death`, `place`, `break` FROM " + tablePrefix + "records WHERE player_id = " + playerID);
+		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `place`, `break`, `kill`, `death` FROM " + tablePrefix + "records WHERE player_id = " + playerID);
 		dataValues = recordsDatas.get(1);
 
 		if (dataValues == null){
@@ -144,10 +144,10 @@ public class PlayerProfile {
 				", `win` = " + win +
 				", `lose` = " + lose +
 				", `draw` = " + draw +
-				", `kill` = " + kill +
-				", `death` = " + death +
 				", `place` = " + flag_place +
 				", `break` = " + flag_break +
+				", `kill` = " + kill +
+				", `death` = " + death +
 				" WHERE player_id = " + playerID);
 	}
 
@@ -252,27 +252,6 @@ public class PlayerProfile {
 			this.draw = this.draw + 1;
 		}
 
-	// kill
-	public void setKill(int kill){
-		this.kill = kill;
-	}
-	public int getKill(){
-		return this.kill;
-	}
-	public void addKill(){
-		this.kill = this.kill + 1;
-	}
-	// death
-	public void setDeath(int death){
-		this.death = death;
-	}
-	public int getDeath(){
-		return this.death;
-	}
-	public void addDeath(){
-		this.death = this.death + 1;
-	}
-
 	// place
 	public void setPlace(int flag_place){
 		this.flag_place = flag_place;
@@ -292,5 +271,26 @@ public class PlayerProfile {
 	}
 	public void addBreak(){
 		this.flag_break = this.flag_break + 1;
+	}
+
+	// kill
+	public void setKill(int kill){
+		this.kill = kill;
+	}
+	public int getKill(){
+		return this.kill;
+	}
+	public void addKill(){
+		this.kill = this.kill + 1;
+	}
+	// death
+	public void setDeath(int death){
+		this.death = death;
+	}
+	public int getDeath(){
+		return this.death;
+	}
+	public void addDeath(){
+		this.death = this.death + 1;
 	}
 }

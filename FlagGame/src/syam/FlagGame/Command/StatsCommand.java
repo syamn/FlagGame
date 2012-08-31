@@ -97,20 +97,22 @@ public class StatsCommand extends BaseCommand{
 		else
 			l.add("&e  途中退場: &c" + prof.getExit() + " 回");
 
-		// 勝敗 *************************************************
-		l.add("&6-=== 勝敗 ===-");
+		// 結果 *************************************************
+		l.add("&6-=== ゲーム勝敗 ===-");
 		l.add("&e Win: &a" + prof.getWin() + " 回");
 		l.add("&eLose: &a" + prof.getLose() + " 回");
 		l.add("&eDraw: &a" + prof.getDraw() + " 回");
 
-		// 個人 *************************************************
-		l.add("&6-=== 個人 ===-");
+		// フラッグ *************************************************
+		l.add("&6-=== フラッグ ===-");
+		l.add("&e 設置: &a" + prof.getPlace() + " フラッグ");
+		l.add("&e 破壊: &a" + prof.getBreak() + " フラッグ");
+
+		// 戦闘 *************************************************
+		l.add("&6-=== 戦闘 ===-");
 		l.add("&e Kill: &a" + prof.getKill() + " 回");
 		l.add("&eDeath: &a" + prof.getDeath() + " 回");
 		l.add("&e  K/D: &a" + prof.getKDstring()); // kd
-
-		l.add("&e 設置: &a" + prof.getPlace() + " フラッグ");
-		l.add("&e 破壊: &a" + prof.getBreak() + " フラッグ");
 
 		return l;
 	}
