@@ -282,7 +282,6 @@ public class FGPlayerListener implements Listener{
 		if (cause == null) return;
 		// エンティティによって殺された
 		if (cause instanceof EntityDamageByEntityEvent){
-			// TODO: Killカウント実装？
 			Entity killerEntity = ((EntityDamageByEntityEvent) cause).getDamager();
 			// エンティティ→プレイヤーによって殺された
 			if (killerEntity instanceof Player){

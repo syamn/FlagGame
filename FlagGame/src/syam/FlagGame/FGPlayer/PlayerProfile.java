@@ -33,6 +33,9 @@ public class PlayerProfile {
 	private int kill = 0;			// Kill数
 	private int death = 0;			// Death数
 
+	private int flag_place = 0;		// Place数
+	private int flag_break = 0;		// Break数
+
 	/**
 	 * コンストラクタ
 	 * @param playerName プレイヤー名
@@ -79,7 +82,7 @@ public class PlayerProfile {
 
 
 		/* *** recordsテーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `kill`, `death` FROM " + tablePrefix + "records WHERE player_id = " + playerID);
+		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `kill`, `death`, `place`, `break` FROM " + tablePrefix + "records WHERE player_id = " + playerID);
 		dataValues = recordsDatas.get(1);
 
 		if (dataValues == null){
@@ -95,6 +98,8 @@ public class PlayerProfile {
 			this.draw = Integer.valueOf(dataValues.get(4));
 			this.kill = Integer.valueOf(dataValues.get(5));
 			this.death = Integer.valueOf(dataValues.get(6));
+			this.flag_place = Integer.valueOf(dataValues.get(7));
+			this.flag_break = Integer.valueOf(dataValues.get(8));
 		}
 		dataValues.clear();
 
@@ -141,6 +146,8 @@ public class PlayerProfile {
 				", `draw` = " + draw +
 				", `kill` = " + kill +
 				", `death` = " + death +
+				", `place` = " + flag_place +
+				", `break` = " + flag_break +
 				" WHERE player_id = " + playerID);
 	}
 
@@ -153,6 +160,16 @@ public class PlayerProfile {
 			double kd = (double)kill/(double)death;
 			return kd;
 		}
+	}
+	public String getKDstring(){
+		double kd = getKD();
+		String cc = "&7"; // 灰色 (1.0 or 0.0)
+		if (kd > 1.0D){
+			cc = "&a";	// 緑色 (1+)
+		}else if (kd < 1.0D && kd != 0.0D){
+			cc = "&c";	// 赤色 (1-)
+		}
+		return cc + String.format("%.3f", kd);
 	}
 
 	/* getter / setter */
@@ -256,4 +273,24 @@ public class PlayerProfile {
 		this.death = this.death + 1;
 	}
 
+	// place
+	public void setPlace(int flag_place){
+		this.flag_place = flag_place;
+	}
+	public int getPlace(){
+		return this.flag_place;
+	}
+	public void addPlace(){
+		this.flag_place = this.flag_place + 1;
+	}
+	// break
+	public void setBreak(int flag_break){
+		this.flag_break = flag_break;
+	}
+	public int getBreak(){
+		return this.flag_break;
+	}
+	public void addBreak(){
+		this.flag_break = this.flag_break + 1;
+	}
 }

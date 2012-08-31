@@ -89,34 +89,28 @@ public class StatsCommand extends BaseCommand{
 		if (other)
 			l.add("&aプレイヤー: &6" + prof.getPlayerName());
 
-		// 一般
-		l.add("&6-= 一般 =-");
+		// 一般 *************************************************
+		l.add("&6-=== 一般 ===-");
 		l.add("&eゲーム参加: &a" + prof.getPlayed() + " 回");
 		if (prof.getExit() == 0)
 			l.add("&e  途中退場: &a0 回");
 		else
 			l.add("&e  途中退場: &c" + prof.getExit() + " 回");
 
-		// 勝敗
-		l.add("&6-= 勝敗 =-");
+		// 勝敗 *************************************************
+		l.add("&6-=== 勝敗 ===-");
 		l.add("&e Win: &a" + prof.getWin() + " 回");
 		l.add("&eLose: &a" + prof.getLose() + " 回");
 		l.add("&eDraw: &a" + prof.getDraw() + " 回");
 
-		// Kill/Death
-		l.add("&6-= 個人 =-");
-		l.add("&e Kill数: &a" + prof.getKill() + " Kill");
-		l.add("&eDeath数: &a" + prof.getDeath() + " Death");
+		// 個人 *************************************************
+		l.add("&6-=== 個人 ===-");
+		l.add("&e Kill: &a" + prof.getKill() + " 回");
+		l.add("&eDeath: &a" + prof.getDeath() + " 回");
+		l.add("&e  K/D: &a" + prof.getKDstring()); // kd
 
-		double kd = prof.getKD();
-		String cc = "&7"; // 灰色 (1.0 or 0.0)
-		if (kd > 1.0D){
-			cc = "&a";	// 緑色 (1+)
-		}else if (kd < 1.0D && kd != 0.0D){
-			cc = "&c";	// 赤色 (1-)
-		}
-
-		l.add("&e    K/D: &a" + cc + String.format("%.3f", prof.getKD()));
+		l.add("&e 設置: &a" + prof.getPlace() + " フラッグ");
+		l.add("&e 破壊: &a" + prof.getBreak() + " フラッグ");
 
 		return l;
 	}

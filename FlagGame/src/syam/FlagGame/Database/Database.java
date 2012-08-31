@@ -97,6 +97,8 @@ public class Database {
 				"`draw` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルdraw数
 				"`kill` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルkill数
 				"`death` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルdeath数
+				"`place` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルplace数
+				"`break` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルbreak数
 				"PRIMARY KEY (`player_id`)" +
 				") ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
