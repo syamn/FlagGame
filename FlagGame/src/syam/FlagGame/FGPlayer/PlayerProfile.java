@@ -150,7 +150,7 @@ public class PlayerProfile {
 		if (kill <= 0 || death <= 0){
 			return 0.0D;
 		}else{
-			double kd = kill/death;
+			double kd = (double)kill/(double)death;
 			return kd;
 		}
 	}
@@ -158,6 +158,9 @@ public class PlayerProfile {
 	/* getter / setter */
 	public int getPlayerID(){
 		return playerID;
+	}
+	public String getPlayerName(){
+		return playerName;
 	}
 	public boolean isLoaded(){
 		return loaded;
