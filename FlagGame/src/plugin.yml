@@ -68,6 +68,9 @@ permissions:
     flag.user.stats.other:
         default: op
         description: Allow show other player stats
+    flag.user.top:
+        default: op
+        description: Allow use top command
     flag.admin.save:
         default: op
         description: Allow save map data

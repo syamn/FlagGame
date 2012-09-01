@@ -32,6 +32,7 @@ import syam.FlagGame.Command.SelectGameCommand;
 import syam.FlagGame.Command.SetCommand;
 import syam.FlagGame.Command.StartCommand;
 import syam.FlagGame.Command.StatsCommand;
+import syam.FlagGame.Command.TopCommand;
 import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Command.WatchCommand;
 import syam.FlagGame.Database.Database;
@@ -281,6 +282,7 @@ public class FlagGame extends JavaPlugin{
 		commands.add(new WatchCommand());
 		commands.add(new LeaveCommand());
 		commands.add(new StatsCommand());
+		commands.add(new TopCommand());
 
 		// Start Commands
 		commands.add(new ReadyCommand());
