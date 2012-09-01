@@ -55,16 +55,16 @@ public class GameProfile {
 	 * @return 成功すればtrue 違えばfalse
 	 */
 	public boolean loadMySQL(){
-		Database database = FlagGame.getPlayerDatabase();
+		Database database = FlagGame.getDatabases();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
 		// ステージID(DB割り当て)を読み出す
-		stageID = database.getInt("SELECT player_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
+		stageID = database.getInt("SELECT stage_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
 
 		// テーブルにデータが無ければ新規レコードを作る
 		if (stageID == 0){
-			database.write("INSERT INTO " + tablePrefix + "stages (stage_name) VALUES (" + stageName + ")");
-			stageID = database.getInt("SELECT player_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
+			database.write("INSERT INTO " + tablePrefix + "stages (stage_name) VALUES ('" + stageName + "')");
+			stageID = database.getInt("SELECT stage_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
 		}
 
 		/* *** テーブルデータ読み込み *************** */
@@ -94,11 +94,11 @@ public class GameProfile {
 	 * ステージデータをMySQLデータベースに保存
 	 */
 	public void save(){
-		Database database = FlagGame.getPlayerDatabase();
+		Database database = FlagGame.getDatabases();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
 		/* stagesテーブル */
-		database.write("UPDATE " + tablePrefix + "records SET " +
+		database.write("UPDATE " + tablePrefix + "stages SET " +
 				"`lastplayed` = " + lastplayed.intValue() +
 				", `played` = " + played +
 				", `place` = " + flag_place +

@@ -63,7 +63,7 @@ public class PlayerProfile {
 	 * @return 正常終了すればtrue、基本データテーブルにデータがなければfalse
 	 */
 	public boolean loadMySQL(){
-		Database database = FlagGame.getPlayerDatabase();
+		Database database = FlagGame.getDatabases();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
 		// プレイヤーID(DB割り当て)を読み出す
@@ -96,7 +96,7 @@ public class PlayerProfile {
 		if (dataValues == null){
 			// 新規レコード追加
 			database.write("INSERT INTO " + tablePrefix + "records (player_id) VALUES (" + playerID + ")");
-			log.warning(playerName + "does not exist in the records table. Their records will be reset.");
+			log.warning(playerName + " does not exist in the records table. Their records will be reset.");
 		}else{
 			// データ読み出し
 			this.played = Integer.valueOf(dataValues.get(0));
@@ -153,7 +153,7 @@ public class PlayerProfile {
 	 * 新規ユーザーデータをMySQLデータベースに追加
 	 */
 	private void addMySQLPlayer(){
-		Database database = FlagGame.getPlayerDatabase();
+		Database database = FlagGame.getDatabases();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
 		database.write("INSERT INTO " + tablePrefix + "users (player_name) VALUES ('" + playerName + "')"); // usersテーブル
@@ -167,7 +167,7 @@ public class PlayerProfile {
 	public void save(){
 		//Long timestamp = System.currentTimeMillis() / 1000;
 
-		Database database = FlagGame.getPlayerDatabase();
+		Database database = FlagGame.getDatabases();
 		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
 
 		// データベースupdate

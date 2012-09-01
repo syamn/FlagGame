@@ -168,16 +168,16 @@ public class FlagGame extends JavaPlugin{
 		// コマンド登録
 		registerCommands();
 
-		// マネージャ
-		gm = new GameManager(this);
-		gfm = new GameFileManager(this);
-
-		// ゲームデータ読み込み
-		gfm.loadGames();
-
 		// データベース連携
 		database = new Database(this);
 		database.createStructure();
+
+		// マネージャ
+		gm = new GameManager(this);
+		gfm = new GameFileManager(this); // 内部でDB使用
+
+		// ゲームデータ読み込み
+		gfm.loadGames();
 
 		// プレイヤー追加
 		for (Player player : getServer().getOnlinePlayers()){
@@ -372,7 +372,7 @@ public class FlagGame extends JavaPlugin{
 		return dynmap;
 	}
 
-	public static Database getPlayerDatabase(){
+	public static Database getDatabases(){
 		return database;
 	}
 
