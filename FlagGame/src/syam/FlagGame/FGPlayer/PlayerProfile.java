@@ -113,7 +113,7 @@ public class PlayerProfile {
 
 		/* *** tpbacksテーブルデータ読み込み *************** */
 		HashMap<Integer, ArrayList<String>> tpbacksDatas = database.read("SELECT `world`, `x`, `y`, `z`, `pitch`, `yaw` FROM " + tablePrefix + "tpbacks WHERE player_id = " + playerID);
-		dataValues = recordsDatas.get(1);
+		dataValues = tpbacksDatas.get(1);
 
 		if (dataValues == null){
 			// 帰る先の地点なし
@@ -194,13 +194,13 @@ public class PlayerProfile {
 		/* tpbacksテーブル */
 		if (backLocation != null){
 			database.write("REPLACE INTO " + tablePrefix + "tpbacks SET " +
-					"`player_id` = " + playerID +
-					", `world` = " + backLocation.getWorld().getName() +
-					", `x` = " + backLocation.getX() +
-					", `y` = " + backLocation.getY() +
-					", `z` = " + backLocation.getZ() +
-					", `pitch` = " + backLocation.getPitch() +
-					", `yaw` = " + backLocation.getYaw());
+					"`player_id` = '" + playerID + "', " +
+					"`world` = '" + backLocation.getWorld().getName() + "', " +
+					"`x` = '" + backLocation.getX() + "', " +
+					"`y` = '" + backLocation.getY() + "', " +
+					"`z` = '" + backLocation.getZ() + "', " +
+					"`pitch` = '" + backLocation.getPitch() + "', " +
+					"`yaw` = '" + backLocation.getYaw() + "'");
 		}else{
 			database.write("DELETE FROM " + tablePrefix + "tpbacks WHERE " +
 					"`player_id` = " + playerID);
