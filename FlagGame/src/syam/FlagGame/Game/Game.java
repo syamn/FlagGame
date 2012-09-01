@@ -790,12 +790,19 @@ public class Game {
 			Location loc = getSpawnLocation(team);
 			// チームのスポーン地点が未設定の場合何もしない
 			if (loc == null) continue;
-			// チームの全プレイヤー(null/オフラインを除く)をスポーン地点にテレポート
+
+			// チームの全プレイヤーをスポーン地点にテレポート
 			for (String name : entry.getValue()){
 				if (name == null) continue;
-				final Player player = Bukkit.getServer().getPlayer(name);
-				if (player != null && player.isOnline())
+				final Player player = Bukkit.getPlayer(name);
+				if (player != null && player.isOnline()){
+					// 現在地点が別ワールドならプレイヤーデータに戻る地点を書き込む
+					if (!player.getWorld().equals(loc.getWorld())){
+						PlayerManager.getProfile(player.getName()).setTpBackLocation(player.getLocation());
+					}
+
 					player.teleport(loc, TeleportCause.PLUGIN);
+				}
 			}
 		}
 	}

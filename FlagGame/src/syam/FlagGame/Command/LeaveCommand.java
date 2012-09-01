@@ -7,12 +7,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.FGPlayer.PlayerManager;
+import syam.FlagGame.FGPlayer.PlayerProfile;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -50,8 +53,7 @@ public class LeaveCommand extends BaseCommand{
 
 			// ゲームワールド内
 			if (world.equals(Bukkit.getWorld(plugin.getConfigs().gameWorld))){
-				player.teleport(world.getSpawnLocation(), TeleportCause.PLUGIN);
-				Actions.message(null, player, "&aゲームワールドのスポーン地点に戻りました！");
+				leaveFromGameworld(player, world.getSpawnLocation());
 			}
 			// 別ワールド
 			else{
@@ -114,6 +116,24 @@ public class LeaveCommand extends BaseCommand{
 		}
 
 		return true;
+	}
+
+	private void leaveFromGameworld(Player player, Location def){
+		PlayerProfile prof = PlayerManager.getProfile(player.getName());
+
+		// プレイヤーデータに以前の座標が記録されていればその場所へTp
+		if (prof.isLoaded() && prof.getTpBackLocation() != null){
+			Location loc = prof.getTpBackLocation();
+
+			player.teleport(loc, TeleportCause.PLUGIN);
+			prof.setTpBackLocation(null);
+
+			Actions.message(null, player, "&aテレポートしました！");
+		}else{
+			player.teleport(def, TeleportCause.PLUGIN);
+
+			Actions.message(null, player, "&aゲームワールドのスポーン地点に戻りました！");
+		}
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -36,6 +37,9 @@ public class WatchCommand extends BaseCommand{
 		}
 
 		// テレポート
+		if (!player.getWorld().equals(specSpawn.getWorld())){
+			PlayerManager.getProfile(player.getName()).setTpBackLocation(player.getLocation());
+		}
 		player.teleport(specSpawn, TeleportCause.PLUGIN);
 		Actions.message(null, player, "&aゲーム'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
 
