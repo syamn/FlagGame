@@ -37,6 +37,15 @@ public class GameManager {
 	//private static List<String> fgChestManager = new ArrayList<String>();
 	private static Map<String, Configables> managersMap = new HashMap<String, Configables>();
 
+	/**
+	 * 全ゲームステージプロファイルを保存する
+	 */
+	public static void saveAll(){
+		for (Game game : FlagGame.getInstance().games.values()){
+			game.getProfile().save();
+		}
+	}
+
 	/* getter/setter */
 
 	/**

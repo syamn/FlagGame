@@ -47,6 +47,9 @@ public class Game {
 	// Instance
 	private final FlagGame plugin;
 
+	// ステージ情報
+	private GameProfile profile; // ゲームステージプロファイル
+
 	/* ***** ゲームデータ ***** */
 	private String GameID; // 一意なゲームID ログ用
 	private String fileName; // ゲームデータのファイル名
@@ -80,8 +83,6 @@ public class Game {
 
 	// プレイヤーのデータファイル
 
-
-
 	// ステージ全体、スポーン地点と拠点マップ
 	private Cuboid stageArea = null;
 	private boolean stageProtect = true;
@@ -100,11 +101,10 @@ public class Game {
 	public Game(final FlagGame plugin, final String name){
 		this.plugin = plugin;
 
-		// ゲームデータ設定
 		this.gameName = name;
-
-		// ファイル名設定
 		this.fileName = this.gameName + ".yml";
+
+		this.profile = new GameProfile(name);
 
 		// ゲームをメインクラスに登録
 		plugin.games.put(this.gameName, this);
@@ -242,6 +242,10 @@ public class Game {
 		timer(); // タイマースタート
 		ready = false;
 		started = true;
+
+		// プロファイル更新
+		profile.updateLastPlayedStage();
+		profile.addPlayed();
 
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+getName()+"&2'が始まりました！");
@@ -1168,13 +1172,19 @@ public class Game {
 	public String getFileName(){
 		return fileName;
 	}
-
 	/**
 	 * ゲーム名を返す
 	 * @return このゲームの名前
 	 */
 	public String getName(){
 		return gameName;
+	}
+	/**
+	 * ゲームステージプロファイルを返す
+	 * @return GameProfile
+	 */
+	public GameProfile getProfile(){
+		return this.profile;
 	}
 
 	/**

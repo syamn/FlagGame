@@ -205,13 +205,16 @@ public class FlagGame extends JavaPlugin{
 			}
 		}
 
-		// プレイヤーデータを保存
+		// プレイヤープロファイルを保存
 		PlayerManager.saveAll();
 
-		// ゲームデータ保存
+		// ゲームデータを保存
 		if (gfm != null){
 			gfm.saveGames();
 		}
+
+		// ゲームステージプロファイルを保存
+		GameManager.saveAll();
 
 		// タスクをすべて止める
 		getServer().getScheduler().cancelTasks(this);

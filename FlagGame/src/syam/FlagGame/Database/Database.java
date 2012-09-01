@@ -108,6 +108,8 @@ public class Database {
 				"`stage_name` varchar(32) NOT NULL," +						// プレイヤー名
 				"`lastplayed` int(32) unsigned NOT NULL DEFAULT '0'," +		// 最後にステージを開始した時間
 				"`played` int(12) unsigned NOT NULL DEFAULT '0'," +			// ステージ開始回数
+				"`place` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルplace数
+				"`break` int(12) unsigned NOT NULL DEFAULT '0'," +			// トータルbreak数
 				"`kill` int(12) unsigned NOT NULL DEFAULT '0'," +			// ステージkill数
 				"`death` int(12) unsigned NOT NULL DEFAULT '0'," +			// ステージdeath数
 				"PRIMARY KEY (`stage_id`)," +

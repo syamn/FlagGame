@@ -301,6 +301,7 @@ public class FGPlayerListener implements Listener{
 			GameTeam dTeam = game.getPlayerTeam(deader);
 			if (dTeam != null){
 				PlayerManager.getProfile(deader.getName()).addDeath(); // death数追加
+				game.getProfile().addDeath();
 			}else{
 				continue;
 			}
@@ -316,6 +317,7 @@ public class FGPlayerListener implements Listener{
 				game.addKillCount(aTeam);
 
 				PlayerManager.getProfile(killer.getName()).addKill(); // kill数追加
+				game.getProfile().addKill();
 
 				//for (Player player : Bukkit.getOnlinePlayers())
 				//	Actions.message(null, player, deathMsg);
