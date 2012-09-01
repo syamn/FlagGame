@@ -49,7 +49,6 @@ public class FlagGame extends JavaPlugin{
 
 	/*
 	 * TODO:
-	 *  プレイヤーも専用クラスを作る？
 	 *
 	 *  順位表
 	 *
@@ -57,16 +56,9 @@ public class FlagGame extends JavaPlugin{
 	 *
 	 *  定期的な状況告知
 	 *
-	 *  参加申請後の取り消し
-	 *
-	 *  3チーム以上のゲーム
-	 *
 	 *  受付中のゲームを定期アナウンス(など)
 	 *
 	 *  参加チームの選択
-	 *
-	 *  BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
-	 *
 	 */
 
 	/*
@@ -93,6 +85,12 @@ public class FlagGame extends JavaPlugin{
 	 * プレイヤーログイン時の待機ゲームアナウンス
 	 *
 	 * 観戦席設置
+	 *
+	 * プレイヤーも専用クラスを作る
+	 *
+	 * 参加申請後の取り消し
+	 *
+	 * BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
 	 *
 	 */
 

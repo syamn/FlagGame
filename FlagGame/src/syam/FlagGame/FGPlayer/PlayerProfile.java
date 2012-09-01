@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Database.Database;
 
@@ -22,6 +26,10 @@ public class PlayerProfile {
 	/* Data */
 	private Long lastjoingame = 0L;	// 最終ゲーム参加日時
 	private int status = 0;			// プレイヤーステータス
+
+	private Location backLocation = null; // 戻る先の地点
+
+	/* Records */
 
 	private int played = 0;			// プレイ回数
 	private int exit = 0;			// 途中退場回数
@@ -103,6 +111,39 @@ public class PlayerProfile {
 		}
 		dataValues.clear();
 
+		/* *** tpbacksテーブルデータ読み込み *************** */
+		HashMap<Integer, ArrayList<String>> tpbacksDatas = database.read("SELECT `world`, `x`, `y`, `z`, `pitch`, `yaw` FROM " + tablePrefix + "tpbacks WHERE player_id = " + playerID);
+		dataValues = recordsDatas.get(1);
+
+		if (dataValues == null){
+			// 帰る先の地点なし
+			backLocation = null;
+		}else{
+			// データ読み出し
+			World world = Bukkit.getWorld(dataValues.get(0));
+			if (world == null){
+				log.warning(logPrefix+ "World "+dataValues.get(0)+" is Not Found! Removing this location.");
+				backLocation = null;
+			}else{
+				double x,y,z;
+				Float pitch = null, yaw = null;
+
+				x = Double.valueOf(dataValues.get(1));
+				y = Double.valueOf(dataValues.get(2));
+				z = Double.valueOf(dataValues.get(3));
+
+				if (dataValues.get(4) == null || dataValues.get(5) == null){
+					this.backLocation = new Location(world, x, y, z);
+
+				}else{
+					pitch = Float.valueOf(dataValues.get(4));
+					yaw = Float.valueOf(dataValues.get(5));
+
+					this.backLocation = new Location(world, x, y, z, pitch, yaw);
+				}
+			}
+		}
+
 		// 読み込み正常終了
 		loaded = true;
 		return true;
@@ -149,6 +190,21 @@ public class PlayerProfile {
 				", `kill` = " + kill +
 				", `death` = " + death +
 				" WHERE player_id = " + playerID);
+
+		/* tpbacksテーブル */
+		if (backLocation != null){
+			database.write("REPLACE INTO " + tablePrefix + "tpbacks SET " +
+					"`player_id` = " + playerID +
+					", `world` = " + backLocation.getWorld().getName() +
+					", `x` = " + backLocation.getX() +
+					", `y` = " + backLocation.getY() +
+					", `z` = " + backLocation.getZ() +
+					", `pitch` = " + backLocation.getPitch() +
+					", `yaw` = " + backLocation.getYaw());
+		}else{
+			database.write("DELETE FROM " + tablePrefix + "tpbacks WHERE " +
+					"`player_id` = " + playerID);
+		}
 	}
 
 	/* 特殊データ算出 */
@@ -198,6 +254,14 @@ public class PlayerProfile {
 	}
 	public int getStatus(){
 		return this.status;
+	}
+
+	// tpBackLocation
+	public void setTpBackLocation(Location loc){
+		this.backLocation = loc;
+	}
+	public Location getTpBackLocation(){
+		return this.backLocation;
 	}
 
 	// played

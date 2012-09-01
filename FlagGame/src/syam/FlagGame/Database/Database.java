@@ -83,6 +83,7 @@ public class Database {
 				"`player_name` varchar(32) NOT NULL," +						// プレイヤー名
 				"`lastjoingame` int(32) unsigned NOT NULL DEFAULT '0'," +	// 最後にゲームに参加した時間
 				"`status` int(2) NOT NULL DEFAULT '0'," +					// ステータスデータ
+				"`status` int(2) NOT NULL DEFAULT '0'," +					// ステータスデータ
 				"PRIMARY KEY (`player_id`)," +
 				"UNIQUE KEY `player_name` (`player_name`)" +
 				") ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
@@ -113,6 +114,18 @@ public class Database {
 				"PRIMARY KEY (`stage_id`)," +
 				"UNIQUE KEY `stage_name` (`stage_name`)" +
 				") ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
+
+		// tpで戻る地点のデータテーブル
+		write("CREATE TABLE IF NOT EXISTS `" + tablePrefix + "tpbacks` (" +
+				"`player_id` int(10) unsigned NOT NULL," +					// 割り当てられたプレイヤーID
+				"`world` varchar(255) NOT NULL," +							// ワールド名
+				"`x` double NOT NULL," +									// x
+				"`y` double NOT NULL," +									// y
+				"`z` double NOT NULL," +									// z
+				"`pitch` float NOT NULL," +									// Pitch
+				"`yaw` float NOT NULL," +									// Yaw
+				"PRIMARY KEY (`player_id`)" +
+				") ENGINE=MyISAM DEFAULT CHARSET=utf8");
 	}
 
 	/**
