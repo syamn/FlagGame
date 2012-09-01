@@ -83,7 +83,6 @@ public class Database {
 				"`player_name` varchar(32) NOT NULL," +						// プレイヤー名
 				"`lastjoingame` int(32) unsigned NOT NULL DEFAULT '0'," +	// 最後にゲームに参加した時間
 				"`status` int(2) NOT NULL DEFAULT '0'," +					// ステータスデータ
-				"`status` int(2) NOT NULL DEFAULT '0'," +					// ステータスデータ
 				"PRIMARY KEY (`player_id`)," +
 				"UNIQUE KEY `player_name` (`player_name`)" +
 				") ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
