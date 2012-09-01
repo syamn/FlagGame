@@ -145,6 +145,7 @@ public class SetCommand extends BaseCommand {
 		game.setStage(block1.getLocation(), block2.getLocation());
 
 		Actions.message(null, player, "&aゲーム'"+game.getName()+"'のステージエリアを設定しました！");
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 	/**
@@ -190,6 +191,7 @@ public class SetCommand extends BaseCommand {
 		game.setBase(team, block1.getLocation(), block2.getLocation());
 
 		Actions.message(null, player, "&a"+team.getTeamName()+"チームの拠点を設定しました！");
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 	/**
@@ -221,6 +223,7 @@ public class SetCommand extends BaseCommand {
 		game.setSpawn(team, player.getLocation());
 
 		Actions.message(null, player, "&a"+team.getTeamName()+"チームのスポーン地点を設定しました！");
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 	/**
@@ -276,6 +279,7 @@ public class SetCommand extends BaseCommand {
 		game.setSpecSpawn(player.getLocation());
 
 		Actions.message(null, player, "&aゲーム'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 
@@ -318,7 +322,7 @@ public class SetCommand extends BaseCommand {
 		game.setTeamLimit(cnt);
 
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
-
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 	private boolean setAward(Game game){
@@ -337,7 +341,7 @@ public class SetCommand extends BaseCommand {
 		game.setAward(award);
 
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
-
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 	private boolean setEntryFee(Game game){
@@ -355,7 +359,7 @@ public class SetCommand extends BaseCommand {
 
 		game.setEntryFee(entryfee);
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
-
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 	private boolean setStageProtect(Game game){
@@ -377,7 +381,7 @@ public class SetCommand extends BaseCommand {
 
 		game.setStageProtected(protect);
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のステージ保護は "+result+" &aに設定されました！");
-
+		plugin.getDynmap().updateRegion(game);
 		return true;
 	}
 

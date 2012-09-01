@@ -49,10 +49,12 @@ public class DeleteCommand extends BaseCommand {
 			ex.printStackTrace();
 		}
 
-		if (!deleted)
+		if (!deleted){
 			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'のゲームデータファイル削除中にエラーが発生しました！");
-		else
+		}else{
 			Actions.message(sender, null, "&aゲーム'"+args.get(0)+"'を削除しました！");
+			plugin.getDynmap().updateRegions();
+		}
 		return true;
 	}
 
