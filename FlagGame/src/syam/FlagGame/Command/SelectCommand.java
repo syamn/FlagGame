@@ -5,12 +5,12 @@ import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
 
-public class SelectGameCommand extends BaseCommand {
-	public SelectGameCommand(){
+public class SelectCommand extends BaseCommand {
+	public SelectCommand(){
 		bePlayer = true;
-		name = "game";
+		name = "select";
 		argLength = 0;
-		usage = "[name] <- select exist game";
+		usage = "[game] <- select exist game";
 	}
 
 	@Override

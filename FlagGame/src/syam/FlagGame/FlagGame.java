@@ -28,7 +28,7 @@ import syam.FlagGame.Command.LeaveCommand;
 import syam.FlagGame.Command.ReadyCommand;
 import syam.FlagGame.Command.ReloadCommand;
 import syam.FlagGame.Command.SaveCommand;
-import syam.FlagGame.Command.SelectGameCommand;
+import syam.FlagGame.Command.SelectCommand;
 import syam.FlagGame.Command.SetCommand;
 import syam.FlagGame.Command.StartCommand;
 import syam.FlagGame.Command.StatsCommand;
@@ -50,8 +50,6 @@ public class FlagGame extends JavaPlugin{
 
 	/*
 	 * TODO:
-	 *
-	 *  順位表
 	 *
 	 * タイマー、状況表示用の看板
 	 *
@@ -92,6 +90,8 @@ public class FlagGame extends JavaPlugin{
 	 * 参加申請後の取り消し
 	 *
 	 * BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
+	 *
+	 * 順位表
 	 *
 	 */
 
@@ -291,7 +291,7 @@ public class FlagGame extends JavaPlugin{
 		// Admin Commands
 		commands.add(new CreateCommand());
 		commands.add(new DeleteCommand());
-		commands.add(new SelectGameCommand());
+		commands.add(new SelectCommand());
 		commands.add(new SetCommand());
 		commands.add(new CheckCommand());
 		commands.add(new TpCommand());
