@@ -1070,8 +1070,15 @@ public class Game {
 			}
 
 			// チェスト内容コピー
-			ItemStack[] is = fromContainer.getInventory().getContents().clone();
-			toContainer.getInventory().setContents(is);
+			ItemStack[] oldIs = fromContainer.getInventory().getContents().clone();
+			ItemStack[] newIs = new ItemStack[oldIs.length];
+			for (int i = 0; i < oldIs.length; i++){
+				if (oldIs[i] == null) continue;
+				// newIs[i] = oldIs[i].clone(); // ItemStackシャローコピー不可
+				newIs[i] = new ItemStack(oldIs[i]); // ディープコピー
+			}
+
+			toContainer.getInventory().setContents(newIs);
 		}
 	}
 
