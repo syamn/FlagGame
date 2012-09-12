@@ -2,6 +2,7 @@ package syam.FlagGame.Game;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1069,7 +1070,7 @@ public class Game {
 			}
 
 			// チェスト内容コピー
-			ItemStack[] is = fromContainer.getInventory().getContents();
+			ItemStack[] is = fromContainer.getInventory().getContents().clone();
 			toContainer.getInventory().setContents(is);
 		}
 	}
