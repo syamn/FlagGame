@@ -26,5 +26,4 @@
 *.dat
 *.tmp
 /*.gitignore
-lib
 .checkstyle
