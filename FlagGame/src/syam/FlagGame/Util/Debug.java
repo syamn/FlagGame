@@ -4,6 +4,7 @@
  */
 package syam.FlagGame.Util;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.FileHandler;
@@ -26,7 +27,7 @@ public class Debug {
 
 	private Logger log;
 	private String logPrefix;
-	private String filePath;
+	private TextFileHandler logFile = null;
 	private boolean debug = false;
 
 	/**
@@ -60,7 +61,7 @@ public class Debug {
 	 */
 	public void init(Logger log, String logPrefix, String logFilePath, boolean isDebug){
 		this.init(log, logPrefix, isDebug);
-		this.filePath = logFilePath;
+		this.logFile = new TextFileHandler(logFilePath);
 	}
 
 	/**
@@ -76,6 +77,16 @@ public class Debug {
 			}
 
 			log.fine(sb.toString());
+
+			// ファイル出力
+			if (logFile != null){
+				 try {
+					logFile.appendLine(sb.toString());
+				} catch (IOException ex) {
+					log.warning(logPrefix+ "Could not write debug log file!");
+					ex.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -90,7 +101,16 @@ public class Debug {
 		if (log == null)
 			return;
 
+		if (this.debug == isDebug)
+			return;
+
 		this.debug = isDebug;
+
+		if (isDebug){
+			log.info(logPrefix+ "DEBUG MODE ENABLED!");
+		}else{
+			log.info(logPrefix+ "DEBUG MODE DISABLED!");
+		}
 	}
 	/**
 	 * デバッグ状態を取得する
@@ -98,6 +118,21 @@ public class Debug {
 	 */
 	public boolean isDebug(){
 		return this.debug;
+	}
+
+	/**
+	 * デバッグ出力先ファイルを設定する null無効にする
+	 * @param filePath null or FilePath
+	 */
+	public void setLogFile(String filePath){
+		this.logFile = new TextFileHandler(filePath);
+	}
+	/**
+	 * デバッグをファイルに出力するか取得する
+	 * @return boolean
+	 */
+	public boolean isDebugToFile(){
+		return (logFile == null) ? false : true;
 	}
 
 	/**
@@ -115,29 +150,6 @@ public class Debug {
 		}
 
 		return instance;
-	}
-
-	/**
-	 * デバッグ用フォーマッター
-	 * DebugFormatter (Debug.java)
-	 * @author syam(syamn)
-	 */
-	private class DebugFormatter extends Formatter {
-		private final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
-		private final String newLine = System.getProperty("line.separator");
-
-		@Override
-		public String format(LogRecord record){
-			StringBuilder sb = new StringBuilder(200);
-
-			sb.append("[");
-			sb.append(df.format(new Date(record.getMillis())));
-			sb.append("] ");
-			sb.append(record.getMessage());
-			sb.append(newLine);
-
-			return sb.toString();
-		}
 	}
 
 	/* ********** static ********** */
