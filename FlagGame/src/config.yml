@@ -11,6 +11,8 @@ ToolID: 269
 WorldName: flag
 # If it true, Gameworld will be protected by player
 WorldProtect: false
+# Use debug mode
+Debug: false
 
 #==================#
 #   Games Config   #

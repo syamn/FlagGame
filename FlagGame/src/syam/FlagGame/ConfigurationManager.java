@@ -42,6 +42,7 @@ public class ConfigurationManager {
 	public int toolID = new Integer(269);
 	public String gameWorld = defaultWorldName;
 	public boolean isProtected = new Boolean(true);
+	public boolean isDebug = new Boolean(false);
 	/* Games Configs */
 	public int startCountdownInSec = new Integer(10);
 	public boolean deathWhenLogout = new Boolean(true);
@@ -88,6 +89,7 @@ public class ConfigurationManager {
 		toolID = plugin.getConfig().getInt("ToolID", 269);
 		gameWorld = plugin.getConfig().getString("WorldName", defaultWorldName);
 		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
+		isDebug = plugin.getConfig().getBoolean("Debug", false);
 		/* Games Configs */
 		startCountdownInSec = plugin.getConfig().getInt("StartCountdownInSec", 10);
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);

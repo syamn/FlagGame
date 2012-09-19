@@ -380,7 +380,7 @@ public class FlagGame extends JavaPlugin{
 
 	/**
 	 * インスタンスを返す
-	 * @return VoteBanインスタンス
+	 * @return FlagGameインスタンス
 	 */
 	public static FlagGame getInstance(){
 		return instance;
