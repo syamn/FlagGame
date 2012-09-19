@@ -21,6 +21,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
@@ -109,6 +110,10 @@ public class FGBlockListener implements Listener{
 			}
 			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag!");
 
+			// 破壊カウント追加
+			PlayerManager.getProfile(player.getName()).addBreak();
+			game.getProfile().addBreak();
+
 			return;
 		}
 
@@ -191,6 +196,11 @@ public class FGBlockListener implements Listener{
 				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
 			}
 			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag!");
+
+			// 設置カウント追加
+			PlayerManager.getProfile(player.getName()).addPlace();
+			game.getProfile().addPlace();
+
 			return;
 		}
 
