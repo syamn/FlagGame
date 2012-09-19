@@ -44,6 +44,7 @@ import syam.FlagGame.Listeners.DeathNotifierListener;
 import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGEntityListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
+import syam.FlagGame.Util.Debug;
 import syam.FlagGame.Util.DynmapHandler;
 
 public class FlagGame extends JavaPlugin{
@@ -96,7 +97,7 @@ public class FlagGame extends JavaPlugin{
 	 */
 
 	// ** Logger **
-	public final static Logger log = Logger.getLogger("Minecraft");
+	public final static Logger log = Logger.getLogger("FlagGame");
 	public final static String logPrefix = "[FlagGame] ";
 	public final static String msgPrefix = "&6[FlagGame] &f";
 
@@ -113,6 +114,7 @@ public class FlagGame extends JavaPlugin{
 	private ConfigurationManager config;
 	private GameManager gm;
 	private GameFileManager gfm;
+	private Debug debug;
 
 	// ** Variable **
 	// 存在するゲーム <String 一意のゲームID, Game>
@@ -133,6 +135,8 @@ public class FlagGame extends JavaPlugin{
 	 * プラグイン起動処理
 	 */
 	public void onEnable(){
+		Debug.setStartupBeginTime();
+
 		instance  = this;
 		PluginManager pm = getServer().getPluginManager();
 		config = new ConfigurationManager(this);
@@ -145,9 +149,15 @@ public class FlagGame extends JavaPlugin{
 			ex.printStackTrace();
 		}
 
-		// プラグインフック
+		// setup Debugger
+		Debug.getInstance().init(log, logPrefix, "plugins/FlagGame/debug.log", getConfigs().isDebug);
+		debug = Debug.getInstance();
+
 		// Vault
+		debug.startTimer("vault");
 		setupVault();
+		debug.endTimer("vault");
+
 		// DeathNotifier
 		Plugin p = pm.getPlugin("DeathNotifier");
 		if (p != null){
@@ -170,15 +180,21 @@ public class FlagGame extends JavaPlugin{
 		registerCommands();
 
 		// データベース連携
+		debug.startTimer("database");
 		database = new Database(this);
 		database.createStructure();
+		debug.endTimer("database");
 
 		// マネージャ
+		debug.startTimer("managers");
 		gm = new GameManager(this);
 		gfm = new GameFileManager(this); // 内部でDB使用
+		debug.endTimer("managers");
 
 		// ゲームデータ読み込み
+		debug.startTimer("load games");
 		gfm.loadGames();
+		debug.endTimer("load games");
 
 		// プレイヤー追加
 		for (Player player : getServer().getOnlinePlayers()){
@@ -186,11 +202,15 @@ public class FlagGame extends JavaPlugin{
 		}
 
 		// dynmapフック
+		debug.startTimer("dynmap");
 		setupDynmap();
+		debug.endTimer("dynmap");
 
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is enabled!");
+
+		debug.finishStartup();
 	}
 
 	/**
@@ -262,6 +282,9 @@ public class FlagGame extends JavaPlugin{
 	    }
 	}
 
+	/**
+	 * Dynmapプラグインにフック
+	 */
 	private void setupDynmap(){
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
 			public void run(){

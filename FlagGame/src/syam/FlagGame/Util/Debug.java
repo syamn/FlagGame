@@ -7,8 +7,10 @@ package syam.FlagGame.Util;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -22,13 +24,17 @@ import syam.FlagGame.FlagGame;
  */
 public class Debug {
 	private static Debug instance = null;
-	private static long startup = 0L;
-	private long timeLog = 0L;
 
 	private Logger log;
 	private String logPrefix;
 	private TextFileHandler logFile = null;
 	private boolean debug = false;
+	private Level oldLogLevel = null;
+
+	// timer
+	private static boolean isStartup = true;
+	private static long startup = 0L;
+	private long timeLog = 0L;
 
 	/**
 	 * 初期化
@@ -90,6 +96,42 @@ public class Debug {
 		}
 	}
 
+	/**
+	 * コンソール出力するログレベルを変更
+	 * @param level
+	 */
+	private void setConsoleLevel(Level level){
+		if (level == null) return;
+
+		Handler handler = getConsoleHandler(log);
+		if (handler != null){
+			handler.setLevel(level);
+		}
+	}
+
+	/**
+	 * コンソールハンドラを返す
+	 * @param log
+	 * @return
+	 */
+	private Handler getConsoleHandler(Logger log){
+		// コンソールハンドラを返す
+		Handler[] handlers = log.getHandlers();
+		for (Handler h : handlers){
+			if (h instanceof ConsoleHandler){
+				return h;
+			}
+		}
+
+		// 親ロガーのコンソールハンドラを返す
+		Logger parent = log.getParent();
+		if (parent != null){
+			return getConsoleHandler(parent);
+		}else{
+			return null;
+		}
+	}
+
 	/* getter / setter */
 
 	/**
@@ -107,8 +149,16 @@ public class Debug {
 		this.debug = isDebug;
 
 		if (isDebug){
+			oldLogLevel = log.getLevel();
+			log.setLevel(Level.FINE);
+			setConsoleLevel(Level.FINE);
+
 			log.info(logPrefix+ "DEBUG MODE ENABLED!");
 		}else{
+			if (oldLogLevel != null){
+				log.setLevel(oldLogLevel);
+				setConsoleLevel(oldLogLevel);
+			}
 			log.info(logPrefix+ "DEBUG MODE DISABLED!");
 		}
 	}
@@ -160,6 +210,14 @@ public class Debug {
 		if (startup <= 0L){
 			startup = System.currentTimeMillis();
 		}
+		isStartup = true;
+	}
+	/**
+	 * プラグイン起動完了時に経過時間を出力する
+	 */
+	public void finishStartup(){
+		isStartup = false;
+		debug("[Timer] Total initialization time: " + (System.currentTimeMillis()-startup) + "ms");
 	}
 
 	/**
@@ -167,33 +225,20 @@ public class Debug {
 	 * @param actionName
 	 * @param useStartup
 	 */
-	public void debugStartTimer(String actionName, boolean useStartup) {
+	public void startTimer(String actionName) {
     	timeLog = System.currentTimeMillis();
 
-    	if (debug){
-    		if (useStartup){
-    			debug("[Startup Timer] starting " + actionName + " (t+" + (System.currentTimeMillis()-startup) + ")");
-    		}else{
-    			debug("[Startup Timer] starting " + actionName);
-    		}
-    	}
+		if (isStartup){
+			debug("[Timer] starting " + actionName + " (t+" + (System.currentTimeMillis()-startup) + ")");
+		}else{
+			debug("[Timer] starting " + actionName);
+		}
     }
-
-	/**
-	 * デバッグ時刻計測開始
-	 * @param actionName
-	 */
-	public void debugStartTimer(String actionName){
-		this.debugStartTimer(actionName, false);
-	}
-
 	/**
 	 * デバッグ時刻計測終了
 	 * @param actionName
 	 */
-	public void debugEndTimer(String actionName){
-		if (debug){
-			debug("[Startup Timer] " + actionName + " finished in " + (System.currentTimeMillis()-timeLog) + "ms");
-		}
+	public void endTimer(String actionName){
+		debug("[Timer] " + actionName + " finished in " + (System.currentTimeMillis()-timeLog) + "ms");
 	}
 }
