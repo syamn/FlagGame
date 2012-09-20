@@ -47,7 +47,7 @@ import syam.FlagGame.Listeners.FGEntityListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
 import syam.FlagGame.Util.Debug;
 import syam.FlagGame.Util.DynmapHandler;
-import syam.PistonJump.Util.Metrics;
+import syam.FlagGame.Util.Metrics;
 
 public class FlagGame extends JavaPlugin{
 

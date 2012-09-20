@@ -1,8 +1,8 @@
 /**
  * FlagGame - Package: syam.FlagGame.Util
- * Created: 2012/09/20 9:32:59
+ * Created: 2012/09/20 9:47:40
  */
-package syam.PistonJump.Util;
+package syam.FlagGame.Util;
 
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.
