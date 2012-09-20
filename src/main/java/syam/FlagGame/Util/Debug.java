@@ -6,6 +6,7 @@ package syam.FlagGame.Util;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -86,8 +87,9 @@ public class Debug {
 
 			// ファイル出力
 			if (logFile != null){
-				 try {
-					logFile.appendLine(sb.toString());
+				final String logHeader = "[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + "] ";
+				try {
+					logFile.appendLine(logHeader + sb.toString());
 				} catch (IOException ex) {
 					log.warning(logPrefix+ "Could not write debug log file!");
 					ex.printStackTrace();
