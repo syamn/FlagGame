@@ -159,21 +159,32 @@ public class PermissionHandler {
 		Plugin vault = plugin.getServer().getPluginManager().getPlugin("Vault");
 		if (vault == null) vault = plugin.getServer().getPluginManager().getPlugin("vault");
 		if (vault == null) return false;
-
-		RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> permissionProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null){
-			vaultPermission = permissionProvider.getProvider();
+		try{
+			RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> permissionProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+			if (permissionProvider != null){
+				vaultPermission = permissionProvider.getProvider();
+			}
+		}catch (Exception ex){
+			log.warning(logPrefix+ "Unexpected error trying to setup Vault permissions!");
+			ex.printStackTrace();
 		}
 
 		return (vaultPermission != null);
 	}
-
+	/**
+	 * PermissionsEx権限管理システム セットアップ
+	 * @return boolean
+	 */
 	private boolean setupPEXPermission(){
 		Plugin testPex = plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 		if (testPex == null) testPex = plugin.getServer().getPluginManager().getPlugin("permissionsex");
 		if (testPex == null) return false;
-
-		pex = (PermissionsEx) testPex;
+		try{
+			pex = (PermissionsEx) testPex;
+		}catch (Exception ex){
+			log.warning(logPrefix+ "Unexpected error trying to setup PEX permissions!");
+			ex.printStackTrace();
+		}
 
 		return (pex != null);
 	}
