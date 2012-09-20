@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import syam.FlagGame.FlagGame;
 
@@ -25,6 +27,7 @@ public class PermissionHandler {
 	 * @author syam(syamn)
 	 */
 	public enum PermType {
+		VAULT,
 		SUPERPERMS,
 		OPS,
 		;
@@ -40,9 +43,9 @@ public class PermissionHandler {
 
 	private final FlagGame plugin;
 	private PermType usePermType = null;
-	//private Debug debug = null;
 
-	// TODO: write here..
+	// 外部権限管理プラグイン
+	private net.milkbowl.vault.permission.Permission vaultPermission = null; // 混同する可能性があるのでパッケージをimportしない
 
 	/**
 	 * コンストラクタ
@@ -62,7 +65,13 @@ public class PermissionHandler {
 
 		// 一致する権限管理プラグインを取得 上にあるほど高優先度
 		for (String pname : prefs){
-			if ("superperms".equalsIgnoreCase(pname)){
+			if ("vault".equalsIgnoreCase(pname)){
+				if (setupVaultPermission()){
+					usePermType = PermType.VAULT;
+					break;
+				}
+			}
+			else if ("superperms".equalsIgnoreCase(pname)){
 				usePermType = PermType.SUPERPERMS;
 				break;
 			}
@@ -107,6 +116,10 @@ public class PermissionHandler {
 
 		// 使用中の権限プラグインによって処理を分ける
 		switch (usePermType){
+			// Vault
+			case VAULT:
+				return vaultPermission.has(player, permission);
+
 			// SuperPerms
 			case SUPERPERMS:
 				return player.hasPermission(permission);
@@ -121,6 +134,25 @@ public class PermissionHandler {
 				return false;
 		}
 	}
+
+	// 権限管理プラグインセットアップメソッド ここから
+	/**
+	 * Vault権限管理システム セットアップ
+	 * @return boolean
+	 */
+	private boolean setupVaultPermission(){
+		Plugin vault = plugin.getServer().getPluginManager().getPlugin("Vault");
+		if (vault == null) vault = plugin.getServer().getPluginManager().getPlugin("vault");
+		if (vault == null) return false;
+
+		RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> permissionProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+		if (permissionProvider != null){
+			vaultPermission = permissionProvider.getProvider();
+		}
+
+		return (vaultPermission != null);
+	}
+	// ここまで
 
 	/**
 	 * 使用している権限管理プラグインを返す
