@@ -136,7 +136,7 @@ public class SetCommand extends BaseCommand {
 		Block block2 = corners[1];
 
 		// ワールドチェック
-		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
 			return true;
 		}
@@ -182,7 +182,7 @@ public class SetCommand extends BaseCommand {
 		Block block2 = corners[1];
 
 		// ワールドチェック
-		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
 			return true;
 		}
@@ -252,7 +252,7 @@ public class SetCommand extends BaseCommand {
 		// マネージャーセット
 		GameManager.setManager(player, Configables.FLAG);
 		GameManager.setSelectedFlagType(player, type);
-		String tool = Material.getMaterial(plugin.getConfigs().toolID).name();
+		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
 		Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
 		return true;
 	}
@@ -264,7 +264,7 @@ public class SetCommand extends BaseCommand {
 	private boolean setChest(Game game){
 		// マネージャーセット
 		GameManager.setManager(player, Configables.CHEST);
-		String tool = Material.getMaterial(plugin.getConfigs().toolID).name();
+		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
 		Actions.message(null, player, "&aチェスト管理モードを開始しました。選択ツール: " + tool);
 
 		return true;

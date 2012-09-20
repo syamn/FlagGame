@@ -52,7 +52,7 @@ public class LeaveCommand extends BaseCommand{
 			}
 
 			// ゲームワールド内
-			if (world.equals(Bukkit.getWorld(plugin.getConfigs().gameWorld))){
+			if (world.equals(Bukkit.getWorld(plugin.getConfigs().getGameWorld()))){
 				leaveFromGameworld(player, world.getSpawnLocation());
 			}
 			// 別ワールド

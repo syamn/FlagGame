@@ -42,7 +42,7 @@ public class FGEntityListener implements Listener{
 		if ((event.getCause() == DamageCause.ENTITY_ATTACK) &&
 				(entity instanceof Player) && (event.getDamager() instanceof Player)){
 			// ゲーム用ワールドでなければ返す
-			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 				return;
 
 			damager = (Player) entity; // 攻撃された人
@@ -52,7 +52,7 @@ public class FGEntityListener implements Listener{
 		else if((event.getCause() == DamageCause.PROJECTILE) &&
 					(entity instanceof Player) && (event.getDamager() instanceof Projectile)){
 			// ゲーム用ワールドでなければ返す
-			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 				return;
 
 			// プレイヤーが打ったもの
@@ -67,7 +67,7 @@ public class FGEntityListener implements Listener{
 			return;
 
 		// 設定確認 チーム内PVPを無効にする設定が無効であれば何もしない
-		if (!plugin.getConfigs().disableTeamPVP)
+		if (!plugin.getConfigs().getDisableTeamPVP())
 			return;
 
 		// 存在するゲームを回す

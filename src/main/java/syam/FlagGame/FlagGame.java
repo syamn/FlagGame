@@ -152,7 +152,7 @@ public class FlagGame extends JavaPlugin{
 		}
 
 		// setup Debugger
-		Debug.getInstance().init(log, logPrefix, "plugins/FlagGame/debug.log", getConfigs().isDebug);
+		Debug.getInstance().init(log, logPrefix, "plugins/FlagGame/debug.log", getConfigs().isDebug());
 		debug = Debug.getInstance();
 
 		// Vault

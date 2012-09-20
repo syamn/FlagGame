@@ -56,7 +56,7 @@ public class GameProfile {
 	 */
 	public boolean loadMySQL(){
 		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
+		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
 
 		// ステージID(DB割り当て)を読み出す
 		stageID = database.getInt("SELECT stage_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
@@ -95,7 +95,7 @@ public class GameProfile {
 	 */
 	public void save(){
 		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
+		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
 
 		/* stagesテーブル */
 		database.write("UPDATE " + tablePrefix + "stages SET " +

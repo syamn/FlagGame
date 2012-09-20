@@ -64,7 +64,7 @@ public class PlayerProfile {
 	 */
 	public boolean loadMySQL(){
 		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
+		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
 
 		// プレイヤーID(DB割り当て)を読み出す
 		playerID = database.getInt("SELECT player_id FROM " + tablePrefix + "users WHERE player_name = '" + playerName + "'");
@@ -154,7 +154,7 @@ public class PlayerProfile {
 	 */
 	private void addMySQLPlayer(){
 		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
+		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
 
 		database.write("INSERT INTO " + tablePrefix + "users (player_name) VALUES ('" + playerName + "')"); // usersテーブル
 		playerID = database.getInt("SELECT player_id FROM "+tablePrefix + "users WHERE player_name = '" + playerName + "'");
@@ -168,7 +168,7 @@ public class PlayerProfile {
 		//Long timestamp = System.currentTimeMillis() / 1000;
 
 		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
+		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
 
 		// データベースupdate
 

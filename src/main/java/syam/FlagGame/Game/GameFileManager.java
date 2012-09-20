@@ -169,7 +169,7 @@ public class GameFileManager {
 			return null;
 		}
 
-		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+		World world = Bukkit.getWorld(plugin.getConfigs().getGameWorld());
 		return new Cuboid(
 				new Location(world, Double.parseDouble(pos1[0]), Double.parseDouble(pos1[1]), Double.parseDouble(pos1[2])),
 				new Location(world, Double.parseDouble(pos2[0]), Double.parseDouble(pos2[1]), Double.parseDouble(pos2[2]))
@@ -216,7 +216,7 @@ public class GameFileManager {
 		String[] block;
 		String[] coord;
 
-		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+		World world = Bukkit.getWorld(plugin.getConfigs().getGameWorld());
 
 		int line = 0;
 		for (String s : flags){
@@ -285,7 +285,7 @@ public class GameFileManager {
 		String[] data;
 		String[] coord;
 
-		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+		World world = Bukkit.getWorld(plugin.getConfigs().getGameWorld());
 
 		int line = 0;
 		for (String s : spawns){
@@ -353,7 +353,7 @@ public class GameFileManager {
 		String[] pos1;
 		String[] pos2;
 
-		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+		World world = Bukkit.getWorld(plugin.getConfigs().getGameWorld());
 
 		int line = 0;
 		for (String s : bases){
@@ -421,7 +421,7 @@ public class GameFileManager {
 
 		String[] coord;
 
-		World world = Bukkit.getWorld(plugin.getConfigs().gameWorld);
+		World world = Bukkit.getWorld(plugin.getConfigs().getGameWorld());
 
 		int line = 0;
 		for (String s : chests){
@@ -450,7 +450,7 @@ public class GameFileManager {
 		String[] coord = loc.split(",");
 		if (coord.length != 5) return null;
 		return new Location(
-				Bukkit.getWorld(plugin.getConfigs().gameWorld),
+				Bukkit.getWorld(plugin.getConfigs().getGameWorld()),
 				Double.valueOf(coord[0]),
 				Double.valueOf(coord[1]),
 				Double.valueOf(coord[2]),

@@ -83,7 +83,7 @@ public class TopCommand extends BaseCommand{
 	 */
 	private void sendRanking(CommandSender sender, PlayerStat stat, int page){
 		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().mysqlTablePrefix;
+		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
 		String suffix = stat.getSuffix();
 
 		HashMap<Integer, ArrayList<String>> rankersList = database.read("SELECT `" + stat.getColumnName() + "`, player_id FROM " + tablePrefix + "records WHERE `" + stat.getColumnName() + "` > 0 ORDER BY `" + stat.getColumnName() + "` DESC");

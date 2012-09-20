@@ -35,9 +35,9 @@ public class Database {
 		this.plugin = plugin;
 
 		// 接続情報読み込み
-		connectionString = "jdbc:mysql://" + plugin.getConfigs().mysqlAddress + ":" + plugin.getConfigs().mysqlPort
-				+ "/" + plugin.getConfigs().mysqlDBName + "?user=" + plugin.getConfigs().mysqlUserName + "&password=" + plugin.getConfigs().mysqlUserPass;
-		tablePrefix = plugin.getConfigs().mysqlTablePrefix;
+		connectionString = "jdbc:mysql://" + plugin.getConfigs().getMySQLaddress() + ":" + plugin.getConfigs().getMySQLport()
+				+ "/" + plugin.getConfigs().getMySQLdbname() + "?user=" + plugin.getConfigs().getMySQLusername() + "&password=" + plugin.getConfigs().getMySQLuserpass();
+		tablePrefix = plugin.getConfigs().getMySQLtablePrefix();
 
 		connect(); // 接続
 

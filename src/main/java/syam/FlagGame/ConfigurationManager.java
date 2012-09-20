@@ -39,24 +39,24 @@ public class ConfigurationManager {
 
 	// 設定項目
 	/* Basic Configs */
-	public int toolID = new Integer(269);
-	public String gameWorld = defaultWorldName;
-	public boolean isProtected = new Boolean(true);
-	public boolean isDebug = new Boolean(false);
+	private int toolID = new Integer(269);
+	private String gameWorld = defaultWorldName;
+	private boolean isProtected = new Boolean(true);
+	private boolean isDebug = new Boolean(false);
 	/* Games Configs */
-	public int startCountdownInSec = new Integer(10);
-	public boolean deathWhenLogout = new Boolean(true);
-	public boolean disableTeamPVP = new Boolean(true);
-	public List<String> disableCommands = new ArrayList<String>();
+	private int startCountdownInSec = new Integer(10);
+	private boolean deathWhenLogout = new Boolean(true);
+	private boolean disableTeamPVP = new Boolean(true);
+	private List<String> disableCommands = new ArrayList<String>();
 	/* MySQL Configs */
-	public String mysqlAddress = "localhost";
-	public int mysqlPort = 3306;
-	public String mysqlDBName = "DatabaseName";
-	public String mysqlUserName = "UserName";
-	public String mysqlUserPass = "UserPassword";
-	public String mysqlTablePrefix = "flaggame_";
+	private String mysqlAddress = "localhost";
+	private int mysqlPort = 3306;
+	private String mysqlDBName = "DatabaseName";
+	private String mysqlUserName = "UserName";
+	private String mysqlUserPass = "UserPassword";
+	private String mysqlTablePrefix = "flaggame_";
 	/* Logging Configs */
-	public String detailDirectory = defaultDetailDirectory;
+	private String detailDirectory = defaultDetailDirectory;
 
 	/**
 	 * コンストラクタ
@@ -118,6 +118,60 @@ public class ConfigurationManager {
 		// 詳細ログ用ディレクトリ作成
 		createDir(new File(detailDirectory));
 	}
+
+	// 設定 getter ここから
+
+	/* Basic Configs */
+	public int getToolID(){
+		return this.toolID;
+	}
+	public String getGameWorld(){
+		return this.gameWorld;
+	}
+	public boolean isProtected(){
+		return this.isProtected;
+	}
+	public boolean isDebug(){
+		return this.isDebug;
+	}
+	/* Games Configs */
+	public int getStartCountdownInSec(){
+		return this.startCountdownInSec;
+	}
+	public boolean getDeathWhenLogout(){
+		return this.deathWhenLogout;
+	}
+	public boolean getDisableTeamPVP(){
+		return this.disableTeamPVP;
+	}
+	public List<String> getDisableCommands(){
+		return this.disableCommands;
+	}
+	/* MySQL Configs */
+	public String getMySQLaddress(){
+		return this.mysqlAddress;
+	}
+	public int getMySQLport(){
+		return this.mysqlPort;
+	}
+	public String getMySQLdbname(){
+		return this.mysqlDBName;
+	}
+	public String getMySQLusername(){
+		return this.mysqlUserName;
+	}
+	public String getMySQLuserpass(){
+		return this.mysqlUserPass;
+	}
+	public String getMySQLtablePrefix(){
+		return this.mysqlTablePrefix;
+	}
+	/* Logging Configs */
+	public String getDetailDirectory(){
+		return this.detailDirectory;
+	}
+
+	// 設定 getter ここまで
 
 	/**
 	 * 設定ファイルに設定を書き込む (コメントが消えるため使わない)

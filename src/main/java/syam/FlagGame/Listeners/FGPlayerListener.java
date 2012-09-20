@@ -62,7 +62,7 @@ public class FGPlayerListener implements Listener{
 		if(block != null){
 			// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.getManager(player) != null &&
-					player.getItemInHand().getTypeId() == plugin.getConfigs().toolID && player.hasPermission("flag.admin.setup.set")){
+					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && player.hasPermission("flag.admin.setup.set")){
 				Configables conf = GameManager.getManager(player);
 
 				Game game = GameManager.getSelectedGame(player);
@@ -74,7 +74,7 @@ public class FGPlayerListener implements Listener{
 				Location loc = block.getLocation();
 
 				// ゲーム用ワールドでなければ返す
-				if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+				if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 					Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
 					return;
 				}
@@ -144,7 +144,7 @@ public class FGPlayerListener implements Listener{
 		Block block = event.getClickedBlock();
 
 		// ゲーム用ワールドでなければ返す
-		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 			return;
 
 		if (block != null){
@@ -186,7 +186,7 @@ public class FGPlayerListener implements Listener{
 		Player player = event.getPlayer();
 
 		// プレイヤーがフラッグワールド以外なら何もしない
-		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			return;
 		}
 
@@ -204,7 +204,7 @@ public class FGPlayerListener implements Listener{
 					Actions.message(null, player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
 					log.warning(logPrefix+ "Player "+player.getName()+" died, But undefined spawn-location. Game: " + game.getName() + " Team: " +team.name());
 					// ワールドスポーンに戻す
-					event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().gameWorld).getSpawnLocation());
+					event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().getGameWorld()).getSpawnLocation());
 					return;
 				}else{
 					// 設定あり
@@ -217,7 +217,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// フラッグゲームワールドスポーンに戻す
-		event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().gameWorld).getSpawnLocation());
+		event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().getGameWorld()).getSpawnLocation());
 	}
 
 
@@ -227,7 +227,7 @@ public class FGPlayerListener implements Listener{
 	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
 		// ワールドチェック
-		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+		if (player.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 			return;
 
 		String cmdMsg = event.getMessage().trim();
@@ -248,7 +248,7 @@ public class FGPlayerListener implements Listener{
 			GameTeam team = game.getPlayerTeam(player);
 			if (team != null){
 				// ゲーム中のプレイヤー 禁止コマンドを操作
-				for (String s : plugin.getConfigs().disableCommands){
+				for (String s : plugin.getConfigs().getDisableCommands()){
 					// 禁止コマンドと同じコマンドがある
 					if (s.trim().equalsIgnoreCase(cmd)){
 						// コマンド実行キャンセル
@@ -267,7 +267,7 @@ public class FGPlayerListener implements Listener{
 		Player deader = event.getEntity();
 
 		// ゲームワールド以外は何もしない
-		if (deader.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (deader.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			return;
 		}
 
@@ -311,7 +311,7 @@ public class FGPlayerListener implements Listener{
 			GameTeam aTeam = game.getPlayerTeam(killer);
 			if (aTeam != null){
 				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
-				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),deathMsg);
+				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().getGameWorld()),deathMsg);
 
 				// チームキル数追加
 				game.addKillCount(aTeam);
@@ -343,10 +343,10 @@ public class FGPlayerListener implements Listener{
 			GameTeam team = game.getPlayerTeam(player);
 
 			// チームに所属していてこの設定が有効なら、アナウンスしてHPをゼロにする
-			if (team != null && plugin.getConfigs().deathWhenLogout){
+			if (team != null && plugin.getConfigs().getDeathWhenLogout()){
 				player.setHealth(0);
 				//game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
-				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().gameWorld),
+				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().getGameWorld()),
 						msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
 				game.log(" Player "+player.getName()+" Died because Logged out!");
 			}
@@ -413,7 +413,7 @@ public class FGPlayerListener implements Listener{
 
 	private boolean canUseBlock(Player player, Block block, Boolean sendFalseMessage, Boolean door){
 		// ワールドがゲーム用ワールドでなければ常にtrueを返す
-		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 			return true;
 
 		GameTeam playerTeam = null;

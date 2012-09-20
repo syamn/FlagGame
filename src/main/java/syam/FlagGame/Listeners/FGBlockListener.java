@@ -47,7 +47,7 @@ public class FGBlockListener implements Listener{
 	public void onBlockBreak(final BlockBreakEvent event){
 		Block block = event.getBlock();
 		// ゲーム用ワールドでなければ返す
-		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			return;
 		}
 
@@ -123,7 +123,7 @@ public class FGBlockListener implements Listener{
 		}
 
 		// ワールド保護チェック
-		if (plugin.getConfigs().isProtected){
+		if (plugin.getConfigs().isProtected()){
 			event.setCancelled(true);
 		}
 	}
@@ -136,7 +136,7 @@ public class FGBlockListener implements Listener{
 	public void onBlockPlace(final BlockPlaceEvent event){
 		Block block = event.getBlock();
 		// ゲーム用ワールドでなければ返す
-		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			return;
 		}
 
@@ -210,7 +210,7 @@ public class FGBlockListener implements Listener{
 		}
 
 		// ワールド保護チェック
-		if (plugin.getConfigs().isProtected){
+		if (plugin.getConfigs().isProtected()){
 			event.setCancelled(true);
 		}
 	}
@@ -244,11 +244,11 @@ public class FGBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onLeavesDecay(final LeavesDecayEvent event){
 		// ゲーム用ワールドでなければ返す
-		if (event.getBlock().getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+		if (event.getBlock().getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 			return;
 
 		// ワールド保護チェック
-		if (plugin.getConfigs().isProtected){
+		if (plugin.getConfigs().isProtected()){
 			event.setCancelled(true);
 		}
 	}
@@ -257,11 +257,11 @@ public class FGBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockFade(final BlockFadeEvent event){
 		// ゲーム用ワールドでなければ返す
-		if (event.getBlock().getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+		if (event.getBlock().getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 			return;
 
 		// ワールド保護チェック
-		if (plugin.getConfigs().isProtected){
+		if (plugin.getConfigs().isProtected()){
 			event.setCancelled(true);
 		}
 	}
@@ -270,11 +270,11 @@ public class FGBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockForm(final BlockFormEvent event){
 		// ゲーム用ワールドでなければ返す
-		if (event.getBlock().getWorld() != Bukkit.getWorld(plugin.getConfigs().gameWorld))
+		if (event.getBlock().getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
 			return;
 
 		// ワールド保護チェック
-		if (plugin.getConfigs().isProtected){
+		if (plugin.getConfigs().isProtected()){
 			event.setCancelled(true);
 		}
 	}

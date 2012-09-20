@@ -28,7 +28,7 @@ public class DeathNotifierListener implements Listener {
 	public void onDeath(final DeathEvent event){
 		Player killed = event.getKilled();
 		// ゲーム用ワールドでの死亡はメッセージを出さない
-		if (killed.getWorld() == Bukkit.getWorld(plugin.getConfigs().gameWorld)){
+		if (killed.getWorld() == Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			/**
 			 * TODO: DeathNotifier側のNPEが解消されるまでnullを許容しない
 			 * PR: https://github.com/TitanDevelopment/DeathNotifier/pull/14

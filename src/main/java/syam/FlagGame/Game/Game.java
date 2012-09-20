@@ -851,7 +851,7 @@ public class Game {
 	 */
 	public void start_timer(final CommandSender sender){
 		// カウントダウン秒をリセット
-		starttimerInSec = plugin.getConfigs().startCountdownInSec;
+		starttimerInSec = plugin.getConfigs().getStartCountdownInSec();
 		if (starttimerInSec <= 0){
 			start(sender);
 			return;
@@ -1284,7 +1284,7 @@ public class Game {
 	 */
 	public void log(String line){
 		if (GameID != null){
-			String filepath = plugin.getConfigs().detailDirectory + GameID + ".log";
+			String filepath = plugin.getConfigs().getDetailDirectory() + GameID + ".log";
 			Actions.log(filepath, line);
 		}
 	}
