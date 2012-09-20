@@ -7,7 +7,6 @@ package syam.FlagGame.Permission;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -16,7 +15,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import syam.FlagGame.FlagGame;
 
 /**
@@ -112,7 +110,7 @@ public class PermissionHandler {
 	 * @param permission Node
 	 * @return boolean
 	 */
-	public boolean has(Permissible permissible, final String permission){
+	public boolean has(final Permissible permissible, final String permission){
 		// コンソールは常にすべての権限を保有する
 		if (permissible instanceof ConsoleCommandSender){
 			return true;
@@ -143,6 +141,46 @@ public class PermissionHandler {
 			case OPS:
 				return player.isOp();
 
+			// Other Types, forgot add here
+			default:
+				log.warning(logPrefix+ "Plugin author forgot add to integration to this permission plugin! Please report this!");
+				return false;
+		}
+	}
+	/**
+	 * 指定したプレイヤー名が指定したワールドで権限を持っているかどうか
+	 * @param worldName ワールド名
+	 * @param playerName プレイヤー名
+	 * @param permission 権限ノード
+	 * @return boolean
+	 */
+	public boolean has(final String worldName, final String playerName, final String permission){
+		// 使用中の権限プラグインによって処理を分ける
+		switch (usePermType){
+			// Vault
+			case VAULT:
+				return vaultPermission.has(worldName, playerName, permission);
+
+			// PEX
+			case PEX:
+				PermissionUser user = PermissionsEx.getPermissionManager().getUser(playerName);
+				if (user == null){ return false; }
+				return user.has(permission, worldName);
+
+			// SuperPerms
+			case SUPERPERMS: {
+				// SuperPermsはクロスワールドな権限システムではないので、このチェックは正しく動作しません
+				// これに起因して不具合が発生するようなら、他の権限プラグインに乗り換えてください
+				Player player = plugin.getServer().getPlayer(playerName);
+				if (player == null) return false;
+				else return player.hasPermission(permission);
+			}
+			// Ops
+			case OPS:{
+				Player player = plugin.getServer().getPlayer(playerName);
+				if (player == null) return false;
+				else return player.isOp();
+			}
 			// Other Types, forgot add here
 			default:
 				log.warning(logPrefix+ "Plugin author forgot add to integration to this permission plugin! Please report this!");
