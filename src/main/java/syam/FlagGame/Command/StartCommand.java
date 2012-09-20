@@ -3,8 +3,8 @@ package syam.FlagGame.Command;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class StartCommand extends BaseCommand{

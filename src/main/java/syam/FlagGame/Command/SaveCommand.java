@@ -1,8 +1,8 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class SaveCommand extends BaseCommand{

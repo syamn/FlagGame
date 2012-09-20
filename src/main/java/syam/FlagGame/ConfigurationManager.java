@@ -36,6 +36,7 @@ public class ConfigurationManager {
 	private final String defaultWorldName = "flag";
 	private final List<String> defaultDisableCommands = new ArrayList<String>() {{add("/spawn"); add("/home"); add("/setspawn");}};
 	private final String defaultDetailDirectory = "plugins/FlagGame/detail/";
+	private final List<String> defaultPermissions = new ArrayList<String>() {{add("superperms"); add("ops");}};
 
 	// 設定項目
 	/* Basic Configs */
@@ -47,7 +48,7 @@ public class ConfigurationManager {
 	private int startCountdownInSec = new Integer(10);
 	private boolean deathWhenLogout = new Boolean(true);
 	private boolean disableTeamPVP = new Boolean(true);
-	private List<String> disableCommands = new ArrayList<String>();
+	private List<String> disableCommands = defaultDisableCommands;
 	/* MySQL Configs */
 	private String mysqlAddress = "localhost";
 	private int mysqlPort = 3306;
@@ -57,6 +58,8 @@ public class ConfigurationManager {
 	private String mysqlTablePrefix = "flaggame_";
 	/* Logging Configs */
 	private String detailDirectory = defaultDetailDirectory;
+	/* Permissions Configs */
+	private List<String> permissions = defaultPermissions;
 
 	/**
 	 * コンストラクタ
@@ -107,6 +110,12 @@ public class ConfigurationManager {
 		mysqlTablePrefix = plugin.getConfig().getString("MySQL.Database.TablePrefix", "flaggame_");
 		/* Logging Configs */
 		detailDirectory = plugin.getConfig().getString("DetailDirectory", defaultDetailDirectory);
+		/* Permissions Configs */
+		if (plugin.getConfig().get("Permissions") != null){
+			permissions = plugin.getConfig().getStringList("Permissions");
+		}else{
+			permissions = defaultPermissions;
+		}
 
 		// ワールドチェック 見つからなければプラグイン無効化
 		if (Bukkit.getWorld(gameWorld) == null){
@@ -169,6 +178,10 @@ public class ConfigurationManager {
 	/* Logging Configs */
 	public String getDetailDirectory(){
 		return this.detailDirectory;
+	}
+	/* Permissions Configs */
+	public List<String> getPermissions(){
+		return this.permissions;
 	}
 
 	// 設定 getter ここまで

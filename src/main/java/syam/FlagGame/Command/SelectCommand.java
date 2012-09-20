@@ -1,9 +1,9 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class SelectCommand extends BaseCommand {

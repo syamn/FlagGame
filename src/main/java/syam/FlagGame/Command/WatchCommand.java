@@ -3,9 +3,9 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class WatchCommand extends BaseCommand{

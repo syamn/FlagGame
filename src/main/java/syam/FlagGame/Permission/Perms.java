@@ -2,7 +2,7 @@
  * FlagGame - Package: syam.FlagGame.Enum
  * Created: 2012/09/20 22:32:47
  */
-package syam.FlagGame.Enum;
+package syam.FlagGame.Permission;
 
 import org.bukkit.permissions.Permissible;
 
@@ -53,6 +53,18 @@ public enum Perms {
 	final String HEADER = "flag.";
 	private String node;
 
+	// 権限ハンドラ
+	private static PermissionHandler handler = null;
+	/**
+	 * PermissionHandlerセットアップ
+	 */
+	public static void setupPermissionHandler(){
+		if (handler == null){
+			handler = PermissionHandler.getInstance();
+		}
+		handler.setupPermissions(true);
+	}
+
 	/**
 	 * コンストラクタ
 	 * @param node 権限ノード
@@ -68,7 +80,7 @@ public enum Perms {
 	 */
 	public boolean has(final Permissible perm){
 		if (perm == null) return false;
-		return perm.hasPermission(this.node);
+		return handler.has(perm, this.node);
 	}
 
 	/**

@@ -45,6 +45,7 @@ import syam.FlagGame.Listeners.DeathNotifierListener;
 import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGEntityListener;
 import syam.FlagGame.Listeners.FGPlayerListener;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Debug;
 import syam.FlagGame.Util.DynmapHandler;
 import syam.FlagGame.Util.Metrics;
@@ -160,26 +161,33 @@ public class FlagGame extends JavaPlugin{
 		setupVault();
 		debug.endTimer("vault");
 
-		// DeathNotifier
+		// プラグインを無効にした場合進まないようにする
+		if (!pm.isPluginEnabled(this)){
+			return;
+		}
+
+		// 権限ハンドラセットアップ
+		debug.startTimer("permission");
+		Perms.setupPermissionHandler();
+		debug.endTimer("permission");
+
+		// Regist Listeners
+		debug.startTimer("listeners");
 		Plugin p = pm.getPlugin("DeathNotifier");
 		if (p != null){
 			pm.registerEvents(dnListener, this); // Regist Listener
 			//usingDeathNotifier = true; //フラグ
 			log.info(logPrefix+ "Hooked to DeathNotifier!");
 		}
-
-		// プラグインを無効にした場合進まないようにする
-		if (!pm.isPluginEnabled(this)){
-			return;
-		}
-
-		// Regist Listeners
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(entityListener, this);
+		debug.endTimer("listeners");
 
 		// コマンド登録
+		debug.startTimer("commands");
 		registerCommands();
+		debug.endTimer("commands");
 
 		// データベース連携
 		debug.startTimer("database");

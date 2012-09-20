@@ -53,6 +53,14 @@ MySQL:
 # DetailLogDirectory
 DetailDirectory: plugins/FlagGame/detail/
 
+#========================#
+#   Permissions Config   #
+#========================#
+# Use Permissions List
+Permissions:
+- superperms
+- ops
+
 #==================#
 #   DO NOT TOUCH   #
 #==================#

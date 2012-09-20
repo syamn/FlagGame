@@ -31,13 +31,13 @@ import org.bukkit.inventory.ItemStack;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.SignAction;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 

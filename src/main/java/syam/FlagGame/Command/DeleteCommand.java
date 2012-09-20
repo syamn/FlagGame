@@ -2,8 +2,8 @@ package syam.FlagGame.Command;
 
 import java.io.File;
 
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class DeleteCommand extends BaseCommand {

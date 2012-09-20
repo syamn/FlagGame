@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.FGPlayer;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class StatsCommand extends BaseCommand{

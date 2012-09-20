@@ -1,6 +1,6 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Enum.Perms;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class ReloadCommand extends BaseCommand {
@@ -20,6 +20,10 @@ public class ReloadCommand extends BaseCommand {
 			ex.printStackTrace();
 			return;
 		}
+
+		// 権限管理プラグイン再設定
+		Perms.setupPermissionHandler();
+
 		Actions.message(sender, null, "&aConfiguration reloaded!");
 	}
 

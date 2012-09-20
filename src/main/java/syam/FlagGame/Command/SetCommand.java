@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.Config.ConfigType;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Util;
 import syam.FlagGame.Util.WorldEditHandler;

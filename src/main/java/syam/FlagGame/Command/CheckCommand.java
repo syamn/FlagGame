@@ -9,8 +9,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
+import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class CheckCommand extends BaseCommand{
