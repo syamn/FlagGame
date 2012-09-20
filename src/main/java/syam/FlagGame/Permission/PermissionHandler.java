@@ -188,6 +188,47 @@ public class PermissionHandler {
 		}
 	}
 
+	/**
+	 * 指定したプレイヤー名のプライマリグループ名を取得する
+	 * @param worldName ワールド名
+	 * @param playerName プレイヤー名
+	 * @return プライマリグループ名
+	 */
+	public String getPlayersGroup(final String worldName, final String playerName){
+		// 使用中の権限プラグインによって処理を分ける
+		switch (usePermType){
+			// Vault
+			case VAULT:
+				return vaultPermission.getPrimaryGroup(worldName, playerName);
+
+			// PEX
+			case PEX:
+				PermissionUser user = PermissionsEx.getPermissionManager().getUser(playerName);
+				if (user == null){ return null; }
+				String[] groups = user.getGroupsNames();
+				if (groups != null && groups.length > 0){
+					return groups[0];
+				}else{
+					return null;
+				}
+
+			// SuperPerms
+			case SUPERPERMS: {
+				// SuperPerms not support group
+				return null;
+			}
+			// Ops
+			case OPS:{
+				// ops not support group
+				return null;
+			}
+			// Other Types, forgot add here
+			default:
+				log.warning(logPrefix+ "Plugin author forgot add to integration to this permission plugin! Please report this!");
+				return null;
+		}
+	}
+
 	// 権限管理プラグインセットアップメソッド ここから
 	/**
 	 * Vault権限管理システム セットアップ
