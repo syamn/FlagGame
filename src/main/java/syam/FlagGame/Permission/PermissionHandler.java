@@ -7,6 +7,9 @@ package syam.FlagGame.Permission;
 import java.util.List;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -100,7 +103,7 @@ public class PermissionHandler {
 
 		// メッセージ送信
 		if (message){
-			log.info(logPrefix+ "Using " + usePermType.name() + " for permissions");
+			log.info(logPrefix+ "Using " + getUsePermTypeString() + " for permissions");
 		}
 	}
 
@@ -226,6 +229,32 @@ public class PermissionHandler {
 			default:
 				log.warning(logPrefix+ "Plugin author forgot add to integration to this permission plugin! Please report this!");
 				return null;
+		}
+	}
+
+	/**
+	 * 使用中の権限管理システム名を返す
+	 * @return string
+	 */
+	public String getUsePermTypeString(){
+		// 使用中の権限プラグインによって処理を分ける
+		switch (usePermType){
+			// Vault
+			case VAULT:
+				return "Vault: " + Bukkit.getServer().getServicesManager().getRegistration(Permission.class).getProvider().getName();
+
+			// PEX
+			case PEX:
+				return "PermissionsEx";
+
+			// Ops
+			case OPS:
+				return "OPs";
+
+			// SuperPerms And Other Types, forgot add here
+			case SUPERPERMS:
+			default:
+				return "SuperPerms";
 		}
 	}
 
