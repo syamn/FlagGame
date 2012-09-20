@@ -3,6 +3,7 @@ package syam.FlagGame.Command;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -47,6 +48,6 @@ public class StartCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.start");
+		return Perms.START.has(sender);
 	}
 }

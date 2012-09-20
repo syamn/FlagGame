@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Database.Database;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.PlayerStat;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Util.Actions;
@@ -126,6 +127,6 @@ public class TopCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.user.top");
+		return Perms.TOP.has(sender);
 	}
 }

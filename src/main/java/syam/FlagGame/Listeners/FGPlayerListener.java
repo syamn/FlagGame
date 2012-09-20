@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.SignAction;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.FGPlayer.PlayerManager;
@@ -62,7 +63,7 @@ public class FGPlayerListener implements Listener{
 		if(block != null){
 			// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.getManager(player) != null &&
-					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && player.hasPermission("flag.admin.setup.set")){
+					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && Perms.SET.has(player)){
 				Configables conf = GameManager.getManager(player);
 
 				Game game = GameManager.getSelectedGame(player);

@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
@@ -41,6 +42,6 @@ public class SelectCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.select");
+		return Perms.SELECT.has(sender);
 	}
 }

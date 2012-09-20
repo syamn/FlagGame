@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
 import syam.FlagGame.Game.Game;
@@ -46,7 +47,7 @@ public class LeaveCommand extends BaseCommand{
 		// ゲームに参加していないプレイヤー
 		if (game == null){
 			// check permission
-			if (!sender.hasPermission("flag.user.leave.spectate")){
+			if (!Perms.LEAVE_SPECTATE.has(sender)){
 				Actions.message(sender, null, "&cあなたはゲームに参加していません");
 				return;
 			}
@@ -65,7 +66,7 @@ public class LeaveCommand extends BaseCommand{
 			// ゲーム開始中
 			if (game.isStarting()){
 				// check permission
-				if (!sender.hasPermission("flag.user.leave.game")){
+				if (!Perms.LEAVE_GAME.has(sender)){
 					Actions.message(sender, null, "&cゲームを途中退場する権限がありません");
 					return;
 				}
@@ -98,7 +99,7 @@ public class LeaveCommand extends BaseCommand{
 			// ゲーム待機中
 			else if (game.isReady()){
 				// check permission
-				if (!sender.hasPermission("flag.user.leave.ready")){
+				if (!Perms.LEAVE_READY.has(sender)){
 					Actions.message(sender, null, "&cゲームのエントリーを取り消す権限がありません");
 					return;
 				}
@@ -136,12 +137,8 @@ public class LeaveCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		if (sender.hasPermission("flag.user.leave.spectate") ||
-			sender.hasPermission("flag.user.leave.game") ||
-			sender.hasPermission("flag.user.leave.ready")) {
-			return true;
-		}else{
-			return false;
-		}
+		return (Perms.LEAVE_GAME.has(sender) ||
+				Perms.LEAVE_READY.has(sender) ||
+				Perms.LEAVE_SPECTATE.has(sender));
 	}
 }

@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
@@ -38,6 +39,6 @@ public class CreateCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.setup.create");
+		return Perms.CREATE.has(sender);
 	}
 }

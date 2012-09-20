@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Util.Actions;
@@ -24,6 +25,6 @@ public class SaveCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.save");
+		return Perms.SAVE.has(sender);
 	}
 }
