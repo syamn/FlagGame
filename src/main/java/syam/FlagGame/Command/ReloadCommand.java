@@ -11,16 +11,15 @@ public class ReloadCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		try{
 			plugin.getConfigs().loadConfig(false);
 		}catch (Exception ex){
 			log.warning(logPrefix+"an error occured while trying to load the config file.");
 			ex.printStackTrace();
-			return true;
+			return;
 		}
 		Actions.message(sender, null, "&aConfiguration reloaded!");
-		return true;
 	}
 
 	@Override

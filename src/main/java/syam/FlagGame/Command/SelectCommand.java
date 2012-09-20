@@ -14,7 +14,7 @@ public class SelectCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		if (args.size() >= 1){
 			// flag game (ゲーム名) - 選択
 			Game game = plugin.getGame(args.get(0));
@@ -27,7 +27,7 @@ public class SelectCommand extends BaseCommand {
 				Actions.message(null, player, "&aゲーム'"+game.getName()+"'を選択しました！");
 			}else{
 				Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません！");
-				return true;
+				return;
 			}
 		}else{
 			// flagadmin game - 選択解除
@@ -37,7 +37,6 @@ public class SelectCommand extends BaseCommand {
 			GameManager.removeManager(player, false);
 			Actions.message(null, player, "&aゲームの選択を解除しました！");
 		}
-		return true;
 	}
 
 	@Override

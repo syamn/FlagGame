@@ -18,7 +18,7 @@ public class InfoCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// 引数が無ければすべてのゲームデータを表示する
 		if (args.size() == 0){
 			int gamecount = plugin.games.size();
@@ -44,7 +44,6 @@ public class InfoCommand extends BaseCommand {
 				}
 			}
 			Actions.message(sender, null, "&a ===========================================");
-			return true;
 		}
 
 		// 引数があれば指定したゲームについての詳細情報を表示する
@@ -52,7 +51,7 @@ public class InfoCommand extends BaseCommand {
 			Game game = plugin.getGame(args.get(0));
 			if (game == null){
 				Actions.message(sender, null, "&cそのゲーム名は存在しません！");
-				return true;
+				return;
 			}
 
 			Actions.message(sender, null, "&a ==================&b GameDetail &a==================");
@@ -95,7 +94,6 @@ public class InfoCommand extends BaseCommand {
 
 			Actions.message(sender, null, "&a ================================================");
 		}
-		return true;
 	}
 
 	@Override

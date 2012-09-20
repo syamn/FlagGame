@@ -21,16 +21,16 @@ public class CheckCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		Game game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
-			return true;
+			return;
 		}
 
 		if (game.isStarting()){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は既に始まっています！");
-			return true;
+			return;
 		}
 
 		// 設定状況をチェックする
@@ -132,8 +132,6 @@ public class CheckCommand extends BaseCommand{
 		}
 
 		Actions.message(sender, null, "&a ===========================================");
-
-		return true;
 	}
 
 	@Override

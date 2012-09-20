@@ -28,7 +28,7 @@ public class LeaveCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// 参加しているゲームを取得する
 		Game game = null;
 		GameTeam team = null;
@@ -48,7 +48,7 @@ public class LeaveCommand extends BaseCommand{
 			// check permission
 			if (!sender.hasPermission("flag.user.leave.spectate")){
 				Actions.message(sender, null, "&cあなたはゲームに参加していません");
-				return true;
+				return;
 			}
 
 			// ゲームワールド内
@@ -67,7 +67,7 @@ public class LeaveCommand extends BaseCommand{
 				// check permission
 				if (!sender.hasPermission("flag.user.leave.game")){
 					Actions.message(sender, null, "&cゲームを途中退場する権限がありません");
-					return true;
+					return;
 				}
 
 				game.remPlayer(player, team);
@@ -100,7 +100,7 @@ public class LeaveCommand extends BaseCommand{
 				// check permission
 				if (!sender.hasPermission("flag.user.leave.ready")){
 					Actions.message(sender, null, "&cゲームのエントリーを取り消す権限がありません");
-					return true;
+					return;
 				}
 				// プレイヤーリストから削除
 				game.remPlayer(player, team);
@@ -114,8 +114,6 @@ public class LeaveCommand extends BaseCommand{
 				log.warning(logPrefix+ "Internal Exception on LeaveCommand.class, Please report this.");
 			}
 		}
-
-		return true;
 	}
 
 	private void leaveFromGameworld(Player player, Location def){

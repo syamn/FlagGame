@@ -16,11 +16,11 @@ public class TpCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		if (args.get(0).equalsIgnoreCase("spawn")){
 			if (args.size() < 2){
 				Actions.message(null, player, "&c引数が足りません！");
-				return true;
+				return;
 			}
 			// ゲーム取得
 			Game game = null;
@@ -35,7 +35,7 @@ public class TpCommand extends BaseCommand{
 			// それも無ければエラーを返す
 			if (game == null){
 				Actions.message(null, player, "&c先にゲームを選択してください");
-				return true;
+				return;
 			}
 
 			// チーム取得
@@ -46,24 +46,24 @@ public class TpCommand extends BaseCommand{
 			}
 			if (team == null){
 				Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
-				return true;
+				return;
 			}
 
 			Location loc = game.getSpawnLocation(team);
 
 			if (loc == null){
 				Actions.message(null, player, "&c"+team.getTeamName()+"チームのスポーン地点は未設定です！");
-				return true;
+				return;
 			}
 
 			// テレポート
 			player.teleport(loc);
 			Actions.message(null, player, "&a"+team.getTeamName()+"チームのスポーン地点にテレポートしました！");
-			return true;
+			return;
 		}
 
 		Actions.message(null, player, "&cそのエリアは未定義です");
-		return true;
+		return;
 	}
 
 	@Override

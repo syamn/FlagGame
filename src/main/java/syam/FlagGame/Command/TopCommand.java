@@ -30,19 +30,19 @@ public class TopCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		PlayerStat stat = PlayerStat.WIN; // デフォルト表示対象 チーム勝利回数
 
 		// 引数なし デフォルト表示
 		if (args.size() <= 0){
 			sendRanking(sender, stat, 1);
-			return true;
+			return;
 		}
 		// 引数1 ページ番号 or ランキング種類指定表示
 		else if (args.size() == 1){
 			if (Util.isInteger(args.get(0))){
 				sendRanking(sender, stat, Integer.valueOf(args.get(0)));
-				return true;
+				return;
 			}
 
 			stat = PlayerStat.getStat(args.get(0));
@@ -54,7 +54,7 @@ public class TopCommand extends BaseCommand{
 				sendAvailableStat();
 			}
 
-			return true;
+			return;
 		}
 		// 引数2+ ページ番号 and ランキング種類指定表示
 		else{
@@ -62,7 +62,7 @@ public class TopCommand extends BaseCommand{
 			if (stat == null){
 				Actions.message(sender, null, "&c表示するランキングの種類が不正です！");
 				sendAvailableStat();
-				return true;
+				return;
 			}
 
 			if (Util.isInteger(args.get(1))){
@@ -71,8 +71,6 @@ public class TopCommand extends BaseCommand{
 				sendRanking(sender, stat, 1);
 			}
 		}
-
-		return true;
 	}
 
 	/**

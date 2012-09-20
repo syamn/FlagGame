@@ -13,15 +13,15 @@ public class CreateCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		if (args.size() == 0){
 			Actions.message(sender, null, "&cゲーム名を入力してください！ /flag create (name)");
-			return true;
+			return;
 		}
 		Game game = plugin.getGame(args.get(0));
 		if (game != null){
 			Actions.message(sender, null, "&cそのゲーム名は既に存在します！");
-			return true;
+			return;
 		}
 
 		// 新規ゲーム登録
@@ -34,7 +34,6 @@ public class CreateCommand extends BaseCommand {
 		plugin.getFileManager().saveGames();
 
 		Actions.message(sender, null, "&a新規ゲーム'"+game.getName()+"'を登録して選択しました！");
-		return true;
 	}
 
 	@Override

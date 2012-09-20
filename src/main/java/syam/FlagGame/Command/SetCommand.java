@@ -34,7 +34,7 @@ public class SetCommand extends BaseCommand {
 	 * コマンド実行時に呼ばれる
 	 */
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// flag set のみ (サブ引数なし)
 		if (args.size() <= 0){
 			if (GameManager.getManager(player) != null){
@@ -43,7 +43,7 @@ public class SetCommand extends BaseCommand {
 				Actions.message(null, player, "&c設定項目を指定してください！");
 				sendAvailableConf();
 			}
-			return true;
+			return;
 		}
 
 		// 管理モードであれば外す
@@ -53,13 +53,13 @@ public class SetCommand extends BaseCommand {
 		Game game = GameManager.getSelectedGame(player);
 		if (game == null){
 			Actions.message(null, player, "&c先に編集するゲームを選択してください");
-			return true;
+			return;
 		}
 
 		// 開始中でないかチェック
 		if (game.isReady() || game.isStarting()){
 			Actions.message(sender, null, "&cこのゲームは受付中か開始中のため設定変更できません！");
-			return true;
+			return;
 		}
 
 		// 設定可能項目名を回す
@@ -73,14 +73,14 @@ public class SetCommand extends BaseCommand {
 		if (conf == null){
 			Actions.message(sender, null, "&cその設定項目は存在しません！");
 			sendAvailableConf();
-			return true;
+			return;
 		}
 
 		// 設定タイプが ConfigType.SIMPLE の場合はサブ引数が2つ以上必要
 		if (conf.getConfigType() == ConfigType.SIMPLE){
 			if (args.size() < 2){
 				Actions.message(sender, null, "&c引数が足りません！ 設定する値を入力してください！");
-				return true;
+				return;
 			}
 		}
 
@@ -88,29 +88,29 @@ public class SetCommand extends BaseCommand {
 		switch (conf){
 			/* 一般 */
 			case STAGE: // ステージ設定
-				return setStage(game);
+				setStage(game); return;
 			case BASE: // 拠点設定
-				return setBase(game);
+				setBase(game); return;
 			case SPAWN: // スポーン地点設定
-				return setSpawn(game);
+				setSpawn(game); return;
 			case FLAG: // フラッグ設定
-				return setFlag(game);
+				setFlag(game); return;
 			case CHEST: // チェスト設定
-				return setChest(game);
+				setChest(game); return;
 			case SPECSPAWN: // 観戦者スポーン設定
-				return setSpecSpawn(game);
+				setSpecSpawn(game); return;
 
 			/* オプション */
 			case GAMETIME: // 制限時間
-				return setGameTime(game);
+				setGameTime(game); return;
 			case TEAMLIMIT: // チーム人数制限
-				return setTeamLimit(game);
+				setTeamLimit(game); return;
 			case AWARD: // 賞金
-				return setAward(game);
+				setAward(game); return;
 			case ENTRYFEE: // 参加料
-				return setEntryFee(game);
+				setEntryFee(game); return;
 			case PROTECT: // ステージ保護
-				return setStageProtect(game);
+				setStageProtect(game); return;
 
 
 			// 定義漏れ
@@ -119,18 +119,16 @@ public class SetCommand extends BaseCommand {
 				log.warning(logPrefix+ "Undefined configables! Please report this!");
 				break;
 		}
-
-		return true;
 	}
 
 	/* ***** ここから各設定関数 ****************************** */
 
 	// 一般
-	private boolean setStage(Game game){
+	private void setStage(Game game){
 		// WorldEdit選択領域取得
 		Block[] corners = WorldEditHandler.getWorldEditRegion(player);
 		// エラー プレイヤーへのメッセージ送信はWorldEditHandlerクラスで処理
-		if (corners == null || corners.length != 2) return true;
+		if (corners == null || corners.length != 2) return;
 
 		Block block1 = corners[0];
 		Block block2 = corners[1];
@@ -138,7 +136,7 @@ public class SetCommand extends BaseCommand {
 		// ワールドチェック
 		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
-			return true;
+			return;
 		}
 
 		// ステージ設定
@@ -146,18 +144,17 @@ public class SetCommand extends BaseCommand {
 
 		Actions.message(null, player, "&aゲーム'"+game.getName()+"'のステージエリアを設定しました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
 	/**
 	 * 拠点エリア設定
 	 * @param game
 	 * @return true
 	 */
-	private boolean setBase(Game game){
+	private void setBase(Game game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
-			return true;
+			return;
 		}
 
 		// チーム取得
@@ -170,13 +167,13 @@ public class SetCommand extends BaseCommand {
 		}
 		if (team == null){
 			Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
-			return true;
+			return;
 		}
 
 		// WorldEdit選択領域取得
 		Block[] corners = WorldEditHandler.getWorldEditRegion(player);
 		// エラー プレイヤーへのメッセージ送信はWorldEditHandlerクラスで処理
-		if (corners == null || corners.length != 2) return true;
+		if (corners == null || corners.length != 2) return;
 
 		Block block1 = corners[0];
 		Block block2 = corners[1];
@@ -184,7 +181,7 @@ public class SetCommand extends BaseCommand {
 		// ワールドチェック
 		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
-			return true;
+			return;
 		}
 
 		// 拠点設定
@@ -192,18 +189,17 @@ public class SetCommand extends BaseCommand {
 
 		Actions.message(null, player, "&a"+team.getTeamName()+"チームの拠点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
 	/**
 	 * スポーン地点設定
 	 * @param game
 	 * @return true
 	 */
-	private boolean setSpawn(Game game){
+	private void setSpawn(Game game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
-			return true;
+			return;
 		}
 
 		// チーム取得
@@ -216,7 +212,7 @@ public class SetCommand extends BaseCommand {
 		}
 		if (team == null){
 			Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
-			return true;
+			return;
 		}
 
 		// スポーン地点設定
@@ -224,18 +220,17 @@ public class SetCommand extends BaseCommand {
 
 		Actions.message(null, player, "&a"+team.getTeamName()+"チームのスポーン地点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
 	/**
 	 * フラッグ管理モード
 	 * @param game
 	 * @return true
 	 */
-	private boolean setFlag(Game game){
+	private void setFlag(Game game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！フラッグの種類を指定してください！");
-			return true;
+			return;
 		}
 
 		// フラッグタイプチェック
@@ -246,7 +241,7 @@ public class SetCommand extends BaseCommand {
 		}
 		if (type == null){
 			Actions.message(null, player, "&cフラッグの種類を正しく指定してください！");
-			return true;
+			return;
 		}
 
 		// マネージャーセット
@@ -254,115 +249,106 @@ public class SetCommand extends BaseCommand {
 		GameManager.setSelectedFlagType(player, type);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
 		Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
-		return true;
 	}
 	/**
 	 * チェスト管理モード
 	 * @param game
 	 * @return true
 	 */
-	private boolean setChest(Game game){
+	private void setChest(Game game){
 		// マネージャーセット
 		GameManager.setManager(player, Configables.CHEST);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
 		Actions.message(null, player, "&aチェスト管理モードを開始しました。選択ツール: " + tool);
-
-		return true;
 	}
 	/**
 	 * 観戦者スポーン地点
 	 * @param game 設定対象のゲームイン寸タンス
 	 * @return
 	 */
-	private boolean setSpecSpawn(Game game){
+	private void setSpecSpawn(Game game){
 		// 観戦者スポーン地点設定
 		game.setSpecSpawn(player.getLocation());
 
 		Actions.message(null, player, "&aゲーム'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
 
 	// オプション
-	private boolean setGameTime(Game game){
+	private void setGameTime(Game game){
 		int num = 60 * 10; // デフォルト10分
 		try{
 			num = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
 			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return true;
+			return;
 		}
 
 		if (num <= 0){
 			Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
-			return true;
+			return;
 		}
 		game.setGameTime(num);
 
 		String sec = num+"秒";
 		if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
-
-		return true;
 	}
-	private boolean setTeamLimit(Game game){
+	private void setTeamLimit(Game game){
 		int cnt = 8; // デフォルト8人
 		try{
 			cnt = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
 			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return true;
+			return;
 		}
 
 		if (cnt <= 0){
 			Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
-			return true;
+			return;
 		}
 
 		game.setTeamLimit(cnt);
 
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
-	private boolean setAward(Game game){
+	private void setAward(Game game){
 		int award = 300; // デフォルト300コイン
 		try{
 			award = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
 			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return true;
+			return;
 		}
 		if (award < 0){
 			Actions.message(sender, null, "&c値が不正です！負数は指定できません！");
-			return true;
+			return;
 		}
 
 		game.setAward(award);
 
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
-	private boolean setEntryFee(Game game){
+	private void setEntryFee(Game game){
 		int entryfee = 100; // デフォルト100コイン
 		try{
 			entryfee = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
 			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return true;
+			return;
 		}
 		if (entryfee < 0){
 			Actions.message(sender, null, "&c値が不正です！負数は指定できません！");
-			return true;
+			return;
 		}
 
 		game.setEntryFee(entryfee);
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
-	private boolean setStageProtect(Game game){
+	private void setStageProtect(Game game){
 		Boolean protect = true; // デフォルトtrue
 		String value = args.get(1).trim();
 
@@ -372,7 +358,7 @@ public class SetCommand extends BaseCommand {
 			protect = false;
 		}else{
 			Actions.message(sender, null, "&c値が不正です！true または false を指定してください！");
-			return true;
+			return;
 		}
 
 		String result = "";
@@ -382,7 +368,6 @@ public class SetCommand extends BaseCommand {
 		game.setStageProtected(protect);
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のステージ保護は "+result+" &aに設定されました！");
 		plugin.getDynmap().updateRegion(game);
-		return true;
 	}
 
 	/* ***** ここまで **************************************** */

@@ -16,23 +16,23 @@ public class WatchCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		Game game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
-			return true;
+			return;
 		}
 
 		Location specSpawn = game.getSpecSpawn();
 		if (specSpawn == null){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は観戦者のスポーン地点が設定されていません");
-			return true;
+			return;
 		}
 
 		for (Game check : plugin.games.values()){
 			if (check.getPlayerTeam(player) != null){
 				Actions.message(null, player, "&cあなたはゲーム'"+check.getName()+"'に参加しているため移動できません！");
-				return true;
+				return;
 			}
 		}
 
@@ -42,8 +42,6 @@ public class WatchCommand extends BaseCommand{
 		}
 		player.teleport(specSpawn, TeleportCause.PLUGIN);
 		Actions.message(null, player, "&aゲーム'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
-
-		return true;
 	}
 
 	@Override

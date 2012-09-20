@@ -13,14 +13,13 @@ public class SaveCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		// データ保存
 		plugin.getFileManager().saveGames();
 		GameManager.saveAll();
 		PlayerManager.saveAll();
 
 		Actions.message(sender, null, "&aGames/Players Saved!");
-		return true;
 	}
 
 	@Override

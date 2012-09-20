@@ -19,7 +19,7 @@ public class StatsCommand extends BaseCommand{
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		PlayerProfile prof = null;
 		boolean other = false;
 
@@ -28,13 +28,13 @@ public class StatsCommand extends BaseCommand{
 			// check console
 			if (!(sender instanceof Player)){
 				Actions.message(sender, null, "&c情報を表示するユーザ名を入力してください");
-				return true;
+				return;
 			}
 
 			// check permission
 			if (!sender.hasPermission("flag.user.stats.self")){
 				Actions.message(sender, null, "&cあなたはこのコマンドを使う権限がありません");
-				return true;
+				return;
 			}
 
 			prof = PlayerManager.getProfile(player.getName());
@@ -46,7 +46,7 @@ public class StatsCommand extends BaseCommand{
 			// check permission
 			if (!sender.hasPermission("flag.user.stats.other")){
 				Actions.message(sender, null, "&cあなたは他人の情報を見る権限がありません");
-				return true;
+				return;
 			}
 
 			FGPlayer fgPlayer = PlayerManager.getPlayer(args.get(0));
@@ -61,7 +61,7 @@ public class StatsCommand extends BaseCommand{
 
 				if (!prof.isLoaded()){
 					Actions.message(sender, null, "&c指定したプレイヤーの情報が見つかりません");
-					return true;
+					return;
 				}
 			}
 		}
@@ -69,15 +69,13 @@ public class StatsCommand extends BaseCommand{
 		// check null
 		if (prof == null){
 			Actions.message(sender, null, "&cプレイヤー情報が正しく読み込めませんでした");
-			return true;
+			return;
 		}
 
 		// メッセージ送信
 		for (String line : buildStrings(prof, other)){
 			Actions.message(sender, null, line);
 		}
-
-		return true;
 	}
 
 	private List<String> buildStrings(PlayerProfile prof, boolean other){

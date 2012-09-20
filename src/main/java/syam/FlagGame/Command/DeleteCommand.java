@@ -14,20 +14,20 @@ public class DeleteCommand extends BaseCommand {
 	}
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		if (args.size() == 0){
 			Actions.message(sender, null, "&cゲーム名を入力してください！ /flag delete (name)");
-			return true;
+			return;
 		}
 		Game game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(sender, null, "&cそのゲーム名は存在しません！");
-			return true;
+			return;
 		}
 
 		if (game.isReady() || game.isStarting()){
 			Actions.message(sender, null, "&cそのゲームは現在受付中または開始中のため削除できません");
-			return true;
+			return;
 		}
 
 		// ゲームのフラッグブロックロールバック
@@ -55,7 +55,6 @@ public class DeleteCommand extends BaseCommand {
 			Actions.message(sender, null, "&aゲーム'"+args.get(0)+"'を削除しました！");
 			plugin.getDynmap().updateRegions();
 		}
-		return true;
 	}
 
 	@Override
