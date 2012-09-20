@@ -59,6 +59,7 @@ DetailDirectory: plugins/FlagGame/detail/
 # Use Permissions List
 Permissions:
 - vault
+- pex
 - superperms
 - ops
 

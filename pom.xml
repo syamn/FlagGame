@@ -212,6 +212,14 @@
           <scope>system</scope>
           <systemPath>${project.basedir}/lib/dynmap-0.70.2.jar</systemPath>
       </dependency>
+      <!-- PermissionsEx Dependency -->
+      <dependency>
+          <groupId>ru.tehkode</groupId>
+          <artifactId>PermissionsEx</artifactId>
+          <version>1.19.3</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/PermissionsEx-1.19.3.jar</systemPath>
+      </dependency>
       <!-- DeathNotifier Dependency -->
       <dependency>
           <groupId>com.titankingdoms.nodinchan</groupId>

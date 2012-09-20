@@ -36,7 +36,7 @@ public class ConfigurationManager {
 	private final String defaultWorldName = "flag";
 	private final List<String> defaultDisableCommands = new ArrayList<String>() {{add("/spawn"); add("/home"); add("/setspawn");}};
 	private final String defaultDetailDirectory = "plugins/FlagGame/detail/";
-	private final List<String> defaultPermissions = new ArrayList<String>() {{add("vault"); add("superperms"); add("ops");}};
+	private final List<String> defaultPermissions = new ArrayList<String>() {{add("vault"); add("pex"); add("superperms"); add("ops");}};
 
 	// 設定項目
 	/* Basic Configs */

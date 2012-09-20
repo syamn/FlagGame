@@ -14,6 +14,9 @@ import org.bukkit.permissions.Permissible;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 import syam.FlagGame.FlagGame;
 
 /**
@@ -28,6 +31,7 @@ public class PermissionHandler {
 	 */
 	public enum PermType {
 		VAULT,
+		PEX,
 		SUPERPERMS,
 		OPS,
 		;
@@ -46,6 +50,7 @@ public class PermissionHandler {
 
 	// 外部権限管理プラグイン
 	private net.milkbowl.vault.permission.Permission vaultPermission = null; // 混同する可能性があるのでパッケージをimportしない
+	private PermissionsEx pex = null;
 
 	/**
 	 * コンストラクタ
@@ -68,6 +73,12 @@ public class PermissionHandler {
 			if ("vault".equalsIgnoreCase(pname)){
 				if (setupVaultPermission()){
 					usePermType = PermType.VAULT;
+					break;
+				}
+			}
+			else if ("pex".equals(pname)){
+				if (setupPEXPermission()){
+					usePermType = PermType.PEX;
 					break;
 				}
 			}
@@ -120,6 +131,10 @@ public class PermissionHandler {
 			case VAULT:
 				return vaultPermission.has(player, permission);
 
+			// PEX
+			case PEX:
+				return pex.has(player, permission);
+
 			// SuperPerms
 			case SUPERPERMS:
 				return player.hasPermission(permission);
@@ -151,6 +166,16 @@ public class PermissionHandler {
 		}
 
 		return (vaultPermission != null);
+	}
+
+	private boolean setupPEXPermission(){
+		Plugin testPex = plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if (testPex == null) testPex = plugin.getServer().getPluginManager().getPlugin("permissionsex");
+		if (testPex == null) return false;
+
+		pex = (PermissionsEx) testPex;
+
+		return (pex != null);
 	}
 	// ここまで
 
