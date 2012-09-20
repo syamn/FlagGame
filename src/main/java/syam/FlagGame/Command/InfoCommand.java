@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -98,6 +99,6 @@ public class InfoCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.user.info");
+		return Perms.INFO.has(sender);
 	}
 }

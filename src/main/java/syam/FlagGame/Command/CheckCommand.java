@@ -9,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -136,6 +137,6 @@ public class CheckCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.setup.check");
+		return Perms.CHECK.has(sender);
 	}
 }

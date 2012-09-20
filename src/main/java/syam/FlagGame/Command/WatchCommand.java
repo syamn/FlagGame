@@ -3,6 +3,7 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
@@ -46,6 +47,6 @@ public class WatchCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.user.watch");
+		return Perms.WATCH.has(sender);
 	}
 }

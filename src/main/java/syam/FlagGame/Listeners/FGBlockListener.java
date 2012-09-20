@@ -21,6 +21,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
@@ -118,7 +119,7 @@ public class FGBlockListener implements Listener{
 		}
 
 		// 権限チェック
-		if (player.hasPermission("flag.ignoreWorldProtect")){
+		if (Perms.IGNORE_PROTECT.has(player)){
 			return;
 		}
 
@@ -205,7 +206,7 @@ public class FGBlockListener implements Listener{
 		}
 
 		// 権限チェック
-		if (player.hasPermission("flag.ignoreWorldProtect")){
+		if (Perms.IGNORE_PROTECT.has(player)){
 			return;
 		}
 
@@ -228,7 +229,7 @@ public class FGBlockListener implements Listener{
 			/* 特殊看板設置 */
 			if(event.getLine(0).trim().toLowerCase().endsWith("[flaggame]")){
 				// 権限チェック
-				if (!player.hasPermission("flag.admin.sign")){
+				if (!Perms.SIGN.has(player)){
 					event.setLine(0, "Denied!");
 					Actions.message(null, player, "&cYou don't have permission to do this!");
 					return;

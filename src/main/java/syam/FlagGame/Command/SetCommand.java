@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Enum.Config.ConfigType;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Game.Game;
@@ -387,6 +388,6 @@ public class SetCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.setup.set");
+		return Perms.SET.has(sender);
 	}
 }

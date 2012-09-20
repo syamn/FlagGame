@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.FGPlayer.FGPlayer;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
@@ -32,7 +33,7 @@ public class StatsCommand extends BaseCommand{
 			}
 
 			// check permission
-			if (!sender.hasPermission("flag.user.stats.self")){
+			if (!Perms.STATS_SELF.has(sender)){
 				Actions.message(sender, null, "&cあなたはこのコマンドを使う権限がありません");
 				return;
 			}
@@ -44,7 +45,7 @@ public class StatsCommand extends BaseCommand{
 			other = true;
 
 			// check permission
-			if (!sender.hasPermission("flag.user.stats.other")){
+			if (!Perms.STATS_OTHER.has(sender)){
 				Actions.message(sender, null, "&cあなたは他人の情報を見る権限がありません");
 				return;
 			}
@@ -117,11 +118,7 @@ public class StatsCommand extends BaseCommand{
 
 	@Override
 	public boolean permission() {
-		if (sender.hasPermission("flag.user.stats.self") ||
-			sender.hasPermission("flag.user.stats.other")){
-			return true;
-		}else{
-			return false;
-		}
+		return (Perms.STATS_SELF.has(sender) ||
+				Perms.STATS_OTHER.has(sender));
 	}
 }

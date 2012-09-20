@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Util.Actions;
 
@@ -31,6 +32,6 @@ public class ReadyCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.ready");
+		return Perms.READY.has(sender);
 	}
 }

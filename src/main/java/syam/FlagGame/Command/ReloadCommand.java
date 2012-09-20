@@ -1,5 +1,6 @@
 package syam.FlagGame.Command;
 
+import syam.FlagGame.Enum.Perms;
 import syam.FlagGame.Util.Actions;
 
 public class ReloadCommand extends BaseCommand {
@@ -24,6 +25,6 @@ public class ReloadCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("flag.admin.reload");
+		return Perms.RELOAD.has(sender);
 	}
 }
