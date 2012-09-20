@@ -128,9 +128,9 @@ public class FlagGame extends JavaPlugin{
 	private static FlagGame instance;
 
 	// Hookup plugins
-	public boolean usingDeathNotifier = false;
-	public static Vault vault = null;
-	public static Economy economy = null;
+	//public boolean usingDeathNotifier = false;
+	private static Vault vault = null;
+	private static Economy economy = null;
 	private DynmapHandler dynmap = null;
 
 	/**
@@ -164,7 +164,7 @@ public class FlagGame extends JavaPlugin{
 		Plugin p = pm.getPlugin("DeathNotifier");
 		if (p != null){
 			pm.registerEvents(dnListener, this); // Regist Listener
-			usingDeathNotifier = true; //フラグ
+			//usingDeathNotifier = true; //フラグ
 			log.info(logPrefix+ "Hooked to DeathNotifier!");
 		}
 
@@ -415,8 +415,27 @@ public class FlagGame extends JavaPlugin{
 		return dynmap;
 	}
 
+	/**
+	 * データベースを返す
+	 * @return Database
+	 */
 	public static Database getDatabases(){
 		return database;
+	}
+
+	/**
+	 * Vaultを返す
+	 * @return Vault
+	 */
+	public Vault getVault(){
+		return this.vault;
+	}
+	/**
+	 * Economyを返す
+	 * @return Economy
+	 */
+	public Economy getEconomy(){
+		return this.economy;
 	}
 
 	/**

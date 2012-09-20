@@ -293,7 +293,7 @@ public class Actions {
 	 */
 	public static boolean addMoney(String name, double amount){
 		if (amount < 0) return false; // 負数は許容しない
-		EconomyResponse r = FlagGame.economy.depositPlayer(name, amount);
+		EconomyResponse r = FlagGame.getInstance().getEconomy().depositPlayer(name, amount);
 		if(r.transactionSuccess()) {
 			return true;
 		} else {
@@ -308,7 +308,7 @@ public class Actions {
 	 */
 	public static boolean takeMoney(String name, double amount){
 		if (amount < 0) return false; // 負数は許容しない
-		EconomyResponse r = FlagGame.economy.withdrawPlayer(name, amount);
+		EconomyResponse r = FlagGame.getInstance().getEconomy().withdrawPlayer(name, amount);
 		if(r.transactionSuccess()) {
 			return true;
 		} else {
@@ -322,7 +322,7 @@ public class Actions {
 	 * @return 持っていればtrue、無ければfalse
 	 */
 	public static boolean checkMoney(String name, double amount){
-		return (FlagGame.economy.has(name, amount));
+		return (FlagGame.getInstance().getEconomy().has(name, amount));
 	}
 
 	/****************************************/

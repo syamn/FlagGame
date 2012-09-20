@@ -28,16 +28,20 @@ public enum Perms {
 	WATCH			("user.watch"),
 
 	// Admin Commands
-	CHECK	("admin.setup.check"),
-	CREATE	("admin.setup.create"),
-	DELETE	("admin.setup.delete"),
 	READY	("admin.ready"),
-	RELOAD	("admin.reload"),
-	SAVE	("admin.save"),
 	SELECT	("admin.select"),
-	SET		("admin.setup.set"),
 	START	("admin.start"),
 	TP		("admin.tp"),
+
+	// Setup Commands
+	CREATE	("admin.setup.create"),
+	DELETE	("admin.setup.delete"),
+	SET		("admin.setup.set"),
+	CHECK	("admin.setup.check"),
+
+	// System Commands
+	SAVE	("admin.save"),
+	RELOAD	("admin.reload"),
 
 	/* 特殊系 */
 	IGNORE_PROTECT	("ignoreWorldProtect"),
