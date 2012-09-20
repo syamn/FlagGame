@@ -85,6 +85,9 @@ public class ConfigurationManager {
 
 		plugin.reloadConfig();
 
+		// Check config.yml version
+		checkver(plugin.getConfig().getDouble("Version", 0.1D));
+
 		/* Basic Configs */
 		toolID = plugin.getConfig().getInt("ToolID", 269);
 		gameWorld = plugin.getConfig().getString("WorldName", defaultWorldName);
@@ -120,6 +123,7 @@ public class ConfigurationManager {
 	 * 設定ファイルに設定を書き込む (コメントが消えるため使わない)
 	 * @throws Exception
 	 */
+	@Deprecated
 	public void save() throws Exception{
 		plugin.saveConfig();
 	}
@@ -152,8 +156,15 @@ public class ConfigurationManager {
 	private void checkver(final double ver){
 		double configVersion = ver; // 設定ファイルのバージョン
 		double nowVersion = 0.1D; // プラグインのバージョン
+
+		String versionString = plugin.getDescription().getVersion();
 		try{
-			nowVersion = Double.parseDouble(FlagGame.getInstance().getDescription().getVersion());
+			// Support maven and Jenkins build number
+			int index = versionString.indexOf("-");
+			if (index > 0){
+				versionString = versionString.substring(0, index);
+			}
+			nowVersion = Double.parseDouble(versionString);
 		}catch (NumberFormatException ex){
 			log.warning(logPrefix+ "Cannot parse version string!");
 		}
