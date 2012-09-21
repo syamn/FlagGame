@@ -1,5 +1,7 @@
 package syam.FlagGame.Command;
 
+import java.util.Random;
+
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -20,7 +22,18 @@ public class ReadyCommand extends BaseCommand {
 			return;
 		}
 
-		Game game = plugin.getGame(args.get(0));
+		Game game = null;
+
+		// ランダム
+		if (args.get(0).equalsIgnoreCase("random")){
+			game = plugin.getGame(getRandomStage());
+			// TODO: 開始中のゲームが選択される可能性 ランダムアナウンスができない
+		}
+		// 通常のゲーム
+		else{
+			game = plugin.getGame(args.get(0));
+		}
+
 		if (game == null){
 			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'が見つかりません");
 			return;
@@ -28,6 +41,19 @@ public class ReadyCommand extends BaseCommand {
 
 		// ready
 		game.ready(sender);
+	}
+
+	/**
+	 * ランダムなステージ名を返す
+	 * @return ステージ名
+	 */
+	private String getRandomStage(){
+		Random rnd = new Random();
+
+		String[] games = plugin.games.keySet().toArray(new String[plugin.games.size()]);
+		String game = games[rnd.nextInt(games.length)];
+
+		return game;
 	}
 
 	@Override
