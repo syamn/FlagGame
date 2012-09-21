@@ -1,7 +1,7 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -15,7 +15,7 @@ public class JoinCommand extends BaseCommand {
 
 	@Override
 	public void execute() {
-		Game game = plugin.getGame(args.get(0));
+		OldGame game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
 			return;
@@ -37,7 +37,7 @@ public class JoinCommand extends BaseCommand {
 			Actions.message(null, player, "&cあなたは既にこのゲームに"+team.getColor()+team.getTeamName()+"チーム&cとしてエントリーしています！");
 			return;
 		}
-		for (Game check : plugin.games.values()){
+		for (OldGame check : plugin.games.values()){
 			GameTeam checkT = check.getPlayerTeam(player);
 			if (checkT != null){
 				Actions.message(null, player, "&cあなたは別のフラッグゲーム'"+check.getName()+"'に"+checkT.getColor()+checkT.getTeamName()+"チーム&cとして参加しています！");

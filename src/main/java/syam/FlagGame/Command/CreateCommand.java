@@ -1,6 +1,6 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -19,14 +19,14 @@ public class CreateCommand extends BaseCommand {
 			Actions.message(sender, null, "&cゲーム名を入力してください！ /flag create (name)");
 			return;
 		}
-		Game game = plugin.getGame(args.get(0));
+		OldGame game = plugin.getGame(args.get(0));
 		if (game != null){
 			Actions.message(sender, null, "&cそのゲーム名は既に存在します！");
 			return;
 		}
 
 		// 新規ゲーム登録
-		game = new Game(plugin, args.get(0));
+		game = new OldGame(plugin, args.get(0));
 		GameManager.setSelectedGame(player, game);
 
 		// update dynmap

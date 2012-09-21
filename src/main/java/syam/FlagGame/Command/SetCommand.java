@@ -12,7 +12,7 @@ import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Enum.Config.ConfigType;
 import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -51,7 +51,7 @@ public class SetCommand extends BaseCommand {
 		GameManager.removeManager(player, false);
 
 		// ゲーム取得
-		Game game = GameManager.getSelectedGame(player);
+		OldGame game = GameManager.getSelectedGame(player);
 		if (game == null){
 			Actions.message(null, player, "&c先に編集するゲームを選択してください");
 			return;
@@ -125,7 +125,7 @@ public class SetCommand extends BaseCommand {
 	/* ***** ここから各設定関数 ****************************** */
 
 	// 一般
-	private void setStage(Game game){
+	private void setStage(OldGame game){
 		// WorldEdit選択領域取得
 		Block[] corners = WorldEditHandler.getWorldEditRegion(player);
 		// エラー プレイヤーへのメッセージ送信はWorldEditHandlerクラスで処理
@@ -151,7 +151,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setBase(Game game){
+	private void setBase(OldGame game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
@@ -196,7 +196,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setSpawn(Game game){
+	private void setSpawn(OldGame game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
@@ -227,7 +227,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setFlag(Game game){
+	private void setFlag(OldGame game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！フラッグの種類を指定してください！");
@@ -256,7 +256,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setChest(Game game){
+	private void setChest(OldGame game){
 		// マネージャーセット
 		GameManager.setManager(player, Configables.CHEST);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
@@ -267,7 +267,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game 設定対象のゲームイン寸タンス
 	 * @return
 	 */
-	private void setSpecSpawn(Game game){
+	private void setSpecSpawn(OldGame game){
 		// 観戦者スポーン地点設定
 		game.setSpecSpawn(player.getLocation());
 
@@ -276,7 +276,7 @@ public class SetCommand extends BaseCommand {
 	}
 
 	// オプション
-	private void setGameTime(Game game){
+	private void setGameTime(OldGame game){
 		int num = 60 * 10; // デフォルト10分
 		try{
 			num = Integer.parseInt(args.get(1));
@@ -295,7 +295,7 @@ public class SetCommand extends BaseCommand {
 		if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
 	}
-	private void setTeamLimit(Game game){
+	private void setTeamLimit(OldGame game){
 		int cnt = 8; // デフォルト8人
 		try{
 			cnt = Integer.parseInt(args.get(1));
@@ -314,7 +314,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setAward(Game game){
+	private void setAward(OldGame game){
 		int award = 300; // デフォルト300コイン
 		try{
 			award = Integer.parseInt(args.get(1));
@@ -332,7 +332,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setEntryFee(Game game){
+	private void setEntryFee(OldGame game){
 		int entryfee = 100; // デフォルト100コイン
 		try{
 			entryfee = Integer.parseInt(args.get(1));
@@ -349,7 +349,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setStageProtect(Game game){
+	private void setStageProtect(OldGame game){
 		Boolean protect = true; // デフォルトtrue
 		String value = args.get(1).trim();
 

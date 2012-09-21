@@ -2,7 +2,7 @@ package syam.FlagGame.Command;
 
 import java.io.File;
 
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -20,7 +20,7 @@ public class DeleteCommand extends BaseCommand {
 			Actions.message(sender, null, "&cゲーム名を入力してください！ /flag delete (name)");
 			return;
 		}
-		Game game = plugin.getGame(args.get(0));
+		OldGame game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(sender, null, "&cそのゲーム名は存在しません！");
 			return;

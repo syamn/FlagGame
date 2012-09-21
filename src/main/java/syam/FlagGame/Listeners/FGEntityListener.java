@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Util.Actions;
 
 public class FGEntityListener implements Listener{
@@ -71,7 +71,7 @@ public class FGEntityListener implements Listener{
 			return;
 
 		// 存在するゲームを回す
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			if (!game.isStarting()) continue;
 
 			GameTeam damagerTeam = game.getPlayerTeam(damager);

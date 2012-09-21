@@ -9,7 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -23,7 +23,7 @@ public class CheckCommand extends BaseCommand{
 
 	@Override
 	public void execute() {
-		Game game = plugin.getGame(args.get(0));
+		OldGame game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
 			return;

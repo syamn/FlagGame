@@ -19,7 +19,7 @@ import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
 import syam.FlagGame.FlagGame;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 
 public class DynmapHandler{
 	// Logger
@@ -135,7 +135,7 @@ public class DynmapHandler{
 
 		Map<String, AreaMarker> newmap = new HashMap<String, AreaMarker>();
 
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			handleGame(game, newmap);
 		}
 
@@ -149,7 +149,7 @@ public class DynmapHandler{
 		markers = newmap;
 	}
 
-	public void updateRegion(Game game){
+	public void updateRegion(OldGame game){
 		if (!activated) return;
 
 		Map<String, AreaMarker> newmap = new HashMap<String, AreaMarker>();
@@ -167,7 +167,7 @@ public class DynmapHandler{
 		markers.putAll(newmap);
 	}
 
-	private void handleGame(Game game, Map<String, AreaMarker> newmap){
+	private void handleGame(OldGame game, Map<String, AreaMarker> newmap){
 		String gameName = game.getName();
 		double[] x = null;
 		double[] z = null;
@@ -228,7 +228,7 @@ public class DynmapHandler{
 	 * @param m
 	 * @return
 	 */
-	private String formatInfoWindow(Game game, AreaMarker m){
+	private String formatInfoWindow(OldGame game, AreaMarker m){
 		String s = "<div class=\"regioninfo\">"+infowindow+"</div>";
 		// Build game name
 		s = s.replaceAll("%gamename%", game.getName());

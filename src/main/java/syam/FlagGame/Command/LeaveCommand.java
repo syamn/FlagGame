@@ -16,7 +16,7 @@ import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -31,9 +31,9 @@ public class LeaveCommand extends BaseCommand{
 	@Override
 	public void execute() {
 		// 参加しているゲームを取得する
-		Game game = null;
+		OldGame game = null;
 		GameTeam team = null;
-		for (Game g : plugin.games.values()){
+		for (OldGame g : plugin.games.values()){
 			if (!g.isStarting() && !g.isReady()) continue;
 			if (g.getPlayerTeam(player) != null){
 				game = g;

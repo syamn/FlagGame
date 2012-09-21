@@ -40,7 +40,7 @@ public class GameFileManager {
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") +
 				"gameData" + System.getProperty("file.separator");
 
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			File file = new File(fileDir + game.getName() + ".yml");
 
 			// マップデータをリストに変換
@@ -99,7 +99,7 @@ public class GameFileManager {
 				name = confFile.getString("GameName", null);
 
 				// ゲーム追加
-				Game game = new Game(plugin, name);
+				OldGame game = new OldGame(plugin, name);
 
 				// ファイル名設定
 				game.setFileName(file.getName());
@@ -208,7 +208,7 @@ public class GameFileManager {
 	 * @param game
 	 * @return
 	 */
-	private Map<Location, Flag> convertFlagListToMap(List<String> flags, Game game){
+	private Map<Location, Flag> convertFlagListToMap(List<String> flags, OldGame game){
 		Map<Location, Flag> ret = new HashMap<Location, Flag>();
 		ret.clear();
 

@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -28,7 +28,7 @@ public class InfoCommand extends BaseCommand {
 			if (gamecount == 0){
 				Actions.message(sender, null, " &7読み込まれているゲームデータがありません");
 			}else{
-				for (Game game : plugin.games.values()){
+				for (OldGame game : plugin.games.values()){
 					// ゲームステータス取得
 					String status = "&7待機中";
 					if (game.isStarting()){
@@ -49,7 +49,7 @@ public class InfoCommand extends BaseCommand {
 
 		// 引数があれば指定したゲームについての詳細情報を表示する
 		else {
-			Game game = plugin.getGame(args.get(0));
+			OldGame game = plugin.getGame(args.get(0));
 			if (game == null){
 				Actions.message(sender, null, "&cそのゲーム名は存在しません！");
 				return;

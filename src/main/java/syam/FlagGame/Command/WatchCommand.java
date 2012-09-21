@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.FGPlayer.PlayerManager;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -18,7 +18,7 @@ public class WatchCommand extends BaseCommand{
 
 	@Override
 	public void execute() {
-		Game game = plugin.getGame(args.get(0));
+		OldGame game = plugin.getGame(args.get(0));
 		if (game == null){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
 			return;
@@ -30,7 +30,7 @@ public class WatchCommand extends BaseCommand{
 			return;
 		}
 
-		for (Game check : plugin.games.values()){
+		for (OldGame check : plugin.games.values()){
 			if (check.getPlayerTeam(player) != null){
 				Actions.message(null, player, "&cあなたはゲーム'"+check.getName()+"'に参加しているため移動できません！");
 				return;

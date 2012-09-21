@@ -35,7 +35,7 @@ import syam.FlagGame.Enum.SignAction;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -66,7 +66,7 @@ public class FGPlayerListener implements Listener{
 					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && Perms.SET.has(player)){
 				Configables conf = GameManager.getManager(player);
 
-				Game game = GameManager.getSelectedGame(player);
+				OldGame game = GameManager.getSelectedGame(player);
 				if (game == null){
 					Actions.message(null, player, "&c先に編集するゲームを選択してください！");
 					return;
@@ -192,7 +192,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// ゲーム参加チェック
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			// 開始されていないゲームはチェックしない
 			if (!game.isStarting()) continue;
 
@@ -242,7 +242,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// 存在するゲームを回す
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			if (!game.isReady() && !game.isStarting())
 				return;
 
@@ -295,7 +295,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// 存在するゲームを回す
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			if (!game.isStarting()) continue;
 
 			// ダメージを受けたプレイヤーがゲームに参加しているプレイヤーか
@@ -338,7 +338,7 @@ public class FGPlayerListener implements Listener{
 
 		/* TODO: GC here */
 
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			if (!game.isStarting()) continue;
 
 			GameTeam team = game.getPlayerTeam(player);
@@ -363,7 +363,7 @@ public class FGPlayerListener implements Listener{
 		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				for (Game game : plugin.games.values()){
+				for (OldGame game : plugin.games.values()){
 					if (!game.isStarting() && !game.isReady()) continue;
 
 					GameTeam team = game.getPlayerTeam(player);
@@ -372,7 +372,7 @@ public class FGPlayerListener implements Listener{
 						return;
 				}
 
-				for (Game game : plugin.games.values()){
+				for (OldGame game : plugin.games.values()){
 					// 待機中ゲーム
 					if (game.isReady()){
 						// 賞金系メッセージ
@@ -421,7 +421,7 @@ public class FGPlayerListener implements Listener{
 		Location loc = block.getLocation();
 
 		// 開始中のゲームを回す
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			GameTeam blockTeam = null;
 			// 拠点マップを回してブロックの所属拠点チームを取得
 			for (Map.Entry<GameTeam, Cuboid> entry : game.getBases().entrySet()){
@@ -453,7 +453,7 @@ public class FGPlayerListener implements Listener{
 		// ドアなら自由に開閉可能にする
 		if (door) return true;
 
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			Cuboid stage = game.getStage();
 			// ステージ領域内かどうか
 			if (stage != null && stage.isIn(loc)){
@@ -518,7 +518,7 @@ public class FGPlayerListener implements Listener{
 						Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
 						return;
 					}
-					for (Game game : plugin.games.values()){
+					for (OldGame game : plugin.games.values()){
 						if (!game.isStarting()) continue;
 						if (game.getPlayerTeam(player) != null){
 							playerTeam = game.getPlayerTeam(player);
@@ -555,7 +555,7 @@ public class FGPlayerListener implements Listener{
 				break;
 			// 自殺
 			case KILL:
-				for (Game game : plugin.games.values()){
+				for (OldGame game : plugin.games.values()){
 					if (!game.isStarting()) continue;
 					if (game.getPlayerTeam(player) != null){
 						GameTeam team = game.getPlayerTeam(player);

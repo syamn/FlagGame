@@ -39,7 +39,7 @@ import syam.FlagGame.FGPlayer.PlayerProfile;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 
-public class Game {
+public class OldGame {
 	// Logger
 	public static final Logger log = FlagGame.log;
 	private static final String logPrefix = FlagGame.logPrefix;
@@ -99,7 +99,7 @@ public class Game {
 	 * @param plugin
 	 * @param name
 	 */
-	public Game(final FlagGame plugin, final String name){
+	public OldGame(final FlagGame plugin, final String name){
 		this.plugin = plugin;
 
 		this.gameName = name;

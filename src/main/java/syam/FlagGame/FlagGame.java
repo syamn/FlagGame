@@ -38,7 +38,7 @@ import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Command.WatchCommand;
 import syam.FlagGame.Database.Database;
 import syam.FlagGame.FGPlayer.PlayerManager;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Listeners.DeathNotifierListener;
@@ -121,7 +121,7 @@ public class FlagGame extends JavaPlugin{
 
 	// ** Variable **
 	// 存在するゲーム <String 一意のゲームID, Game>
-	public HashMap<String, Game> games = new HashMap<String, Game>();
+	public HashMap<String, OldGame> games = new HashMap<String, OldGame>();
 	// プレイヤーデータベース
 	private static Database database;
 
@@ -233,7 +233,7 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public void onDisable(){
 		// 開始中のゲームをすべて終わらせる
-		for (Game game : games.values()){
+		for (OldGame game : games.values()){
 			if (game.isStarting()){
 				game.cancelTimerTask();
 				game.finish();
@@ -384,7 +384,7 @@ public class FlagGame extends JavaPlugin{
 	 * @param gameName
 	 * @return Game
 	 */
-	public Game getGame(String gameName){
+	public OldGame getGame(String gameName){
 		if (!games.containsKey(gameName)){
 			return null;
 		}else{

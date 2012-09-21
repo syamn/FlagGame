@@ -2,7 +2,7 @@ package syam.FlagGame.Command;
 
 import java.util.Random;
 
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -22,7 +22,7 @@ public class ReadyCommand extends BaseCommand {
 			return;
 		}
 
-		Game game = null;
+		OldGame game = null;
 
 		// ランダム
 		if (args.get(0).equalsIgnoreCase("random")){

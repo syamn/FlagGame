@@ -26,7 +26,7 @@ public class GameManager {
 	}
 
 	// 選択中のゲーム
-	private static Map<String, Game> selectedGame = new HashMap<String, Game>();
+	private static Map<String, OldGame> selectedGame = new HashMap<String, OldGame>();
 	// 選択中のブロック
 	private static Map<String, Location> selectedBlock = new HashMap<String, Location>();
 	// 選択中のフラッグ種類
@@ -41,7 +41,7 @@ public class GameManager {
 	 * 全ゲームステージプロファイルを保存する
 	 */
 	public static void saveAll(){
-		for (Game game : FlagGame.getInstance().games.values()){
+		for (OldGame game : FlagGame.getInstance().games.values()){
 			game.getProfile().save();
 		}
 	}
@@ -53,7 +53,7 @@ public class GameManager {
 	 * @param player 対象プレイヤー
 	 * @param game 対象ゲーム
 	 */
-	public static void setSelectedGame(Player player, Game game){
+	public static void setSelectedGame(Player player, OldGame game){
 		selectedGame.put(player.getName(), game);
 	}
 	/**
@@ -61,7 +61,7 @@ public class GameManager {
 	 * @param player 対象のプレイヤー
 	 * @return null または対象のゲーム
 	 */
-	public static Game getSelectedGame(Player player){
+	public static OldGame getSelectedGame(Player player){
 		if (player == null || !selectedGame.containsKey(player.getName())){
 			return null;
 		}else{

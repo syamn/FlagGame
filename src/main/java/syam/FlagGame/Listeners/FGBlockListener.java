@@ -23,7 +23,7 @@ import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
@@ -56,7 +56,7 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			// フラッグチェック
 			Flag flag = game.getFlag(loc);
 			if (flag == null){
@@ -145,7 +145,7 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		for (Game game : plugin.games.values()){
+		for (OldGame game : plugin.games.values()){
 			// フラッグチェック
 			Flag flag = game.getFlag(loc);
 			if (flag == null){

@@ -1,7 +1,7 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -18,7 +18,7 @@ public class SelectCommand extends BaseCommand {
 	public void execute() {
 		if (args.size() >= 1){
 			// flag game (ゲーム名) - 選択
-			Game game = plugin.getGame(args.get(0));
+			OldGame game = plugin.getGame(args.get(0));
 			if (game != null){
 				// 既に選択中のゲームと別のゲームを選択した場合は管理モードを終了する
 				if (GameManager.getSelectedGame(player) != null && GameManager.getSelectedGame(player) != game){

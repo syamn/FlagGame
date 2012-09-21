@@ -3,7 +3,7 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -24,7 +24,7 @@ public class TpCommand extends BaseCommand{
 				return;
 			}
 			// ゲーム取得
-			Game game = null;
+			OldGame game = null;
 			// 引数からゲーム取得
 			if (args.size() >= 3)
 				game = plugin.getGame(args.get(2));
