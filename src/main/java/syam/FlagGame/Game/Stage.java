@@ -4,10 +4,12 @@
  */
 package syam.FlagGame.Game;
 
+import syam.FlagGame.Api.IStage;
+
 /**
  * Stage (Stage.java)
  * @author syam(syamn)
  */
-public class Stage {
+public class Stage implements IStage{
 
 }

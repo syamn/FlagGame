@@ -1,5 +1,5 @@
 /**
- * FlagGame - Package: syam.FlagGame.Game
+ * FlagGame - Package: syam.FlagGame.Api
  * Created: 2012/09/22 2:40:53
  */
 package syam.FlagGame.Api;
