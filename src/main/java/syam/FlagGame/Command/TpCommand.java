@@ -50,7 +50,7 @@ public class TpCommand extends BaseCommand{
 				return;
 			}
 
-			Location loc = game.getSpawnLocation(team);
+			Location loc = game.getSpawn(team);
 
 			if (loc == null){
 				Actions.message(null, player, "&c"+team.getTeamName()+"チームのスポーン地点は未設定です！");

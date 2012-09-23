@@ -67,8 +67,8 @@ public class InfoCommand extends BaseCommand {
 
 			String chksp_red = "&c未設定";
 			String chksp_blue = "&c未設定";
-			if (game.getSpawnLocation(GameTeam.RED) != null) chksp_red = "&6設定済";
-			if (game.getSpawnLocation(GameTeam.BLUE) != null) chksp_blue = "&6設定済";
+			if (game.getSpawn(GameTeam.RED) != null) chksp_red = "&6設定済";
+			if (game.getSpawn(GameTeam.BLUE) != null) chksp_blue = "&6設定済";
 
 			// プレイヤーリスト構築
 			String players = ""; int cnt_players = 0;

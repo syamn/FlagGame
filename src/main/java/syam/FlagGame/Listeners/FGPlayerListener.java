@@ -199,7 +199,7 @@ public class FGPlayerListener implements Listener{
 			// チームに所属していれば、チームのスポーン地点へ移動させる
 			GameTeam team = game.getPlayerTeam(player);
 			if (team != null){
-				Location loc = game.getSpawnLocation(team);
+				Location loc = game.getSpawn(team);
 				if (loc == null){
 					// 所属チームのスポーン地点設定なし
 					Actions.message(null, player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
