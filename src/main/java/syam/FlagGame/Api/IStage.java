@@ -11,6 +11,8 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import syam.FlagGame.Enum.FlagState;
+import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.GameProfile;
@@ -35,6 +37,7 @@ public interface IStage {
 	void setFlags(Map<Location, Flag> flags);
 	Map<Location, Flag> getFlags();
 
+	public Map<FlagState, HashMap<FlagType, Integer>> checkFlag();
 
 	// チェスト関係
 	void setChest(Location loc);
@@ -97,4 +100,7 @@ public interface IStage {
 	// 参加費
 	void setEntryFee(int entryFee);
 	int getEntryFee();
+
+	void setAvailable(boolean available);
+	boolean isAvailable();
 }

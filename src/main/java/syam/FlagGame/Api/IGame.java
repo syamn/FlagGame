@@ -20,7 +20,7 @@ import syam.FlagGame.Game.Stage;
  */
 public interface IGame {
 	// ゲーム進行関係
-	void ready(CommandSender sender, Stage stage, boolean random);
+	void ready(CommandSender sender, boolean random);
 	void ready(CommandSender sender);
 
 	void start(CommandSender sender);

@@ -25,6 +25,8 @@ public class GameManager {
 		this.plugin = plugin;
 	}
 
+	public static HashMap<String, Game> games = new HashMap<String, Game>();
+
 	// 選択中のゲーム
 	private static Map<String, OldGame> selectedGame = new HashMap<String, OldGame>();
 	// 選択中のブロック

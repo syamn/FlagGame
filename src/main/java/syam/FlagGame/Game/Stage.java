@@ -5,6 +5,7 @@
 package syam.FlagGame.Game;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Api.IStage;
+import syam.FlagGame.Enum.FlagState;
+import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
@@ -44,11 +47,6 @@ public class Stage implements IStage{
 	private int teamPlayerLimit = 16;
 
 	private int gameTimeInSec = 6 * 60;
-	private int remainSec = gameTimeInSec;
-	private int timerThreadID = -1;
-
-	private int startCountdownSec = 10;
-	private int startTimerThreadID = -1;
 
 	private int award = 300;
 	private int entryFee = 100;
@@ -185,6 +183,65 @@ public class Stage implements IStage{
 		this.flags.putAll(flags);
 	}
 
+	/**
+	 * すべてのフラッグの状態をチェックする
+	 * @return Map<FlagState, HashMap<FlagType, Integer>>
+	 */
+	public Map<FlagState, HashMap<FlagType, Integer>> checkFlag(){
+		// 各チームのポイントを格納する
+		Map<FlagState, HashMap<FlagType, Integer>> ret = new HashMap<FlagState, HashMap<FlagType, Integer>>();
+
+		// 全フラッグを回す
+		flag:
+		for (Flag flag : flags.values()){
+			Block block = flag.getNowBlock(); // フラッグ座標のブロックを取得
+			FlagType ft = flag.getFlagType();
+			FlagState state = null; // フラッグの現在状態
+			int i = 0; // 加算後と加算後の得点
+
+			// 全チームを回す
+			for (GameTeam gt : GameTeam.values()){
+
+				// チームのフラッグデータと一致すればそのチームにカウント
+				if (gt.getBlockID() == block.getTypeId() && gt.getBlockData() == block.getData()){
+					state = gt.getFlagState();
+
+					// get - FlagType, Integer
+					HashMap<FlagType, Integer> hm = ret.get(state);
+					if (hm == null){
+						hm = new HashMap<FlagType, Integer>();
+					}
+
+					// get Integer
+					if (hm.containsKey(ft)){
+						i = hm.get(ft);
+					}
+
+					// 個数加算
+					i++;
+
+					// put
+					hm.put(ft, i); // num
+					ret.put(state, hm); // state
+
+					// 先に進まないように
+					continue flag;
+				}
+			}
+			// 一致しなかった、どちらのブロックでもない場合
+			state = FlagState.NONE;
+			HashMap<FlagType, Integer> hm = ret.get(state);
+			if (hm == null) hm = new HashMap<FlagType, Integer>(); // get
+			if (hm.containsKey(ft)) i = hm.get(ft); // get
+			i++; // 個数加算
+			hm.put(ft, i); // put
+			ret.put(state, hm); // put
+		}
+
+		return ret;
+	}
+
+
 	/* ***** チェスト関係 ***** */
 
 	/**
@@ -307,8 +364,6 @@ public class Stage implements IStage{
 		return this.profile;
 	}
 
-
-
 	/**
 	 * ファイル名を設定
 	 * @param filename
@@ -337,12 +392,7 @@ public class Stage implements IStage{
 	 * @param sec 制限時間(秒)
 	 */
 	public void setGameTime(int sec){
-		// もしゲーム中なら何もしない
-		if (!busy){
-			//cancelTimerTask();
-			gameTimeInSec = sec;
-			remainSec = gameTimeInSec;
-		}
+		gameTimeInSec = sec;
 	}
 	/**
 	 * このゲームの制限時間(秒)を返す
@@ -397,5 +447,21 @@ public class Stage implements IStage{
 	 */
 	public int getEntryFee(){
 		return entryFee;
+	}
+
+	/**
+	 * ステージの有効/無効を設定する
+	 * @param available
+	 */
+	public void setAvailable(boolean available){
+		this.available = available;
+	}
+
+	/**
+	 * ステージの有効/無効を取得する
+	 * @return available
+	 */
+	public boolean isAvailable(){
+		return this.available;
 	}
 }
