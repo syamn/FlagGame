@@ -59,6 +59,7 @@ public class Actions {
 			}
 		}
 	}
+	
 	/**
 	 * メッセージをブロードキャスト
 	 * @param message メッセージ
