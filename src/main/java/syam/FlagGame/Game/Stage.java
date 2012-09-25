@@ -321,6 +321,7 @@ public class Stage implements IStage{
 
 	/* ***** エリア関係 ***** */
 
+
 	// ステージ
 	public void setStage(Location pos1, Location pos2){
 		stageArea = new Cuboid(pos1, pos2);

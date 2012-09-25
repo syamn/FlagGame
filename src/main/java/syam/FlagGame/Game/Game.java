@@ -31,6 +31,7 @@ import syam.FlagGame.Enum.FlagState;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameResult;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Exceptions.GameStateException;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
 import syam.FlagGame.Util.Actions;
@@ -95,14 +96,8 @@ public class Game implements IGame{
 	 * このゲームを開始待機中にする
 	 */
 	public void ready(CommandSender sender, boolean random){
-		if (started){
-			// TODO:この辺で例外投げる？
-			Actions.message(sender, null, "&cこのゲームは既に始まっています");
-			return;
-		}
-		if (ready){
-			Actions.message(sender, null, "&cこのゲームは既に参加受付中です");
-			return;
+		if (started || ready){
+			throw new GameStateException("This game is already using!");
 		}
 
 		// 一度プレイヤーリスト初期化
@@ -113,20 +108,17 @@ public class Game implements IGame{
 
 		// ステージエリアチェック
 		if (stage.getStage() == null){
-			Actions.message(sender, null, "&cステージエリアが正しく設定されていません");
-			return;
+			throw new GameStateException("Stage area is not defined properly!");
 		}
 
 		// スポーン地点チェック
 		if (stage.getSpawns().size() != 2){
-			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
-			return;
+			throw new GameStateException("Team spawn area is not defined properly!");
 		}
 
 		// 保護チェック
 		if (!stage.isStageProtected()){
 			stage.setStageProtected(true);
-			Actions.message(sender, null, "&1ステージ保護が自動で有効になりました！");
 		}
 
 		// 待機
