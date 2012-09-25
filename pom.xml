@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>syam.FlagGame</groupId>
   <artifactId>FlagGame</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <name>FlagGame</name>
   <description>CraftBukkit FlagGame Plugin</description>
 
