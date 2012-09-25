@@ -35,8 +35,10 @@ import syam.FlagGame.Enum.SignAction;
 import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
@@ -66,8 +68,8 @@ public class FGPlayerListener implements Listener{
 					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && Perms.SET.has(player)){
 				Configables conf = GameManager.getManager(player);
 
-				OldGame game = GameManager.getSelectedGame(player);
-				if (game == null){
+				Stage stage = GameManager.getSelectedStage(player);
+				if (stage == null){
 					Actions.message(null, player, "&c先に編集するゲームを選択してください！");
 					return;
 				}
@@ -85,9 +87,9 @@ public class FGPlayerListener implements Listener{
 					// フラッグモード
 					case FLAG:
 						// 既にフラッグブロックなら解除する
-						if (game.getFlag(loc) != null){
-							game.removeFlag(loc);
-							Actions.message(null, player, "&aゲーム'"+game.getName()+"'のフラッグを削除しました！");
+						if (stage.getFlag(loc) != null){
+							stage.removeFlag(loc);
+							Actions.message(null, player, "&aステージ'"+stage.getName()+"'のフラッグを削除しました！");
 							return;
 						}
 
@@ -99,8 +101,8 @@ public class FGPlayerListener implements Listener{
 						}
 
 						// 新規フラッグ登録 TODO: とりあえずロールバックブロックをAirにする
-						new Flag(plugin, game, loc, type, 0, (byte) 0);
-						Actions.message(null, player, "&aゲーム'"+game.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
+						new Flag(plugin, stage, loc, type, 0, (byte) 0);
+						Actions.message(null, player, "&aステージ'"+stage.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
 						break;
 
 					// チェストモード
@@ -111,14 +113,14 @@ public class FGPlayerListener implements Listener{
 							return;
 						}
 						// 既にフラッグブロックになっているか判定
-						if (game.getChest(loc) == null){
+						if (stage.getChest(loc) == null){
 							// 選択
-							game.setChest(loc);
-							Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを設定しました！");
+							stage.setChest(loc);
+							Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを設定しました！");
 						}else{
 							// 削除
-							game.removeChest(loc);
-							Actions.message(null, player, "&aゲーム'"+game.getName()+"'のチェストを削除しました！");
+							stage.removeChest(loc);
+							Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを削除しました！");
 						}
 						break;
 				}
@@ -192,18 +194,18 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// ゲーム参加チェック
-		for (OldGame game : plugin.games.values()){
+		for (Game game : GameManager.games.values()){
 			// 開始されていないゲームはチェックしない
 			if (!game.isStarting()) continue;
 
 			// チームに所属していれば、チームのスポーン地点へ移動させる
 			GameTeam team = game.getPlayerTeam(player);
 			if (team != null){
-				Location loc = game.getSpawn(team);
+				Location loc = game.getStage().getSpawn(team);
 				if (loc == null){
 					// 所属チームのスポーン地点設定なし
 					Actions.message(null, player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
-					log.warning(logPrefix+ "Player "+player.getName()+" died, But undefined spawn-location. Game: " + game.getName() + " Team: " +team.name());
+					log.warning(logPrefix+ "Player "+player.getName()+" died, But undefined spawn-location. Game: " + game.getStage().getName() + " Team: " +team.name());
 					// ワールドスポーンに戻す
 					event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().getGameWorld()).getSpawnLocation());
 					return;
@@ -242,7 +244,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// 存在するゲームを回す
-		for (OldGame game : plugin.games.values()){
+		for (Game game : GameManager.games.values()){
 			if (!game.isReady() && !game.isStarting())
 				return;
 
@@ -295,14 +297,14 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// 存在するゲームを回す
-		for (OldGame game : plugin.games.values()){
+		for (Game game : GameManager.games.values()){
 			if (!game.isStarting()) continue;
 
 			// ダメージを受けたプレイヤーがゲームに参加しているプレイヤーか
 			GameTeam dTeam = game.getPlayerTeam(deader);
 			if (dTeam != null){
 				PlayerManager.getProfile(deader.getName()).addDeath(); // death数追加
-				game.getProfile().addDeath();
+				game.getStage().getProfile().addDeath();
 			}else{
 				continue;
 			}
@@ -311,14 +313,14 @@ public class FGPlayerListener implements Listener{
 			if (killer == null) continue;
 			GameTeam aTeam = game.getPlayerTeam(killer);
 			if (aTeam != null){
-				deathMsg = msgPrefix+"&6["+game.getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
+				deathMsg = msgPrefix+"&6["+game.getStage().getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
 				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().getGameWorld()),deathMsg);
 
 				// チームキル数追加
 				game.addKillCount(aTeam);
 
 				PlayerManager.getProfile(killer.getName()).addKill(); // kill数追加
-				game.getProfile().addKill();
+				game.getStage().getProfile().addKill();
 
 				//for (Player player : Bukkit.getOnlinePlayers())
 				//	Actions.message(null, player, deathMsg);
@@ -338,7 +340,7 @@ public class FGPlayerListener implements Listener{
 
 		/* TODO: GC here */
 
-		for (OldGame game : plugin.games.values()){
+		for (Game game : GameManager.games.values()){
 			if (!game.isStarting()) continue;
 
 			GameTeam team = game.getPlayerTeam(player);
@@ -363,7 +365,7 @@ public class FGPlayerListener implements Listener{
 		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				for (OldGame game : plugin.games.values()){
+				for (Game game : GameManager.games.values()){
 					if (!game.isStarting() && !game.isReady()) continue;
 
 					GameTeam team = game.getPlayerTeam(player);
@@ -372,15 +374,15 @@ public class FGPlayerListener implements Listener{
 						return;
 				}
 
-				for (OldGame game : plugin.games.values()){
+				for (Game game : GameManager.games.values()){
 					// 待機中ゲーム
 					if (game.isReady()){
 						// 賞金系メッセージ
-						String entryFeeMsg = String.valueOf(game.getEntryFee()) + "Coin";
-						String awardMsg = String.valueOf(game.getAward()) +"Coin";
-						if (game.getEntryFee() <= 0)
+						String entryFeeMsg = String.valueOf(game.getStage().getEntryFee()) + "Coin";
+						String awardMsg = String.valueOf(game.getStage().getAward()) +"Coin";
+						if (game.getStage().getEntryFee() <= 0)
 							entryFeeMsg = "&7FREE!";
-						if (game.getAward() <= 0)
+						if (game.getStage().getAward() <= 0)
 							awardMsg = "&7なし";
 
 						// アナウンス
@@ -421,10 +423,10 @@ public class FGPlayerListener implements Listener{
 		Location loc = block.getLocation();
 
 		// 開始中のゲームを回す
-		for (OldGame game : plugin.games.values()){
+		for (Game game : GameManager.games.values()){
 			GameTeam blockTeam = null;
 			// 拠点マップを回してブロックの所属拠点チームを取得
-			for (Map.Entry<GameTeam, Cuboid> entry : game.getBases().entrySet()){
+			for (Map.Entry<GameTeam, Cuboid> entry : game.getStage().getBases().entrySet()){
 				if (entry.getValue().isIn(loc)){
 					blockTeam = entry.getKey();
 					break;
@@ -453,17 +455,16 @@ public class FGPlayerListener implements Listener{
 		// ドアなら自由に開閉可能にする
 		if (door) return true;
 
-		for (OldGame game : plugin.games.values()){
-			Cuboid stage = game.getStage();
+		for (Stage stage : StageManager.stages.values()){
+			Cuboid stageArea = stage.getStage();
 			// ステージ領域内かどうか
-			if (stage != null && stage.isIn(loc)){
-				// ゲーム保護があるかどうか
-				if (game.isStageProtected()){
+			if (stageArea != null && stageArea.isIn(loc)){
+				// ステージ保護があるかどうか
+				if (stage.isStageProtected()){
 					// そのゲームに参加しているプレイヤーかどうか取得
-					playerTeam = game.getPlayerTeam(player);
-					if (playerTeam != null){
+					if (stage.isUsing() && stage.getGame() != null && stage.getGame().getPlayerTeam(player) != null){
 						// チェスト登録されているものか取得
-						if (game.getChest(loc) != null){
+						if (stage.getChest(loc) != null){
 							return true;
 						}
 						// 未登録チェストはダミー扱いで開閉禁止
@@ -518,7 +519,7 @@ public class FGPlayerListener implements Listener{
 						Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
 						return;
 					}
-					for (OldGame game : plugin.games.values()){
+					for (Game game : GameManager.games.values()){
 						if (!game.isStarting()) continue;
 						if (game.getPlayerTeam(player) != null){
 							playerTeam = game.getPlayerTeam(player);
@@ -555,7 +556,7 @@ public class FGPlayerListener implements Listener{
 				break;
 			// 自殺
 			case KILL:
-				for (OldGame game : plugin.games.values()){
+				for (Game game : GameManager.games.values()){
 					if (!game.isStarting()) continue;
 					if (game.getPlayerTeam(player) != null){
 						GameTeam team = game.getPlayerTeam(player);

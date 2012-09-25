@@ -1,8 +1,9 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -11,32 +12,32 @@ public class SelectCommand extends BaseCommand {
 		bePlayer = true;
 		name = "select";
 		argLength = 0;
-		usage = "[game] <- select exist game";
+		usage = "[stage] <- select exist stage";
 	}
 
 	@Override
 	public void execute() {
 		if (args.size() >= 1){
 			// flag game (ゲーム名) - 選択
-			OldGame game = plugin.getGame(args.get(0));
-			if (game != null){
+			Stage stage = StageManager.getStage(args.get(0));
+			if (stage != null){
 				// 既に選択中のゲームと別のゲームを選択した場合は管理モードを終了する
-				if (GameManager.getSelectedGame(player) != null && GameManager.getSelectedGame(player) != game){
+				if (GameManager.getSelectedStage(player) != null && GameManager.getSelectedStage(player) != stage){
 					GameManager.removeManager(player, false);
 				}
-				GameManager.setSelectedGame(player, game);
-				Actions.message(null, player, "&aゲーム'"+game.getName()+"'を選択しました！");
+				GameManager.setSelectedStage(player, stage);
+				Actions.message(null, player, "&aステージ'"+stage.getName()+"'を選択しました！");
 			}else{
-				Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません！");
+				Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません！");
 				return;
 			}
 		}else{
-			// flagadmin game - 選択解除
-			if (GameManager.getSelectedGame(player) != null){
-				GameManager.setSelectedGame(player, null);
+			// flag game - 選択解除
+			if (GameManager.getSelectedStage(player) != null){
+				GameManager.setSelectedStage(player, null);
 			}
 			GameManager.removeManager(player, false);
-			Actions.message(null, player, "&aゲームの選択を解除しました！");
+			Actions.message(null, player, "&aステージの選択を解除しました！");
 		}
 	}
 

@@ -1,7 +1,10 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -15,19 +18,22 @@ public class JoinCommand extends BaseCommand {
 
 	@Override
 	public void execute() {
-		OldGame game = plugin.getGame(args.get(0));
-		if (game == null){
-			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
+		Stage stage = StageManager.getStage(args.get(0));
+		if (stage == null){
+			Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
+			return;
+		}
+
+		Game game = null;
+		if (stage.isUsing() && stage.getGame() != null){
+			game = stage.getGame();
+		}else{
+			Actions.message(null, player, "&cステージ'"+args.get(0)+"'は現在参加受付中ではありません");
 			return;
 		}
 
 		if (game.isStarting()){
 			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は既に始まっています！");
-			return;
-		}
-
-		if (!game.isReady()){
-			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は現在参加受付中ではありません");
 			return;
 		}
 
@@ -37,34 +43,34 @@ public class JoinCommand extends BaseCommand {
 			Actions.message(null, player, "&cあなたは既にこのゲームに"+team.getColor()+team.getTeamName()+"チーム&cとしてエントリーしています！");
 			return;
 		}
-		for (OldGame check : plugin.games.values()){
+		for (Game check : GameManager.games.values()){
 			GameTeam checkT = check.getPlayerTeam(player);
 			if (checkT != null){
-				Actions.message(null, player, "&cあなたは別のフラッグゲーム'"+check.getName()+"'に"+checkT.getColor()+checkT.getTeamName()+"チーム&cとして参加しています！");
+				Actions.message(null, player, "&cあなたは別のゲーム'"+check.getName()+"'に"+checkT.getColor()+checkT.getTeamName()+"チーム&cとして参加しています！");
 				return;
 			}
 		}
 
 		// 人数チェック
-		int limit = game.getTeamLimit();
+		int limit = game.getStage().getTeamLimit();
 		if ((game.getPlayersSet(GameTeam.RED).size() >= limit) && (game.getPlayersSet(GameTeam.BLUE).size() >= limit)){
 			Actions.message(null, player, "&cこのゲームは参加可能な定員に達しています！");
 			return;
 		}
 
 		// 参加料チェック
-		if (game.getEntryFee() > 0){
+		if (game.getStage().getEntryFee() > 0){
 			// 所持金確認
-			if (!Actions.checkMoney(player.getName(), game.getEntryFee())){
-				Actions.message(null, player, "&c参加するためには参加料 "+game.getEntryFee()+"Coin が必要です！");
+			if (!Actions.checkMoney(player.getName(), game.getStage().getEntryFee())){
+				Actions.message(null, player, "&c参加するためには参加料 "+game.getStage().getEntryFee()+"Coin が必要です！");
 				return;
 			}
 			// 引き落とし
-			if (!Actions.takeMoney(player.getName(), game.getEntryFee())){
+			if (!Actions.takeMoney(player.getName(), game.getStage().getEntryFee())){
 				Actions.message(null, player, "&c参加料の引き落としにエラーが発生しました。管理人までご連絡ください。");
 				return;
 			}else{
-				Actions.message(null, player, "&c参加料として "+game.getEntryFee()+"Coin を支払いました！");
+				Actions.message(null, player, "&c参加料として "+game.getStage().getEntryFee()+"Coin を支払いました！");
 			}
 		}
 

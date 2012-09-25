@@ -41,6 +41,9 @@ public class Stage implements IStage{
 	// ステージ情報
 	private GameProfile profile;
 
+	// 開始中のゲーム
+	private Game game = null;
+
 	// ***** ステージデータ *****
 	private String fileName;
 	private String stageName;
@@ -51,7 +54,7 @@ public class Stage implements IStage{
 	private int award = 300;
 	private int entryFee = 100;
 
-	private boolean busy = false;
+	private boolean using = false;
 	private boolean available = false;
 
 	// フラッグ・チェスト
@@ -463,5 +466,19 @@ public class Stage implements IStage{
 	 */
 	public boolean isAvailable(){
 		return this.available;
+	}
+
+	public void setUsing(boolean using){
+		this.using = using;
+	}
+	public boolean isUsing(){
+		return this.using;
+	}
+
+	public void setGame(Game game){
+		this.game = game;
+	}
+	public Game getGame(){
+		return this.game;
 	}
 }

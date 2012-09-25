@@ -96,6 +96,7 @@ public class Game implements IGame{
 	 */
 	public void ready(CommandSender sender, boolean random){
 		if (started){
+			// TODO:この辺で例外投げる？
 			Actions.message(sender, null, "&cこのゲームは既に始まっています");
 			return;
 		}
@@ -130,6 +131,8 @@ public class Game implements IGame{
 
 		// 待機
 		ready = true;
+		stage.setUsing(true);
+		stage.setGame(this);
 
 		// 賞金系メッセージ
 		String entryFeeMsg = String.valueOf(stage.getEntryFee()) + "Coin";
@@ -861,6 +864,9 @@ public class Game implements IGame{
 
 
 	/* getter / setter */
+	public String getName(){
+		return this.getStage().getName();
+	}
 
 	@Override
 	public Set<String> getPlayersSet() {

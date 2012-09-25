@@ -3,8 +3,9 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -24,17 +25,17 @@ public class TpCommand extends BaseCommand{
 				return;
 			}
 			// ゲーム取得
-			OldGame game = null;
+			Stage stage = null;
 			// 引数からゲーム取得
 			if (args.size() >= 3)
-				game = plugin.getGame(args.get(2));
+				stage = StageManager.getStage(args.get(2));
 
 			// 取れなかった場合選択済みゲームを取得
-			if (game == null)
-				game = GameManager.getSelectedGame(player);
+			if (stage == null)
+				stage = GameManager.getSelectedStage(player);
 
 			// それも無ければエラーを返す
-			if (game == null){
+			if (stage == null){
 				Actions.message(null, player, "&c先にゲームを選択してください");
 				return;
 			}
@@ -50,7 +51,7 @@ public class TpCommand extends BaseCommand{
 				return;
 			}
 
-			Location loc = game.getSpawn(team);
+			Location loc = stage.getSpawn(team);
 
 			if (loc == null){
 				Actions.message(null, player, "&c"+team.getTeamName()+"チームのスポーン地点は未設定です！");

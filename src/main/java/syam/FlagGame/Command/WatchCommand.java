@@ -4,7 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.FGPlayer.PlayerManager;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -13,24 +16,24 @@ public class WatchCommand extends BaseCommand{
 		bePlayer = true;
 		name = "watch";
 		argLength = 1;
-		usage = "<game> <- watch the game";
+		usage = "<stage> <- watch the game";
 	}
 
 	@Override
 	public void execute() {
-		OldGame game = plugin.getGame(args.get(0));
-		if (game == null){
-			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
+		Stage stage = StageManager.getStage(args.get(0));
+		if (stage == null){
+			Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
 			return;
 		}
 
-		Location specSpawn = game.getSpecSpawn();
+		Location specSpawn = stage.getSpecSpawn();
 		if (specSpawn == null){
-			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は観戦者のスポーン地点が設定されていません");
+			Actions.message(null, player, "&cステージ'"+args.get(0)+"'は観戦者のスポーン地点が設定されていません");
 			return;
 		}
 
-		for (OldGame check : plugin.games.values()){
+		for (Game check : GameManager.games.values()){
 			if (check.getPlayerTeam(player) != null){
 				Actions.message(null, player, "&cあなたはゲーム'"+check.getName()+"'に参加しているため移動できません！");
 				return;
@@ -42,7 +45,7 @@ public class WatchCommand extends BaseCommand{
 			PlayerManager.getProfile(player.getName()).setTpBackLocation(player.getLocation());
 		}
 		player.teleport(specSpawn, TeleportCause.PLUGIN);
-		Actions.message(null, player, "&aゲーム'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
+		Actions.message(null, player, "&aステージ'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
 	}
 
 	@Override

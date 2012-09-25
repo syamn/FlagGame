@@ -16,11 +16,11 @@ public class SaveCommand extends BaseCommand{
 	@Override
 	public void execute() {
 		// データ保存
-		plugin.getFileManager().saveGames();
+		plugin.getFileManager().saveStages();
 		GameManager.saveAll();
 		PlayerManager.saveAll();
 
-		Actions.message(sender, null, "&aGames/Players Saved!");
+		Actions.message(sender, null, "&aStages/Players Saved!");
 	}
 
 	@Override

@@ -38,7 +38,7 @@ import syam.FlagGame.Command.TpCommand;
 import syam.FlagGame.Command.WatchCommand;
 import syam.FlagGame.Database.Database;
 import syam.FlagGame.FGPlayer.PlayerManager;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameFileManager;
 import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Listeners.DeathNotifierListener;
@@ -121,7 +121,7 @@ public class FlagGame extends JavaPlugin{
 
 	// ** Variable **
 	// 存在するゲーム <String 一意のゲームID, Game>
-	public HashMap<String, OldGame> games = new HashMap<String, OldGame>();
+	//public HashMap<String, OldGame> games = new HashMap<String, OldGame>();
 	// プレイヤーデータベース
 	private static Database database;
 
@@ -203,7 +203,7 @@ public class FlagGame extends JavaPlugin{
 
 		// ゲームデータ読み込み
 		debug.startTimer("load games");
-		gfm.loadGames();
+		gfm.loadStages();
 		debug.endTimer("load games");
 
 		// プレイヤー追加
@@ -233,7 +233,7 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public void onDisable(){
 		// 開始中のゲームをすべて終わらせる
-		for (OldGame game : games.values()){
+		for (Game game : GameManager.games.values()){
 			if (game.isStarting()){
 				game.cancelTimerTask();
 				game.finish();
@@ -246,7 +246,7 @@ public class FlagGame extends JavaPlugin{
 
 		// ゲームデータを保存
 		if (gfm != null){
-			gfm.saveGames();
+			gfm.saveStages();
 		}
 
 		// ゲームステージプロファイルを保存
@@ -384,13 +384,13 @@ public class FlagGame extends JavaPlugin{
 	 * @param gameName
 	 * @return Game
 	 */
-	public OldGame getGame(String gameName){
+	/*public OldGame getGame(String gameName){
 		if (!games.containsKey(gameName)){
 			return null;
 		}else{
 			return games.get(gameName);
 		}
-	}
+	}*/
 
 	/**
 	 * ゲームマネージャを返す

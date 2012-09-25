@@ -27,8 +27,8 @@ public class GameManager {
 
 	public static HashMap<String, Game> games = new HashMap<String, Game>();
 
-	// 選択中のゲーム
-	private static Map<String, OldGame> selectedGame = new HashMap<String, OldGame>();
+	// 選択中のステージ
+	private static Map<String, Stage> selectedStage = new HashMap<String, Stage>();
 	// 選択中のブロック
 	private static Map<String, Location> selectedBlock = new HashMap<String, Location>();
 	// 選択中のフラッグ種類
@@ -40,34 +40,43 @@ public class GameManager {
 	private static Map<String, Configables> managersMap = new HashMap<String, Configables>();
 
 	/**
-	 * 全ゲームステージプロファイルを保存する
+	 * 全ステージプロファイルを保存する
 	 */
 	public static void saveAll(){
-		for (OldGame game : FlagGame.getInstance().games.values()){
-			game.getProfile().save();
+		for (Stage stage : StageManager.stages.values()){
+			stage.getProfile().save();
 		}
+	}
+
+	/**
+	 * ゲームを返す
+	 * @param gameName
+	 * @return Game
+	 */
+	public static Game getGame(String gameName){
+		return games.get(gameName);
 	}
 
 	/* getter/setter */
 
 	/**
-	 * 指定したゲームを選択中にする
+	 * 指定したステージを選択中にする
 	 * @param player 対象プレイヤー
-	 * @param game 対象ゲーム
+	 * @param game 対象ステージ
 	 */
-	public static void setSelectedGame(Player player, OldGame game){
-		selectedGame.put(player.getName(), game);
+	public static void setSelectedStage(Player player, Stage stage){
+		selectedStage.put(player.getName(), stage);
 	}
 	/**
-	 * 選択中のゲームを返す
+	 * 選択中のステージを返す
 	 * @param player 対象のプレイヤー
-	 * @return null または対象のゲーム
+	 * @return null または対象のステージ
 	 */
-	public static OldGame getSelectedGame(Player player){
-		if (player == null || !selectedGame.containsKey(player.getName())){
+	public static Stage getSelectedStage(Player player){
+		if (player == null || !selectedStage.containsKey(player.getName())){
 			return null;
 		}else{
-			return selectedGame.get(player.getName());
+			return selectedStage.get(player.getName());
 		}
 	}
 

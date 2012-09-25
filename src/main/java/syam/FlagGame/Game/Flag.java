@@ -17,7 +17,7 @@ public class Flag {
 	private final FlagGame plugin;
 
 	/* フラッグデータ */
-	private OldGame game = null; // フラッグが所属するゲーム
+	private Stage stage = null; // フラッグが所属するステージ
 
 	private Location loc = null; // フラッグ座標
 	private FlagType type = null; // フラッグの種類
@@ -31,11 +31,11 @@ public class Flag {
 	 * コンストラクタ
 	 * @param plugin
 	 */
-	public Flag(final FlagGame plugin, final OldGame game, final Location loc, final FlagType type, final int blockID, final byte blockData){
+	public Flag(final FlagGame plugin, final Stage stage, final Location loc, final FlagType type, final int blockID, final byte blockData){
 		this.plugin = plugin;
 
 		// フラッグデータ登録
-		this.game = game;
+		this.stage = stage;
 		this.loc = loc;
 		this.type = type;
 
@@ -46,15 +46,15 @@ public class Flag {
 		init();
 	}
 
-	public Flag(final FlagGame plugin, final OldGame game, final Location loc, final FlagType type){
-		this(plugin, game, loc, type, 0, (byte) 0);
+	public Flag(final FlagGame plugin, final Stage stage, final Location loc, final FlagType type){
+		this(plugin, stage, loc, type, 0, (byte) 0);
 	}
 
 	/**
 	 * ゲームクラスにこのフラッグデータを登録
 	 */
 	private void init(){
-		game.setFlag(loc, this);
+		stage.setFlag(loc, this);
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class Flag {
 	}
 
 	/* getter / setter */
-	public OldGame getGame(){
-		return game;
+	public Stage getStage(){
+		return stage;
 	}
 
 	public Location getLocation(){

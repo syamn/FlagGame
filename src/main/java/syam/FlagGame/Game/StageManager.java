@@ -12,4 +12,13 @@ import java.util.HashMap;
  */
 public class StageManager {
 	public static HashMap<String, Stage> stages = new HashMap<String, Stage>();
+
+	/**
+	 * ステージを返す
+	 * @param stageName
+	 * @return Game
+	 */
+	public static Stage getStage(String stageName){
+		return stages.get(stageName);
+	}
 }

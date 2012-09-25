@@ -9,7 +9,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -18,24 +19,24 @@ public class CheckCommand extends BaseCommand{
 		bePlayer = false;
 		name = "check";
 		argLength = 1;
-		usage = "<game> <- check the setup status";
+		usage = "<stage> <- check the setup status";
 	}
 
 	@Override
 	public void execute() {
-		OldGame game = plugin.getGame(args.get(0));
-		if (game == null){
-			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'が見つかりません");
+		Stage stage = StageManager.getStage(args.get(0));
+		if (stage == null){
+			Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
 			return;
 		}
 
-		if (game.isStarting()){
-			Actions.message(null, player, "&cゲーム'"+args.get(0)+"'は既に始まっています！");
+		if (stage.isUsing()){
+			Actions.message(null, player, "&cステージ'"+args.get(0)+"'は既に使われています！");
 			return;
 		}
 
 		// 設定状況をチェックする
-		Actions.message(sender, null, msgPrefix+ "&aゲーム'"+args.get(0)+"'の設定をチェックします..");
+		Actions.message(sender, null, msgPrefix+ "&aステージ'"+args.get(0)+"'の設定をチェックします..");
 		Actions.message(sender, null, "&a ===========================================");
 
 		// flags
@@ -44,7 +45,7 @@ public class CheckCommand extends BaseCommand{
 		List<String> errorLoc = new ArrayList<String>();
 
 		// ステージエリア
-		if (game.getStage() == null){
+		if (stage.getStage() == null){
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&bステージエリア: &c未設定");
 			if (help == null)
@@ -55,7 +56,7 @@ public class CheckCommand extends BaseCommand{
 		else Actions.message(sender, null, msgPrefix+ "&6[*]&bステージエリア: &6設定済み");
 
 		// チームスポーン
-		if (game.getSpawns().size() != GameTeam.values().length){
+		if (stage.getSpawns().size() != GameTeam.values().length){
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーン地点: &c未設定");
 			if (help == null)
@@ -65,7 +66,7 @@ public class CheckCommand extends BaseCommand{
 		else Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーン地点: &6設定済み");
 
 		// チームエリア
-		if (game.getBases().size() != GameTeam.values().length){
+		if (stage.getBases().size() != GameTeam.values().length){
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーンエリア: &c未設定");
 			if (help == null)
@@ -76,19 +77,19 @@ public class CheckCommand extends BaseCommand{
 		else Actions.message(sender, null, msgPrefix+ "&6[*]&b各チームスポーンエリア: &6設定済み");
 
 		// フラッグ
-		if (game.getFlags().size() < 1 ){
+		if (stage.getFlags().size() < 1 ){
 			error = true;
 			Actions.message(sender, null, msgPrefix+ "&6[*]&bフラッグ: &c未設定");
 			if (help == null)
 				help = "&6 * ゲームで使うフラッグを設定してください！ *\n" +
 						"&6 '&a/flag set flag <フラッグ種類>&6'コマンドで管理モードになります";
 		}
-		else Actions.message(sender, null, msgPrefix+ "&6[*]&bフラッグ: &6"+game.getFlags().size()+"個");
+		else Actions.message(sender, null, msgPrefix+ "&6[*]&bフラッグ: &6"+stage.getFlags().size()+"個");
 
 		// チェスト
-		if (game.getChests().size() > 0){
+		if (stage.getChests().size() > 0){
 			// 全チェストをチェック
-			for (Location loc : game.getChests()){
+			for (Location loc : stage.getChests()){
 				Block toBlock = loc.getBlock();
 				Block fromBlock = toBlock.getRelative(BlockFace.DOWN, 2);
 				// インベントリインターフェースを持たないブロック
@@ -103,15 +104,15 @@ public class CheckCommand extends BaseCommand{
 				}
 			}
 			if (errorLoc.size() > 0)
-				Actions.message(sender, null, msgPrefix+ "&6   &bチェスト: &c"+game.getChests().size()+"個中 エラー "+errorLoc.size()+"個");
+				Actions.message(sender, null, msgPrefix+ "&6   &bチェスト: &c"+stage.getChests().size()+"個中 エラー "+errorLoc.size()+"個");
 			else
-				Actions.message(sender, null, msgPrefix+ "&6   &bチェスト: &6"+game.getChests().size()+"個 OK");
+				Actions.message(sender, null, msgPrefix+ "&6   &bチェスト: &6"+stage.getChests().size()+"個 OK");
 		}
-		else Actions.message(sender, null, msgPrefix+ "&6   &bチェスト: &6"+game.getChests().size()+"個");
+		else Actions.message(sender, null, msgPrefix+ "&6   &bチェスト: &6"+stage.getChests().size()+"個");
 
 
 		// 観戦者スポーン
-		if (game.getSpecSpawn() == null)
+		if (stage.getSpecSpawn() == null)
 			Actions.message(sender, null, msgPrefix+ "&6   &b観戦者スポーン地点: &c未設定");
 		else
 			Actions.message(sender, null, msgPrefix+ "&6   &b観戦者スポーン地点: &6設定済み");

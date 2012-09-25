@@ -3,7 +3,9 @@ package syam.FlagGame.Command;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -12,25 +14,25 @@ public class StartCommand extends BaseCommand{
 		bePlayer = false;
 		name = "start";
 		argLength = 1;
-		usage = "<game> <- start game";
+		usage = "<stage> <- start game";
 	}
 
 	@Override
 	public void execute() {
-		// flagadmin ready - ゲームを開始準備中にする
 		if (args.size() == 0){
-			Actions.message(sender, null, "&cゲーム名を入力してください！ /fg start (name)");
+			Actions.message(sender, null, "&cステージ名を入力してください！");
 			return;
 		}
 
-		OldGame game = plugin.getGame(args.get(0));
-		if (game == null){
-			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'が見つかりません");
+		Stage stage = StageManager.getStage(args.get(0));
+		if (stage == null){
+			Actions.message(sender, null, "&cステージ'"+args.get(0)+"'が見つかりません");
 			return;
 		}
 
-		if (!game.isReady()){
-			Actions.message(sender, null, "&cゲーム'"+args.get(0)+"'は参加受付状態ではありません");
+		Game game = stage.getGame();
+		if (!stage.isUsing() || game == null || !game.isReady()){
+			Actions.message(sender, null, "&cステージ'"+args.get(0)+"'は参加受付状態ではありません");
 			return;
 		}
 

@@ -23,7 +23,9 @@ import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Game;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
@@ -56,15 +58,15 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		for (OldGame game : plugin.games.values()){
+		for (Stage stage : StageManager.stages.values()){
 			// フラッグチェック
-			Flag flag = game.getFlag(loc);
+			Flag flag = stage.getFlag(loc);
 			if (flag == null){
 				// フラッグブロックでなければ、ステージエリア外かチェックする 7/26追加
-				Cuboid stage = game.getStage();
+				Cuboid stageArea = stage.getStage();
 				// ステージエリア内なら破壊を禁止
-				if (stage != null && stage.isIn(loc)){
-					if (game.isStageProtected())
+				if (stageArea != null && stageArea.isIn(loc)){
+					if (stage.isStageProtected())
 						event.setCancelled(true);
 					return; // ステージエリアの被りが無い前提で返す
 				}
@@ -72,7 +74,11 @@ public class FGBlockListener implements Listener{
 			}
 
 			// 開始状態チェック
-			if (!game.isStarting())
+			if (!stage.isUsing())
+				continue;
+
+			Game game = stage.getGame();
+			if (game == null)
 				continue;
 
 			/* フラッグが壊された */
@@ -113,7 +119,7 @@ public class FGBlockListener implements Listener{
 
 			// 破壊カウント追加
 			PlayerManager.getProfile(player.getName()).addBreak();
-			game.getProfile().addBreak();
+			stage.getProfile().addBreak();
 
 			return;
 		}
@@ -145,15 +151,15 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		for (OldGame game : plugin.games.values()){
+		for (Stage stage : StageManager.stages.values()){
 			// フラッグチェック
-			Flag flag = game.getFlag(loc);
+			Flag flag = stage.getFlag(loc);
 			if (flag == null){
 				// フラッグブロックでなければ、ステージエリア外かチェックする 7/26追加
-				Cuboid stage = game.getStage();
+				Cuboid stageArea = stage.getStage();
 				// ステージエリア内なら破壊を禁止
-				if (stage != null && stage.isIn(loc)){
-					if (game.isStageProtected())
+				if (stageArea != null && stageArea.isIn(loc)){
+					if (stage.isStageProtected())
 						event.setCancelled(true);
 					return; // ステージエリアの被りが無い前提で返す
 				}
@@ -161,7 +167,11 @@ public class FGBlockListener implements Listener{
 			}
 
 			// 開始状態チェック
-			if (!game.isStarting())
+			if (!stage.isUsing())
+				continue;
+
+			Game game = stage.getGame();
+			if (game == null)
 				continue;
 
 			// プレイヤーと設置したブロックのチーム取得
@@ -200,7 +210,7 @@ public class FGBlockListener implements Listener{
 
 			// 設置カウント追加
 			PlayerManager.getProfile(player.getName()).addPlace();
-			game.getProfile().addPlace();
+			stage.getProfile().addPlace();
 
 			return;
 		}

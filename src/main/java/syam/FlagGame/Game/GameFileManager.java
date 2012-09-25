@@ -34,34 +34,34 @@ public class GameFileManager {
 		this.plugin = plugin;
 	}
 
-	/* ゲームデータ保存/読み出し */
-	public void saveGames(){
+	/* ステージデータ保存/読み出し */
+	public void saveStages(){
 		FileConfiguration confFile = new YamlConfiguration();
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") +
-				"gameData" + System.getProperty("file.separator");
+				"gameData" + System.getProperty("file.separator"); // TODO: change this dir name
 
-		for (OldGame game : plugin.games.values()){
-			File file = new File(fileDir + game.getName() + ".yml");
+		for (Stage stage : StageManager.stages.values()){
+			File file = new File(fileDir + stage.getName() + ".yml");
 
 			// マップデータをリストに変換
-			String stage = null;
-			if (game.getStage() != null) stage = convertStageCuboidToString(game.getStage());
-			List<String> flagList = convertFlagMapToList(game.getFlags());
-			List<String> spawnList = convertSpawnMapToList(game.getSpawns());
-			List<String> baseList = convertBaseMapToList(game.getBases());
-			List<String> chestList = convertChestMapToList(game.getChests());
+			String stageArea = null;
+			if (stage.getStage() != null) stageArea = convertStageCuboidToString(stage.getStage());
+			List<String> flagList = convertFlagMapToList(stage.getFlags());
+			List<String> spawnList = convertSpawnMapToList(stage.getSpawns());
+			List<String> baseList = convertBaseMapToList(stage.getBases());
+			List<String> chestList = convertChestMapToList(stage.getChests());
 
 			// 保存するデータをここに
-			confFile.set("GameName", game.getName());
-			confFile.set("GameTime", game.getGameTime());
-			confFile.set("TeamLimit", game.getTeamLimit());
-			confFile.set("Award", game.getAward());
-			confFile.set("EntryFee", game.getEntryFee());
-			confFile.set("StageProtected", game.isStageProtected());
+			confFile.set("GameName", stage.getName());
+			confFile.set("GameTime", stage.getGameTime());
+			confFile.set("TeamLimit", stage.getTeamLimit());
+			confFile.set("Award", stage.getAward());
+			confFile.set("EntryFee", stage.getEntryFee());
+			confFile.set("StageProtected", stage.isStageProtected());
 
-			confFile.set("Stage", stage);
+			confFile.set("Stage", stageArea);
 			confFile.set("Spawns", spawnList);
-			confFile.set("SpecSpawn", convertPlayerLocation(game.getSpecSpawn()));
+			confFile.set("SpecSpawn", convertPlayerLocation(stage.getSpecSpawn()));
 			confFile.set("Flags", flagList);
 			confFile.set("Bases", baseList);
 			confFile.set("Chests", chestList);
@@ -69,21 +69,21 @@ public class GameFileManager {
 			try {
 				confFile.save(file);
 			} catch (IOException ex) {
-				log.warning(logPrefix+ "Couldn't write Game data!");
+				log.warning(logPrefix+ "Couldn't write Stage data!");
 				ex.printStackTrace();
 			}
 		}
 	}
 
-	public void loadGames(){
+	public void loadStages(){
 		FileConfiguration confFile = new YamlConfiguration();
-		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "gameData";
+		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "gameData"; // TODO: change this dir name
 
 		File dir = new File(fileDir);
 		File[] files = dir.listFiles();
 
-		// ゲームデータクリア
-		plugin.games.clear();
+		// ステージデータクリア
+		StageManager.stages.clear();
 
 		// ファイルなし
 		if (files == null || files.length == 0)
@@ -98,26 +98,26 @@ public class GameFileManager {
 				// 読むデータキー
 				name = confFile.getString("GameName", null);
 
-				// ゲーム追加
-				OldGame game = new OldGame(plugin, name);
+				// ステージ追加
+				Stage stage = new Stage(plugin, name);
 
 				// ファイル名設定
-				game.setFileName(file.getName());
+				stage.setFileName(file.getName());
 
 				// 各設定やマップを追加
-				game.setGameTime(confFile.getInt("GameTime", 60 * 10));
-				game.setTeamLimit(confFile.getInt("TeamLimit", 8));
-				game.setAward(confFile.getInt("Award", 1000));
-				game.setEntryFee(confFile.getInt("EntryFee", 100));
-				game.setStageProtected(confFile.getBoolean("StageProtected", true));
+				stage.setGameTime(confFile.getInt("GameTime", 60 * 10));
+				stage.setTeamLimit(confFile.getInt("TeamLimit", 8));
+				stage.setAward(confFile.getInt("Award", 1000));
+				stage.setEntryFee(confFile.getInt("EntryFee", 100));
+				stage.setStageProtected(confFile.getBoolean("StageProtected", true));
 
-				Cuboid stage = convertStageStringToCuboid(confFile.getString("Stage")); // ステージエリア
-				if (stage != null) game.setStage(stage);
-				game.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
-				game.setSpecSpawn(convertPlayerLocation(confFile.getString("SpecSpawn", null))); // 観戦者スポーン地点
-				game.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), game)); // フラッグ
-				game.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点エリア
-				game.setChests(convertChestListToMap(confFile.getStringList("Chests"))); // チェスト
+				Cuboid stageArea = convertStageStringToCuboid(confFile.getString("Stage")); // ステージエリア
+				if (stageArea != null) stage.setStage(stageArea);
+				stage.setSpawns(convertSpawnListToMap(confFile.getStringList("Spawns"))); // スポーン地点
+				stage.setSpecSpawn(convertPlayerLocation(confFile.getString("SpecSpawn", null))); // 観戦者スポーン地点
+				stage.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), stage)); // フラッグ
+				stage.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点エリア
+				stage.setChests(convertChestListToMap(confFile.getStringList("Chests"))); // チェスト
 
 				log.info(logPrefix+ "Loaded Game: "+file.getName()+" ("+name+")");
 
@@ -140,8 +140,8 @@ public class GameFileManager {
 
 		return ret;
 	}
-	private Cuboid convertStageStringToCuboid(String stage) {
-		if (stage == null)
+	private Cuboid convertStageStringToCuboid(String stageArea) {
+		if (stageArea == null)
 			return null;
 
 		String[] data;
@@ -149,7 +149,7 @@ public class GameFileManager {
 		String[] pos2;
 
 		// デリミタ分割
-		data = stage.split("@");
+		data = stageArea.split("@");
 		if (data.length != 2){
 			log.warning(logPrefix+ "Skipping StageLine: incorrect format (@)");
 			return null;
@@ -205,10 +205,10 @@ public class GameFileManager {
 	/**
 	 * フラッグデータをリストからハッシュマップに変換
 	 * @param flags
-	 * @param game
+	 * @param stage
 	 * @return
 	 */
-	private Map<Location, Flag> convertFlagListToMap(List<String> flags, OldGame game){
+	private Map<Location, Flag> convertFlagListToMap(List<String> flags, Stage stage){
 		Map<Location, Flag> ret = new HashMap<Location, Flag>();
 		ret.clear();
 
@@ -255,7 +255,7 @@ public class GameFileManager {
 			}
 
 			Location loc = new Location(world, new Double(coord[0]), new Double(coord[1]), new Double(coord[2])).getBlock().getLocation();
-			ret.put(loc, new Flag(plugin, game, loc, type, Integer.parseInt(block[0]), Byte.parseByte(block[1])));
+			ret.put(loc, new Flag(plugin, stage, loc, type, Integer.parseInt(block[0]), Byte.parseByte(block[1])));
 		}
 
 		return ret;

@@ -19,7 +19,8 @@ import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
 import syam.FlagGame.FlagGame;
-import syam.FlagGame.Game.OldGame;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 
 public class DynmapHandler{
 	// Logger
@@ -128,15 +129,15 @@ public class DynmapHandler{
 	}
 
 	/**
-	 * ゲーム領域をアップデートする
+	 * ステージ領域をアップデートする
 	 */
 	public void updateRegions(){
 		if (!activated) return;
 
 		Map<String, AreaMarker> newmap = new HashMap<String, AreaMarker>();
 
-		for (OldGame game : plugin.games.values()){
-			handleGame(game, newmap);
+		for (Stage stage: StageManager.stages.values()){
+			handleStage(stage, newmap);
 		}
 
 		// 古いマーカーを削除
@@ -149,11 +150,11 @@ public class DynmapHandler{
 		markers = newmap;
 	}
 
-	public void updateRegion(OldGame game){
+	public void updateRegion(Stage stage){
 		if (!activated) return;
 
 		Map<String, AreaMarker> newmap = new HashMap<String, AreaMarker>();
-		handleGame(game, newmap);
+		handleStage(stage, newmap);
 
 		// 更新するゲームの古いマーカーを削除
 		for (String updateName : newmap.keySet()){
@@ -167,13 +168,13 @@ public class DynmapHandler{
 		markers.putAll(newmap);
 	}
 
-	private void handleGame(OldGame game, Map<String, AreaMarker> newmap){
-		String gameName = game.getName();
+	private void handleStage(Stage stage, Map<String, AreaMarker> newmap){
+		String gameName = stage.getName();
 		double[] x = null;
 		double[] z = null;
 
 		// ステージエリア未設定ならスキップ
-		Cuboid region = game.getStage();
+		Cuboid region = stage.getStage();
 		if (region == null)
 			return;
 
@@ -216,7 +217,7 @@ public class DynmapHandler{
 		}
 
 		// ポップアップするバルーンに詳細情報を設定する
-		m.setDescription(formatInfoWindow(game, m));
+		m.setDescription(formatInfoWindow(stage, m));
 
 		// 新マーカーマップに追加
 		newmap.put(markerid, m);
@@ -228,35 +229,35 @@ public class DynmapHandler{
 	 * @param m
 	 * @return
 	 */
-	private String formatInfoWindow(OldGame game, AreaMarker m){
+	private String formatInfoWindow(Stage stage, AreaMarker m){
 		String s = "<div class=\"regioninfo\">"+infowindow+"</div>";
 		// Build game name
-		s = s.replaceAll("%gamename%", game.getName());
+		s = s.replaceAll("%gamename%", stage.getName());
 
 		// Build flag/chest count
-		s = s.replaceAll("%flagcount%", game.getFlags().size() + "個");
-		s = s.replaceAll("%chestcount%", game.getChests().size() + "個");
+		s = s.replaceAll("%flagcount%", stage.getFlags().size() + "個");
+		s = s.replaceAll("%chestcount%", stage.getChests().size() + "個");
 
 		// Build options
-		s = s.replaceAll("%gametime%", Actions.getTimeString(game.getGameTime()));
-		s = s.replaceAll("%teamlimit%", game.getTeamLimit() + "人");
+		s = s.replaceAll("%gametime%", Actions.getTimeString(stage.getGameTime()));
+		s = s.replaceAll("%teamlimit%", stage.getTeamLimit() + "人");
 
 		// Build Award/EntryFee
-		String entryFeeMsg = String.valueOf(game.getEntryFee()) + " Coin";
-		String awardMsg = String.valueOf(game.getAward()) +" Coin";
-		if (game.getEntryFee() <= 0) entryFeeMsg = "&7FREE";
-		if (game.getAward() <= 0) awardMsg = "&7なし";
+		String entryFeeMsg = String.valueOf(stage.getEntryFee()) + " Coin";
+		String awardMsg = String.valueOf(stage.getAward()) +" Coin";
+		if (stage.getEntryFee() <= 0) entryFeeMsg = "&7FREE";
+		if (stage.getAward() <= 0) awardMsg = "&7なし";
 		s = s.replaceAll("%entryfee%", entryFeeMsg);
 		s = s.replaceAll("%award%", awardMsg);
 
 		// Build specspawn
-		if (game.getSpecSpawn() == null){
+		if (stage.getSpecSpawn() == null){
 			s = s.replaceAll("%specspawn%", "なし");
 		}else{
 			s = s.replaceAll("%specspawn%", "あり");
 		}
 
-		// Build project members/managers
+		// Build players - included by own ProjectManager plugin
 		/*
 		String managers = "(none)";
 		String members = "(none)";

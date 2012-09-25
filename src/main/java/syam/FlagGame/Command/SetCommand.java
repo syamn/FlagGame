@@ -12,8 +12,8 @@ import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Enum.Config.ConfigType;
 import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Util;
@@ -51,14 +51,14 @@ public class SetCommand extends BaseCommand {
 		GameManager.removeManager(player, false);
 
 		// ゲーム取得
-		OldGame game = GameManager.getSelectedGame(player);
-		if (game == null){
+		Stage stage = GameManager.getSelectedStage(player);
+		if (stage == null){
 			Actions.message(null, player, "&c先に編集するゲームを選択してください");
 			return;
 		}
 
 		// 開始中でないかチェック
-		if (game.isReady() || game.isStarting()){
+		if (stage.isUsing()){
 			Actions.message(sender, null, "&cこのゲームは受付中か開始中のため設定変更できません！");
 			return;
 		}
@@ -89,29 +89,29 @@ public class SetCommand extends BaseCommand {
 		switch (conf){
 			/* 一般 */
 			case STAGE: // ステージ設定
-				setStage(game); return;
+				setStage(stage); return;
 			case BASE: // 拠点設定
-				setBase(game); return;
+				setBase(stage); return;
 			case SPAWN: // スポーン地点設定
-				setSpawn(game); return;
+				setSpawn(stage); return;
 			case FLAG: // フラッグ設定
-				setFlag(game); return;
+				setFlag(stage); return;
 			case CHEST: // チェスト設定
-				setChest(game); return;
+				setChest(stage); return;
 			case SPECSPAWN: // 観戦者スポーン設定
-				setSpecSpawn(game); return;
+				setSpecSpawn(stage); return;
 
 			/* オプション */
 			case GAMETIME: // 制限時間
-				setGameTime(game); return;
+				setGameTime(stage); return;
 			case TEAMLIMIT: // チーム人数制限
-				setTeamLimit(game); return;
+				setTeamLimit(stage); return;
 			case AWARD: // 賞金
-				setAward(game); return;
+				setAward(stage); return;
 			case ENTRYFEE: // 参加料
-				setEntryFee(game); return;
+				setEntryFee(stage); return;
 			case PROTECT: // ステージ保護
-				setStageProtect(game); return;
+				setStageProtect(stage); return;
 
 
 			// 定義漏れ
@@ -125,7 +125,7 @@ public class SetCommand extends BaseCommand {
 	/* ***** ここから各設定関数 ****************************** */
 
 	// 一般
-	private void setStage(OldGame game){
+	private void setStage(Stage game){
 		// WorldEdit選択領域取得
 		Block[] corners = WorldEditHandler.getWorldEditRegion(player);
 		// エラー プレイヤーへのメッセージ送信はWorldEditHandlerクラスで処理
@@ -151,7 +151,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setBase(OldGame game){
+	private void setBase(Stage game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
@@ -196,7 +196,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setSpawn(OldGame game){
+	private void setSpawn(Stage game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
@@ -227,7 +227,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setFlag(OldGame game){
+	private void setFlag(Stage game){
 		// 引数チェック
 		if (args.size() < 2){
 			Actions.message(sender, null, "&c引数が足りません！フラッグの種類を指定してください！");
@@ -256,7 +256,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game
 	 * @return true
 	 */
-	private void setChest(OldGame game){
+	private void setChest(Stage game){
 		// マネージャーセット
 		GameManager.setManager(player, Configables.CHEST);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
@@ -267,7 +267,7 @@ public class SetCommand extends BaseCommand {
 	 * @param game 設定対象のゲームイン寸タンス
 	 * @return
 	 */
-	private void setSpecSpawn(OldGame game){
+	private void setSpecSpawn(Stage game){
 		// 観戦者スポーン地点設定
 		game.setSpecSpawn(player.getLocation());
 
@@ -276,7 +276,7 @@ public class SetCommand extends BaseCommand {
 	}
 
 	// オプション
-	private void setGameTime(OldGame game){
+	private void setGameTime(Stage game){
 		int num = 60 * 10; // デフォルト10分
 		try{
 			num = Integer.parseInt(args.get(1));
@@ -295,7 +295,7 @@ public class SetCommand extends BaseCommand {
 		if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
 	}
-	private void setTeamLimit(OldGame game){
+	private void setTeamLimit(Stage game){
 		int cnt = 8; // デフォルト8人
 		try{
 			cnt = Integer.parseInt(args.get(1));
@@ -314,7 +314,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setAward(OldGame game){
+	private void setAward(Stage game){
 		int award = 300; // デフォルト300コイン
 		try{
 			award = Integer.parseInt(args.get(1));
@@ -332,7 +332,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setEntryFee(OldGame game){
+	private void setEntryFee(Stage game){
 		int entryfee = 100; // デフォルト100コイン
 		try{
 			entryfee = Integer.parseInt(args.get(1));
@@ -349,7 +349,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setStageProtect(OldGame game){
+	private void setStageProtect(Stage game){
 		Boolean protect = true; // デフォルトtrue
 		String value = args.get(1).trim();
 

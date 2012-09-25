@@ -1,7 +1,8 @@
 package syam.FlagGame.Command;
 
-import syam.FlagGame.Game.OldGame;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -10,31 +11,31 @@ public class CreateCommand extends BaseCommand {
 		bePlayer = true;
 		name = "create";
 		argLength = 1;
-		usage = "<name> <- create new game";
+		usage = "<name> <- create new stage";
 	}
 
 	@Override
 	public void execute() {
 		if (args.size() == 0){
-			Actions.message(sender, null, "&cゲーム名を入力してください！ /flag create (name)");
+			Actions.message(sender, null, "&cステージ名を入力してください！ /flag create (name)");
 			return;
 		}
-		OldGame game = plugin.getGame(args.get(0));
-		if (game != null){
-			Actions.message(sender, null, "&cそのゲーム名は既に存在します！");
+		Stage stage = StageManager.getStage(args.get(0));
+		if (stage != null){
+			Actions.message(sender, null, "&cそのステージ名は既に存在します！");
 			return;
 		}
 
 		// 新規ゲーム登録
-		game = new OldGame(plugin, args.get(0));
-		GameManager.setSelectedGame(player, game);
+		stage = new Stage(plugin, args.get(0));
+		GameManager.setSelectedStage(player, stage);
 
 		// update dynmap
 		plugin.getDynmap().updateRegions();
-		// save project
-		plugin.getFileManager().saveGames();
+		// save stage
+		plugin.getFileManager().saveStages();
 
-		Actions.message(sender, null, "&a新規ゲーム'"+game.getName()+"'を登録して選択しました！");
+		Actions.message(sender, null, "&a新規ステージ'"+stage.getName()+"'を登録して選択しました！");
 	}
 
 	@Override
