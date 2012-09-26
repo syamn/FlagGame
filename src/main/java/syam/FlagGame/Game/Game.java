@@ -411,6 +411,8 @@ public class Game implements IGame{
 			}
 		}
 
+		GameManager.removeGame(this.getName());
+
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();
 		// 初期化
@@ -484,6 +486,8 @@ public class Game implements IGame{
 				}
 			}
 		}
+
+		GameManager.removeGame(this.getName());
 
 		// 初期化
 		//init();
