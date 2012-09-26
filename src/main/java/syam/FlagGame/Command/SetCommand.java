@@ -112,7 +112,8 @@ public class SetCommand extends BaseCommand {
 				setEntryFee(stage); return;
 			case PROTECT: // ステージ保護
 				setStageProtect(stage); return;
-
+			case AVAILABLE: // 有効設定
+				setStageAvailable(stage);
 
 			// 定義漏れ
 			default:
@@ -349,7 +350,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setStageProtect(Stage game){
+	private void setStageProtect(Stage stage){
 		Boolean protect = true; // デフォルトtrue
 		String value = args.get(1).trim();
 
@@ -362,13 +363,31 @@ public class SetCommand extends BaseCommand {
 			return;
 		}
 
-		String result = "";
-		if (protect) result = "&a有効";
-		else result = "&c無効";
+		String result = "&a有効";
+		if (!protect) result = "&c無効";
 
-		game.setStageProtected(protect);
-		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のステージ保護は "+result+" &aに設定されました！");
-		plugin.getDynmap().updateRegion(game);
+		stage.setStageProtected(protect);
+		Actions.message(sender, null, "&aステージ'"+stage.getName()+"'の保護は "+result+" &aに設定されました！");
+		plugin.getDynmap().updateRegion(stage);
+	}
+	private void setStageAvailable(Stage stage){
+		Boolean available = true; // デフォルトtrue
+		String value = args.get(1).trim();
+
+		if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes")){
+			available = true;
+		}else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("no")){
+			available = false;
+		}else{
+			Actions.message(sender, null, "&c値が不正です！true または false を指定してください！");
+			return;
+		}
+
+		String result = "&a可能";
+		if (!available) result = "&c不可";
+
+		stage.setStageProtected(available);
+		Actions.message(sender, null, "&aステージ'"+stage.getName()+"'は使用"+result+"&aに設定されました！");
 	}
 
 	/* ***** ここまで **************************************** */

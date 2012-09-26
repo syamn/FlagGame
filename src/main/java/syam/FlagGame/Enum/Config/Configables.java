@@ -20,6 +20,7 @@ public enum Configables {
 	AWARD ("勝利チームへの賞金", ConfigType.SIMPLE),
 	ENTRYFEE ("参加料", ConfigType.SIMPLE),
 	PROTECT ("ステージ保護", ConfigType.SIMPLE),
+	AVAILABLE ("ステージ有効", ConfigType.SIMPLE),
 	;
 
 	private String configName;
