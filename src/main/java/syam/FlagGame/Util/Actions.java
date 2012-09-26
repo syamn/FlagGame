@@ -65,8 +65,6 @@ public class Actions {
 	 * @param message メッセージ
 	 */
 	public static void broadcastMessage(String message){
-		debug(message);//debug
-		if(true)return;//debug
 		if (message != null){
 			message = message
 					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
