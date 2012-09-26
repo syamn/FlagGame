@@ -22,7 +22,7 @@ import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Util.Cuboid;
 
-public class GameFileManager {
+public class StageFileManager {
 	// Logger
 	public static final Logger log = FlagGame.log;
 	private static final String logPrefix = FlagGame.logPrefix;
@@ -30,7 +30,7 @@ public class GameFileManager {
 
 	private final FlagGame plugin;
 
-	public GameFileManager(final FlagGame plugin){
+	public StageFileManager(final FlagGame plugin){
 		this.plugin = plugin;
 	}
 

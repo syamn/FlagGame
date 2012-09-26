@@ -3,7 +3,7 @@ package syam.FlagGame.Command;
 import org.bukkit.Location;
 
 import syam.FlagGame.Enum.GameTeam;
-import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.SetupManager;
 import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
@@ -32,7 +32,7 @@ public class TpCommand extends BaseCommand{
 
 			// 取れなかった場合選択済みゲームを取得
 			if (stage == null)
-				stage = GameManager.getSelectedStage(player);
+				stage = SetupManager.getSelectedStage(player);
 
 			// それも無ければエラーを返す
 			if (stage == null){

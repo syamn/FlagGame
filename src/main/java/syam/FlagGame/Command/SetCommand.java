@@ -12,7 +12,7 @@ import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Enum.Config.ConfigType;
 import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.SetupManager;
 import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
@@ -38,8 +38,8 @@ public class SetCommand extends BaseCommand {
 	public void execute() {
 		// flag set のみ (サブ引数なし)
 		if (args.size() <= 0){
-			if (GameManager.getManager(player) != null){
-				GameManager.removeManager(player, false);
+			if (SetupManager.getManager(player) != null){
+				SetupManager.removeManager(player, false);
 			}else{
 				Actions.message(null, player, "&c設定項目を指定してください！");
 				sendAvailableConf();
@@ -48,10 +48,10 @@ public class SetCommand extends BaseCommand {
 		}
 
 		// 管理モードであれば外す
-		GameManager.removeManager(player, false);
+		SetupManager.removeManager(player, false);
 
 		// ゲーム取得
-		Stage stage = GameManager.getSelectedStage(player);
+		Stage stage = SetupManager.getSelectedStage(player);
 		if (stage == null){
 			Actions.message(null, player, "&c先に編集するゲームを選択してください");
 			return;
@@ -59,7 +59,7 @@ public class SetCommand extends BaseCommand {
 
 		// 開始中でないかチェック
 		if (stage.isUsing()){
-			Actions.message(sender, null, "&cこのゲームは受付中か開始中のため設定変更できません！");
+			Actions.message(sender, null, "&cこのステージは受付中か開始中のため設定変更できません！");
 			return;
 		}
 
@@ -144,7 +144,7 @@ public class SetCommand extends BaseCommand {
 		// ステージ設定
 		game.setStage(block1.getLocation(), block2.getLocation());
 
-		Actions.message(null, player, "&aゲーム'"+game.getName()+"'のステージエリアを設定しました！");
+		Actions.message(null, player, "&aステージ'"+game.getName()+"'のエリアを設定しました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	/**
@@ -247,8 +247,8 @@ public class SetCommand extends BaseCommand {
 		}
 
 		// マネージャーセット
-		GameManager.setManager(player, Configables.FLAG);
-		GameManager.setSelectedFlagType(player, type);
+		SetupManager.setManager(player, Configables.FLAG);
+		SetupManager.setSelectedFlagType(player, type);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
 		Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
 	}
@@ -259,7 +259,7 @@ public class SetCommand extends BaseCommand {
 	 */
 	private void setChest(Stage game){
 		// マネージャーセット
-		GameManager.setManager(player, Configables.CHEST);
+		SetupManager.setManager(player, Configables.CHEST);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
 		Actions.message(null, player, "&aチェスト管理モードを開始しました。選択ツール: " + tool);
 	}
@@ -272,7 +272,7 @@ public class SetCommand extends BaseCommand {
 		// 観戦者スポーン地点設定
 		game.setSpecSpawn(player.getLocation());
 
-		Actions.message(null, player, "&aゲーム'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
+		Actions.message(null, player, "&aステージ'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 
@@ -294,7 +294,7 @@ public class SetCommand extends BaseCommand {
 
 		String sec = num+"秒";
 		if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
-		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
+		Actions.message(sender, null, "&aステージ'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
 	}
 	private void setTeamLimit(Stage game){
 		int cnt = 8; // デフォルト8人
@@ -312,7 +312,7 @@ public class SetCommand extends BaseCommand {
 
 		game.setTeamLimit(cnt);
 
-		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
+		Actions.message(sender, null, "&aステージ'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	private void setAward(Stage game){
@@ -330,7 +330,7 @@ public class SetCommand extends BaseCommand {
 
 		game.setAward(award);
 
-		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
+		Actions.message(sender, null, "&aステージ'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	private void setEntryFee(Stage game){

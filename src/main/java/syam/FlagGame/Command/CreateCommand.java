@@ -1,6 +1,7 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.SetupManager;
 import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
@@ -28,7 +29,7 @@ public class CreateCommand extends BaseCommand {
 
 		// 新規ゲーム登録
 		stage = new Stage(plugin, args.get(0));
-		GameManager.setSelectedStage(player, stage);
+		SetupManager.setSelectedStage(player, stage);
 
 		// update dynmap
 		plugin.getDynmap().updateRegions();

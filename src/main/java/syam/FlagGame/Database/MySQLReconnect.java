@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.StageManager;
 
 public class MySQLReconnect implements Runnable{
 	private final FlagGame plugin;
@@ -27,7 +28,7 @@ public class MySQLReconnect implements Runnable{
 				}
 
 				// ゲームステージプロファイルを保存
-				GameManager.saveAll();
+				StageManager.saveAll();
 			}
 		}
 	}

@@ -37,6 +37,7 @@ import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.SetupManager;
 import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
@@ -64,11 +65,11 @@ public class FGPlayerListener implements Listener{
 
 		if(block != null){
 			// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && GameManager.getManager(player) != null &&
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && SetupManager.getManager(player) != null &&
 					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && Perms.SET.has(player)){
-				Configables conf = GameManager.getManager(player);
+				Configables conf = SetupManager.getManager(player);
 
-				Stage stage = GameManager.getSelectedStage(player);
+				Stage stage = SetupManager.getSelectedStage(player);
 				if (stage == null){
 					Actions.message(null, player, "&c先に編集するゲームを選択してください！");
 					return;
@@ -94,7 +95,7 @@ public class FGPlayerListener implements Listener{
 						}
 
 						// フラッグタイプを取得
-						FlagType type = GameManager.getSelectedFlagType(player);
+						FlagType type = SetupManager.getSelectedFlagType(player);
 						if (type == null){
 							Actions.message(null, player, "&cフラッグタイプが指定されていません！");
 							return;

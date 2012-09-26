@@ -2,6 +2,7 @@ package syam.FlagGame.Command;
 
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 
@@ -17,7 +18,7 @@ public class SaveCommand extends BaseCommand{
 	public void execute() {
 		// データ保存
 		plugin.getFileManager().saveStages();
-		GameManager.saveAll();
+		StageManager.saveAll();
 		PlayerManager.saveAll();
 
 		Actions.message(sender, null, "&aStages/Players Saved!");

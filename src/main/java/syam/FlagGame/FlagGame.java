@@ -38,8 +38,9 @@ import syam.FlagGame.Command.WatchCommand;
 import syam.FlagGame.Database.Database;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.GameFileManager;
+import syam.FlagGame.Game.StageFileManager;
 import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Game.StageManager;
 import syam.FlagGame.Listeners.DeathNotifierListener;
 import syam.FlagGame.Listeners.FGBlockListener;
 import syam.FlagGame.Listeners.FGEntityListener;
@@ -115,7 +116,7 @@ public class FlagGame extends JavaPlugin{
 	// ** Private classes **
 	private ConfigurationManager config;
 	private GameManager gm;
-	private GameFileManager gfm;
+	private StageFileManager gfm;
 	private Debug debug;
 
 	// ** Variable **
@@ -197,7 +198,7 @@ public class FlagGame extends JavaPlugin{
 		// マネージャ
 		debug.startTimer("managers");
 		gm = new GameManager(this);
-		gfm = new GameFileManager(this); // 内部でDB使用
+		gfm = new StageFileManager(this); // 内部でDB使用
 		debug.endTimer("managers");
 
 		// ゲームデータ読み込み
@@ -249,7 +250,7 @@ public class FlagGame extends JavaPlugin{
 		}
 
 		// ゲームステージプロファイルを保存
-		GameManager.saveAll();
+		StageManager.saveAll();
 
 		// タスクをすべて止める
 		getServer().getScheduler().cancelTasks(this);
@@ -402,7 +403,7 @@ public class FlagGame extends JavaPlugin{
 	/** ゲームファイルマネージャを返す
 	 * @return GameManager
 	 */
-	public GameFileManager getFileManager(){
+	public StageFileManager getFileManager(){
 		return gfm;
 	}
 
