@@ -25,11 +25,12 @@ public class ReadyCommand extends BaseCommand {
 		}
 
 		Stage stage = null;
+		boolean random = false;
 
-		// ランダム
+		// ランダムゲーム
 		if (args.get(0).equalsIgnoreCase("random")){
-			stage = StageManager.getStage(getRandomStage());
-			// TODO: 開始中のゲームが選択される可能性 ランダムアナウンスができない
+			stage = StageManager.getRandomAvailableStage();
+			random = true;
 		}
 		// 通常のゲーム
 		else{
@@ -74,21 +75,8 @@ public class ReadyCommand extends BaseCommand {
 		}
 
 		// ready
-		Game game = new Game(plugin, stage);
+		Game game = new Game(plugin, stage, random);
 		game.ready(sender);
-	}
-
-	/**
-	 * ランダムなステージ名を返す
-	 * @return ステージ名
-	 */
-	private String getRandomStage(){
-		Random rnd = new Random();
-
-		String[] stages = StageManager.getStages().keySet().toArray(new String[StageManager.getStages().size()]);
-		String stage = stages[rnd.nextInt(stages.length)];
-
-		return stage;
 	}
 
 	@Override

@@ -4,7 +4,10 @@
  */
 package syam.FlagGame.Manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import syam.FlagGame.Game.Stage;
 
@@ -53,6 +56,36 @@ public class StageManager {
 		stages.clear();
 	}
 
+	/**
+	 * 実行可能なステージリストを返す
+	 * @return List<Stage>
+	 */
+	public static ArrayList<Stage> getAvailableStages(){
+		ArrayList<Stage> ret = new ArrayList<Stage>();
+
+		for (Stage stage : stages.values()){
+			if (stage.isAvailable() && !stage.isUsing()){
+				ret.add(stage);
+			}
+		}
+
+		return ret;
+	}
+
+	/**
+	 * 実行可能なステージからランダムで1つ抽出する
+	 * @return Stage
+	 */
+	public static Stage getRandomAvailableStage(){
+		Random rnd = new Random();
+		ArrayList<Stage> availables = getAvailableStages();
+
+		if (availables.size() <= 0){
+			return null;
+		}
+
+		return availables.get(rnd.nextInt(availables.size()));
+	}
 
 	/**
 	 * ステージ名からステージを返す
@@ -62,7 +95,4 @@ public class StageManager {
 	public static Stage getStage(String stageName){
 		return stages.get(stageName);
 	}
-
-
-
 }

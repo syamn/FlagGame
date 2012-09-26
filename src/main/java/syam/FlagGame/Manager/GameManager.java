@@ -18,6 +18,7 @@ public class GameManager {
 	}
 
 	private static HashMap<String, Game> games = new HashMap<String, Game>();
+	private static Game waitingRandomGame = null;
 
 	/**
 	 * ゲームマップを返す
@@ -43,7 +44,6 @@ public class GameManager {
 		games.remove(stageName);
 	}
 
-
 	/**
 	 * ステージ名からゲームを返す
 	 * @param gameName
@@ -51,5 +51,13 @@ public class GameManager {
 	 */
 	public static Game getGame(String gameName){
 		return games.get(gameName);
+	}
+
+	/* *********** */
+	public static void setRandomGame(Game game){
+		waitingRandomGame = game;
+	}
+	public static Game getRandomGame(){
+		return waitingRandomGame;
 	}
 }

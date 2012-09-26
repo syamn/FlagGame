@@ -18,18 +18,35 @@ public class JoinCommand extends BaseCommand {
 
 	@Override
 	public void execute() {
-		Stage stage = StageManager.getStage(args.get(0));
-		if (stage == null){
-			Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
-			return;
+		boolean random = false;
+		Stage stage = null;
+
+		if (args.get(0).equalsIgnoreCase("random")){
+			random = true;
+		}else{
+			stage = StageManager.getStage(args.get(0));
+			if (stage == null){
+				Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
+				return;
+			}
 		}
 
 		Game game = null;
-		if (stage.isUsing() && stage.getGame() != null){
-			game = stage.getGame();
-		}else{
-			Actions.message(null, player, "&cステージ'"+args.get(0)+"'は現在参加受付中ではありません");
-			return;
+		if (!random){
+			if (stage.isUsing() && stage.getGame() != null){
+				game = stage.getGame();
+			}else{
+				Actions.message(null, player, "&cステージ'"+args.get(0)+"'は現在参加受付中ではありません");
+				return;
+			}
+		}
+		// ランダムゲーム
+		else{
+			game = GameManager.getRandomGame();
+			if (game == null){
+				Actions.message(null, player, "&c現在受付中のランダムステージはありません！");
+				return;
+			}
 		}
 
 		if (game.isStarting()){
@@ -81,9 +98,10 @@ public class JoinCommand extends BaseCommand {
 		GameTeam team = game.getPlayerTeam(player);
 		Actions.broadcastMessage(msgPrefix+"&aプレイヤー'&6"+player.getName()+"&a'が"+team.getColor()+team.getTeamName()+"チーム&aに参加しました！");
 
+
 		// 参加後に人数チェックして定員通知
 		if ((game.getPlayersSet(GameTeam.RED).size() >= limit) && (game.getPlayersSet(GameTeam.BLUE).size() >= limit)){
-			Actions.message(null, player, "&aゲーム'"+game.getName()+"'が定員("+limit*2+"人)に達しました！");
+			Actions.message(null, player, "&aこのゲームは参加定員("+limit*2+"人)に達しています！");
 		}
 	}
 

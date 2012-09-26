@@ -382,6 +382,11 @@ public class SetCommand extends BaseCommand {
 			return;
 		}
 
+		// TODO:ステージを有効化するときは、ステージが開始出来る状態かチェックする
+		if (available){
+
+		}
+
 		String result = "&a可能";
 		if (!available) result = "&c不可";
 

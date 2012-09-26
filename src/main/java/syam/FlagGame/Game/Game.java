@@ -51,6 +51,7 @@ public class Game implements IGame{
 
 	private String GameID; // 一意なゲームID ログ用
 	private Stage stage;
+	private boolean random = false;
 
 	private int remainSec; // 1ゲームの制限時間
 	private int timerThreadID = -1; // タイマータスクのID
@@ -72,14 +73,14 @@ public class Game implements IGame{
 	 * @param plugin
 	 * @param stage
 	 */
-	public Game(final FlagGame plugin, final Stage stage){
+	public Game(final FlagGame plugin, final Stage stage, final boolean random){
 		this.plugin = plugin;
 		this.stage = stage;
+		this.random = random;
 
 		// 例外チェック
 		if (!stage.isAvailable()){
-			log.severe(logPrefix+ "Stage " + stage.getName() + " is not available!");
-			return;
+			throw new GameStateException("This stage is not available!");
 		}
 		if (GameManager.getGames().containsKey(stage)){
 			log.severe(logPrefix+ "Stage " + stage.getName() + " is duplicate!");
@@ -95,7 +96,7 @@ public class Game implements IGame{
 	/**
 	 * このゲームを開始待機中にする
 	 */
-	public void ready(CommandSender sender, boolean random){
+	public void ready(CommandSender sender){
 		if (started || ready){
 			throw new GameStateException("This game is already using!");
 		}
@@ -135,9 +136,17 @@ public class Game implements IGame{
 			awardMsg = "&7なし";
 
 		// アナウンス
-		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+stage.getName()+"&2'の参加受付が開始されました！");
-		Actions.broadcastMessage(msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
-		Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+stage.getName()+"&2' コマンドで参加してください！");
+		if (!random){
+			Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+stage.getName()+"&2'の参加受付が開始されました！");
+			Actions.broadcastMessage(msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+			Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join "+stage.getName()+"&2' コマンドで参加してください！");
+		}else{
+			Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6ランダムステージ&2'の参加受付が開始されました！");
+			Actions.broadcastMessage(msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+			Actions.broadcastMessage(msgPrefix+"&2 '&6/flag join random&2' コマンドで参加してください！");
+
+			GameManager.setRandomGame(this);
+		}
 
 		// ロギング
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd-HHmmss");
@@ -151,10 +160,6 @@ public class Game implements IGame{
 		log("========================================");
 	}
 
-	public void ready(CommandSender sender) {
-		this.ready(sender, false);
-	}
-
 	/**
 	 * ゲームを開始する
 	 */
@@ -162,6 +167,10 @@ public class Game implements IGame{
 		if (started){
 			Actions.message(sender, null, "&cこのゲームは既に始まっています");
 			return;
+		}
+
+		if (random){
+			GameManager.setRandomGame(null);
 		}
 
 		// チームの人数チェック
@@ -209,7 +218,12 @@ public class Game implements IGame{
 		stage.getProfile().addPlayed();
 
 		// アナウンス
-		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+stage.getName()+"&2'が始まりました！");
+		if (!random){
+			Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+stage.getName()+"&2'が始まりました！");
+		}else{
+			Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6ランダムステージ&2'が始まりました！");
+			Actions.broadcastMessage(msgPrefix+"&2ステージ'&6"+stage.getName()+"&2'が選択されました！");
+		}
 		Actions.broadcastMessage(msgPrefix+"&f &a制限時間: &f"+Actions.getTimeString(stage.getGameTime())+"&f | &b青チーム: &f"+bluePlayers.size()+"&b人&f | &c赤チーム: &f"+redPlayers.size()+"&c人");
 		if (stage.getSpecSpawn() != null){
 			Actions.broadcastMessage(msgPrefix+"&2 '&6/flag watch "+stage.getName()+"&2' コマンドで観戦することができます！");
@@ -411,6 +425,9 @@ public class Game implements IGame{
 			}
 		}
 
+		// 後処理
+		stage.setUsing(false);
+		stage.setGame(null);
 		GameManager.removeGame(this.getName());
 
 		// フラッグブロックロールバック 終了時はロールバックしない
@@ -487,6 +504,9 @@ public class Game implements IGame{
 			}
 		}
 
+		// 後処理
+		stage.setUsing(false);
+		stage.setGame(null);
 		GameManager.removeGame(this.getName());
 
 		// 初期化
@@ -782,7 +802,11 @@ public class Game implements IGame{
 			return;
 		}
 
-		Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6"+stage.getName()+"'&2が始まります！");
+		if (!random){
+			Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6"+stage.getName()+"'&2が始まります！");
+		}else{
+			Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'ランダムステージ'&2が始まります！");
+		}
 
 		// タイマータスク起動
 		//starttimerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
@@ -877,6 +901,10 @@ public class Game implements IGame{
 	@Override
 	public boolean isStarting() {
 		return this.started;
+	}
+
+	public boolean isRandom(){
+		return this.random;
 	}
 
 	@Override

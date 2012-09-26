@@ -386,11 +386,20 @@ public class FGPlayerListener implements Listener{
 							awardMsg = "&7なし";
 
 						// アナウンス
-						Actions.message(null, player, "&b* ===================================");
-						Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
-						Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
-						Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
-						Actions.message(null, player, "&b* ===================================");
+						if (!game.isRandom()){
+							Actions.message(null, player, "&b* ===================================");
+							Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
+							Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+							Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
+							Actions.message(null, player, "&b* ===================================");
+						}else{
+							Actions.message(null, player, "&b* ===================================");
+							Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6ランダムステージ&2'の参加受付が行われています！");
+							Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+							Actions.message(null, player, msgPrefix+"&2 '&6/flag join random&2' コマンドで参加してください！");
+							Actions.message(null, player, "&b* ===================================");
+						}
+
 					}
 					// 開始中ゲーム
 					else if (game.isStarting()){

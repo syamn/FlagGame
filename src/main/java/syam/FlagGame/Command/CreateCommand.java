@@ -17,9 +17,16 @@ public class CreateCommand extends BaseCommand {
 	@Override
 	public void execute() {
 		if (args.size() == 0){
-			Actions.message(sender, null, "&cステージ名を入力してください！ /flag create (name)");
+			Actions.message(sender, null, "&cステージ名を入力してください！");
 			return;
 		}
+
+		// random拒否
+		if(args.get(0).equalsIgnoreCase("random")){
+			Actions.message(sender, null, "&cこのステージ名は使用できません！");
+			return;
+		}
+
 		Stage stage = StageManager.getStage(args.get(0));
 		if (stage != null){
 			Actions.message(sender, null, "&cそのステージ名は既に存在します！");
@@ -28,6 +35,7 @@ public class CreateCommand extends BaseCommand {
 
 		// 新規ゲーム登録
 		stage = new Stage(plugin, args.get(0));
+		stage.setAvailable(false);
 		SetupManager.setSelectedStage(player, stage);
 
 		// update dynmap
