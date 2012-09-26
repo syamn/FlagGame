@@ -38,7 +38,7 @@ public class GameFileManager {
 	public void saveStages(){
 		FileConfiguration confFile = new YamlConfiguration();
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") +
-				"gameData" + System.getProperty("file.separator"); // TODO: change this dir name
+				"stageData" + System.getProperty("file.separator");
 
 		for (Stage stage : StageManager.stages.values()){
 			File file = new File(fileDir + stage.getName() + ".yml");
@@ -77,7 +77,7 @@ public class GameFileManager {
 
 	public void loadStages(){
 		FileConfiguration confFile = new YamlConfiguration();
-		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "gameData"; // TODO: change this dir name
+		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "stageData";
 
 		File dir = new File(fileDir);
 		File[] files = dir.listFiles();

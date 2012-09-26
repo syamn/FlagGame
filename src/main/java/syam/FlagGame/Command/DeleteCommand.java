@@ -40,7 +40,7 @@ public class DeleteCommand extends BaseCommand {
 		StageManager.stages.remove(args.get(0));
 
 		// ゲームデータファイルを削除
-		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "gameData"; // TODO: change here
+		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "stageData";
 		boolean deleted = false;
 		try{
 			File file = new File(fileDir + System.getProperty("file.separator") + stage.getFileName());
