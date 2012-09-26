@@ -66,6 +66,8 @@ public class GameFileManager {
 			confFile.set("Bases", baseList);
 			confFile.set("Chests", chestList);
 
+			confFile.set("Available", stage.isAvailable());
+
 			try {
 				confFile.save(file);
 			} catch (IOException ex) {
@@ -74,7 +76,6 @@ public class GameFileManager {
 			}
 		}
 	}
-
 	public void loadStages(){
 		FileConfiguration confFile = new YamlConfiguration();
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "stageData";
@@ -118,6 +119,9 @@ public class GameFileManager {
 				stage.setFlags(convertFlagListToMap(confFile.getStringList("Flags"), stage)); // フラッグ
 				stage.setBases(convertBaseListToMap(confFile.getStringList("Bases"))); // 拠点エリア
 				stage.setChests(convertChestListToMap(confFile.getStringList("Chests"))); // チェスト
+
+				// 有効かどうか
+				stage.setAvailable(confFile.getBoolean("Available", true));
 
 				log.info(logPrefix+ "Loaded Game: "+file.getName()+" ("+name+")");
 
