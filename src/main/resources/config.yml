@@ -13,6 +13,8 @@ WorldName: flag
 WorldProtect: false
 # Use debug mode
 Debug: false
+# Use dynmap layer for show stage information?
+UseDynmap: false
 
 #==================#
 #   Games Config   #

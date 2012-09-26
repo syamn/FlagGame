@@ -44,6 +44,7 @@ public class ConfigurationManager {
 	private String gameWorld = defaultWorldName;
 	private boolean isProtected = new Boolean(true);
 	private boolean isDebug = new Boolean(false);
+	private boolean useDynmap = new Boolean(false);
 	/* Games Configs */
 	private int startCountdownInSec = new Integer(10);
 	private boolean deathWhenLogout = new Boolean(true);
@@ -96,6 +97,7 @@ public class ConfigurationManager {
 		gameWorld = plugin.getConfig().getString("WorldName", defaultWorldName);
 		isProtected = plugin.getConfig().getBoolean("WorldProtect", true);
 		isDebug = plugin.getConfig().getBoolean("Debug", false);
+		useDynmap = plugin.getConfig().getBoolean("UseDynmap", false);
 		/* Games Configs */
 		startCountdownInSec = plugin.getConfig().getInt("StartCountdownInSec", 10);
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
@@ -142,6 +144,9 @@ public class ConfigurationManager {
 	}
 	public boolean isDebug(){
 		return this.isDebug;
+	}
+	public boolean getUseDynmap(){
+		return this.useDynmap;
 	}
 	/* Games Configs */
 	public int getStartCountdownInSec(){

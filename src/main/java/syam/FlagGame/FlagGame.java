@@ -303,9 +303,11 @@ public class FlagGame extends JavaPlugin{
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
 			public void run(){
 				dynmap = new DynmapHandler(FlagGame.getInstance());
-				dynmap.init();
+				if (FlagGame.getInstance().getConfigs().getUseDynmap()){
+					dynmap.init();
+				}
 			}
-		}, 20L * 3);
+		}, 20L * 1);
 	}
 	/**
 	 * Metricsセットアップ
