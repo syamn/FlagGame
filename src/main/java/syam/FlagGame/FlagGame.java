@@ -111,7 +111,7 @@ public class FlagGame extends JavaPlugin{
 	private final DeathNotifierListener dnListener = new DeathNotifierListener(this);
 
 	// ** Commands **
-	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
+	private static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 
 	// ** Private classes **
 	private ConfigurationManager config;
@@ -380,19 +380,6 @@ public class FlagGame extends JavaPlugin{
 	/* getter */
 
 	/**
-	 * ゲームを返す
-	 * @param gameName
-	 * @return Game
-	 */
-	/*public OldGame getGame(String gameName){
-		if (!games.containsKey(gameName)){
-			return null;
-		}else{
-			return games.get(gameName);
-		}
-	}*/
-
-	/**
 	 * ゲームマネージャを返す
 	 * @return GameManager
 	 */
@@ -429,6 +416,14 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public static Database getDatabases(){
 		return database;
+	}
+
+	/**
+	 * コマンドリストを返す
+	 * @return List<BaseCommand>
+	 */
+	public static List<BaseCommand> getCommands(){
+		return commands;
 	}
 
 	/**

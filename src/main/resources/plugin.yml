@@ -2,7 +2,7 @@
 name: FlagGame
 version: version-number-unknown
 main: syam.FlagGame.FlagGame
-description: FlagMatch Gaming Plugin for SakuraServer
+description: FlagMatch Gaming Plugin
 website: http://sakura-server.net/
 depend: [Vault, WorldEdit]
 softdepend: [DeathNotifier, dynmap, PermissionsEx]
