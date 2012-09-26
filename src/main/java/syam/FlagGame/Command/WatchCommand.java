@@ -5,9 +5,9 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.GameManager;
 import syam.FlagGame.Game.Stage;
-import syam.FlagGame.Game.StageManager;
+import syam.FlagGame.Manager.GameManager;
+import syam.FlagGame.Manager.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 

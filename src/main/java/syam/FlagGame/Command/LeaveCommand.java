@@ -1,10 +1,8 @@
 package syam.FlagGame.Command;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +15,7 @@ import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
 import syam.FlagGame.Game.Game;
-import syam.FlagGame.Game.GameManager;
+import syam.FlagGame.Manager.GameManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 

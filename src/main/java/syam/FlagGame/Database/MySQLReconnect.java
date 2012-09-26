@@ -4,8 +4,7 @@ import org.bukkit.entity.Player;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.FGPlayer.PlayerManager;
-import syam.FlagGame.Game.GameManager;
-import syam.FlagGame.Game.StageManager;
+import syam.FlagGame.Manager.StageManager;
 
 public class MySQLReconnect implements Runnable{
 	private final FlagGame plugin;

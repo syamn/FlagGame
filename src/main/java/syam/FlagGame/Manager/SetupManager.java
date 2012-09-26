@@ -2,7 +2,7 @@
  * FlagGame - Package: syam.FlagGame.Game
  * Created: 2012/09/26 22:54:17
  */
-package syam.FlagGame.Game;
+package syam.FlagGame.Manager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.Config.Configables;
+import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Util.Actions;
 
 /**

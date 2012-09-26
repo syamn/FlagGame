@@ -20,7 +20,7 @@ import org.dynmap.markers.MarkerSet;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Game.Stage;
-import syam.FlagGame.Game.StageManager;
+import syam.FlagGame.Manager.StageManager;
 
 public class DynmapHandler{
 	// Logger

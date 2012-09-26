@@ -1,18 +1,10 @@
-package syam.FlagGame.Game;
+package syam.FlagGame.Manager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import syam.FlagGame.FlagGame;
-import syam.FlagGame.Enum.FlagType;
-import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Util.Actions;
+import syam.FlagGame.Game.Game;
 
 public class GameManager {
 	// Logger

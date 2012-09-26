@@ -1,6 +1,5 @@
 package syam.FlagGame.Listeners;
 
-import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -25,7 +24,7 @@ import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.Game.Flag;
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.Stage;
-import syam.FlagGame.Game.StageManager;
+import syam.FlagGame.Manager.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;

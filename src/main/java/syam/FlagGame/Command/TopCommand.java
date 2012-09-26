@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Database.Database;
 import syam.FlagGame.Enum.PlayerStat;
-import syam.FlagGame.Enum.Config.Configables;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Util;

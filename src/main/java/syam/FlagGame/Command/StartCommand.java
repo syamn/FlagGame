@@ -1,11 +1,10 @@
 package syam.FlagGame.Command;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import syam.FlagGame.Game.Game;
 import syam.FlagGame.Game.Stage;
-import syam.FlagGame.Game.StageManager;
+import syam.FlagGame.Manager.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 

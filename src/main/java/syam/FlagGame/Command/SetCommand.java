@@ -6,14 +6,13 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Enum.Config.ConfigType;
 import syam.FlagGame.Enum.Config.Configables;
-import syam.FlagGame.Game.SetupManager;
 import syam.FlagGame.Game.Stage;
+import syam.FlagGame.Manager.SetupManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Util;

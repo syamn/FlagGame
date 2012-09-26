@@ -1,8 +1,7 @@
 package syam.FlagGame.Command;
 
 import syam.FlagGame.FGPlayer.PlayerManager;
-import syam.FlagGame.Game.GameManager;
-import syam.FlagGame.Game.StageManager;
+import syam.FlagGame.Manager.StageManager;
 import syam.FlagGame.Permission.Perms;
 import syam.FlagGame.Util.Actions;
 

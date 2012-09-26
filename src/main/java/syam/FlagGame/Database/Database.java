@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.swing.table.TableStringConverter;
-
 import syam.FlagGame.FlagGame;
 
 public class Database {

@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -34,6 +33,7 @@ import syam.FlagGame.Enum.GameTeam;
 import syam.FlagGame.Exceptions.GameStateException;
 import syam.FlagGame.FGPlayer.PlayerManager;
 import syam.FlagGame.FGPlayer.PlayerProfile;
+import syam.FlagGame.Manager.GameManager;
 import syam.FlagGame.Util.Actions;
 
 /**

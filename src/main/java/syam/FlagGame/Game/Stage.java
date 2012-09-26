@@ -22,6 +22,7 @@ import syam.FlagGame.Api.IStage;
 import syam.FlagGame.Enum.FlagState;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Manager.StageManager;
 import syam.FlagGame.Util.Actions;
 import syam.FlagGame.Util.Cuboid;
 

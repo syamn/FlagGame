@@ -2,9 +2,11 @@
  * FlagGame - Package: syam.FlagGame.Game
  * Created: 2012/09/23 4:58:28
  */
-package syam.FlagGame.Game;
+package syam.FlagGame.Manager;
 
 import java.util.HashMap;
+
+import syam.FlagGame.Game.Stage;
 
 /**
  * StageManager (StageManager.java)

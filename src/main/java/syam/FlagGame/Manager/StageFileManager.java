@@ -1,4 +1,4 @@
-package syam.FlagGame.Game;
+package syam.FlagGame.Manager;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +13,14 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import syam.FlagGame.FlagGame;
 import syam.FlagGame.Enum.FlagType;
 import syam.FlagGame.Enum.GameTeam;
+import syam.FlagGame.Game.Flag;
+import syam.FlagGame.Game.Stage;
 import syam.FlagGame.Util.Cuboid;
 
 public class StageFileManager {
