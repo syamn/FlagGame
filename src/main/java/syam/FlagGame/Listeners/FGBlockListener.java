@@ -58,7 +58,7 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		for (Stage stage : StageManager.stages.values()){
+		for (Stage stage : StageManager.getStages().values()){
 			// フラッグチェック
 			Flag flag = stage.getFlag(loc);
 			if (flag == null){
@@ -151,7 +151,7 @@ public class FGBlockListener implements Listener{
 		Player player = event.getPlayer();
 
 		// フラッグブロックかチェックする
-		for (Stage stage : StageManager.stages.values()){
+		for (Stage stage : StageManager.getStages().values()){
 			// フラッグチェック
 			Flag flag = stage.getFlag(loc);
 			if (flag == null){

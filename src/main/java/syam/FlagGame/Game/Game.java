@@ -81,7 +81,7 @@ public class Game implements IGame{
 			log.severe(logPrefix+ "Stage " + stage.getName() + " is not available!");
 			return;
 		}
-		if (GameManager.games.containsKey(stage)){
+		if (GameManager.getGames().containsKey(stage)){
 			log.severe(logPrefix+ "Stage " + stage.getName() + " is duplicate!");
 			return;
 		}
@@ -89,7 +89,7 @@ public class Game implements IGame{
 		this.remainSec = stage.getGameTime();
 
 		// ゲームマネージャにゲーム登録
-		GameManager.games.put(stage.getName(), this);
+		GameManager.addGame(stage.getName(), this);
 	}
 
 	/**

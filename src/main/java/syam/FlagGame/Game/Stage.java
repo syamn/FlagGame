@@ -82,7 +82,7 @@ public class Stage implements IStage{
 		this.profile = new GameProfile(name);
 
 		// ステージマネージャにステージ登録
-		StageManager.stages.put(this.stageName, this);
+		StageManager.addStage(stageName, this);
 	}
 
 	/* ロールバックメソッド */

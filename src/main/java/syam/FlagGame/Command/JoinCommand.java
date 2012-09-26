@@ -43,7 +43,7 @@ public class JoinCommand extends BaseCommand {
 			Actions.message(null, player, "&cあなたは既にこのゲームに"+team.getColor()+team.getTeamName()+"チーム&cとしてエントリーしています！");
 			return;
 		}
-		for (Game check : GameManager.games.values()){
+		for (Game check : GameManager.getGames().values()){
 			GameTeam checkT = check.getPlayerTeam(player);
 			if (checkT != null){
 				Actions.message(null, player, "&cあなたは別のゲーム'"+check.getName()+"'に"+checkT.getColor()+checkT.getTeamName()+"チーム&cとして参加しています！");

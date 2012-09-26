@@ -195,7 +195,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// ゲーム参加チェック
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			// 開始されていないゲームはチェックしない
 			if (!game.isStarting()) continue;
 
@@ -245,7 +245,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// 存在するゲームを回す
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			if (!game.isReady() && !game.isStarting())
 				return;
 
@@ -298,7 +298,7 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// 存在するゲームを回す
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			if (!game.isStarting()) continue;
 
 			// ダメージを受けたプレイヤーがゲームに参加しているプレイヤーか
@@ -341,7 +341,7 @@ public class FGPlayerListener implements Listener{
 
 		/* TODO: GC here */
 
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			if (!game.isStarting()) continue;
 
 			GameTeam team = game.getPlayerTeam(player);
@@ -366,7 +366,7 @@ public class FGPlayerListener implements Listener{
 		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				for (Game game : GameManager.games.values()){
+				for (Game game : GameManager.getGames().values()){
 					if (!game.isStarting() && !game.isReady()) continue;
 
 					GameTeam team = game.getPlayerTeam(player);
@@ -375,7 +375,7 @@ public class FGPlayerListener implements Listener{
 						return;
 				}
 
-				for (Game game : GameManager.games.values()){
+				for (Game game : GameManager.getGames().values()){
 					// 待機中ゲーム
 					if (game.isReady()){
 						// 賞金系メッセージ
@@ -424,7 +424,7 @@ public class FGPlayerListener implements Listener{
 		Location loc = block.getLocation();
 
 		// 開始中のゲームを回す
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			GameTeam blockTeam = null;
 			// 拠点マップを回してブロックの所属拠点チームを取得
 			for (Map.Entry<GameTeam, Cuboid> entry : game.getStage().getBases().entrySet()){
@@ -456,7 +456,7 @@ public class FGPlayerListener implements Listener{
 		// ドアなら自由に開閉可能にする
 		if (door) return true;
 
-		for (Stage stage : StageManager.stages.values()){
+		for (Stage stage : StageManager.getStages().values()){
 			Cuboid stageArea = stage.getStage();
 			// ステージ領域内かどうか
 			if (stageArea != null && stageArea.isIn(loc)){
@@ -520,7 +520,7 @@ public class FGPlayerListener implements Listener{
 						Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
 						return;
 					}
-					for (Game game : GameManager.games.values()){
+					for (Game game : GameManager.getGames().values()){
 						if (!game.isStarting()) continue;
 						if (game.getPlayerTeam(player) != null){
 							playerTeam = game.getPlayerTeam(player);
@@ -557,7 +557,7 @@ public class FGPlayerListener implements Listener{
 				break;
 			// 自殺
 			case KILL:
-				for (Game game : GameManager.games.values()){
+				for (Game game : GameManager.getGames().values()){
 					if (!game.isStarting()) continue;
 					if (game.getPlayerTeam(player) != null){
 						GameTeam team = game.getPlayerTeam(player);

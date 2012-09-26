@@ -136,7 +136,7 @@ public class DynmapHandler{
 
 		Map<String, AreaMarker> newmap = new HashMap<String, AreaMarker>();
 
-		for (Stage stage: StageManager.stages.values()){
+		for (Stage stage: StageManager.getStages().values()){
 			handleStage(stage, newmap);
 		}
 

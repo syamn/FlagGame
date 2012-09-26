@@ -86,7 +86,7 @@ public class ReadyCommand extends BaseCommand {
 	private String getRandomStage(){
 		Random rnd = new Random();
 
-		String[] stages = StageManager.stages.keySet().toArray(new String[StageManager.stages.size()]);
+		String[] stages = StageManager.getStages().keySet().toArray(new String[StageManager.getStages().size()]);
 		String stage = stages[rnd.nextInt(stages.length)];
 
 		return stage;

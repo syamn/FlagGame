@@ -25,7 +25,32 @@ public class GameManager {
 		this.plugin = plugin;
 	}
 
-	public static HashMap<String, Game> games = new HashMap<String, Game>();
+	private static HashMap<String, Game> games = new HashMap<String, Game>();
+
+	/**
+	 * ゲームマップを返す
+	 * @return HashMap<String, Game>
+	 */
+	public static HashMap<String, Game> getGames(){
+		return games;
+	}
+
+	/**
+	 * ゲームを追加する
+	 * @param stageName ステージ名
+	 * @param game ゲームインスタンス
+	 */
+	public static void addGame(String stageName, Game game){
+		games.put(stageName, game);
+	}
+	/**
+	 * ゲームを削除する
+	 * @param stageName ステージ名
+	 */
+	public static void removeGame(String stageName){
+		games.remove(stageName);
+	}
+
 
 	/**
 	 * ステージ名からゲームを返す

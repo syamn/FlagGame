@@ -40,7 +40,7 @@ public class StageFileManager {
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") +
 				"stageData" + System.getProperty("file.separator");
 
-		for (Stage stage : StageManager.stages.values()){
+		for (Stage stage : StageManager.getStages().values()){
 			File file = new File(fileDir + stage.getName() + ".yml");
 
 			// マップデータをリストに変換
@@ -84,7 +84,7 @@ public class StageFileManager {
 		File[] files = dir.listFiles();
 
 		// ステージデータクリア
-		StageManager.stages.clear();
+		StageManager.removeStages();
 
 		// ファイルなし
 		if (files == null || files.length == 0)

@@ -34,7 +34,7 @@ public class LeaveCommand extends BaseCommand{
 		// 参加しているゲームを取得する
 		Game game = null;
 		GameTeam team = null;
-		for (Game g : GameManager.games.values()){
+		for (Game g : GameManager.getGames().values()){
 			if (g.getPlayerTeam(player) != null){
 				game = g;
 				team = g.getPlayerTeam(player);

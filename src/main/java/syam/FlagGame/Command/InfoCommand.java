@@ -23,13 +23,13 @@ public class InfoCommand extends BaseCommand {
 	public void execute() {
 		// 引数が無ければすべてのステージデータを表示する
 		if (args.size() == 0){
-			int stagecount = StageManager.stages.size();
+			int stagecount = StageManager.getStages().size();
 
 			Actions.message(sender, null, "&a ===============&b StageList("+stagecount+") &a===============");
 			if (stagecount == 0){
 				Actions.message(sender, null, " &7読み込まれているステージがありません");
 			}else{
-				for (Stage stage : StageManager.stages.values()){
+				for (Stage stage : StageManager.getStages().values()){
 					// ゲームステータス取得
 					String status = "&7待機中";
 					if (stage.isUsing() && stage.getGame() != null){

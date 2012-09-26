@@ -33,7 +33,7 @@ public class WatchCommand extends BaseCommand{
 			return;
 		}
 
-		for (Game check : GameManager.games.values()){
+		for (Game check : GameManager.getGames().values()){
 			if (check.getPlayerTeam(player) != null){
 				Actions.message(null, player, "&cあなたはゲーム'"+check.getName()+"'に参加しているため移動できません！");
 				return;

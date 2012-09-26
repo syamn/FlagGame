@@ -233,7 +233,7 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public void onDisable(){
 		// 開始中のゲームをすべて終わらせる
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			if (game.isStarting()){
 				game.cancelTimerTask();
 				game.finish();

@@ -72,7 +72,7 @@ public class FGEntityListener implements Listener{
 			return;
 
 		// 存在するゲームを回す
-		for (Game game : GameManager.games.values()){
+		for (Game game : GameManager.getGames().values()){
 			if (!game.isStarting()) continue;
 
 			GameTeam damagerTeam = game.getPlayerTeam(damager);

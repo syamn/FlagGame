@@ -37,7 +37,7 @@ public class DeleteCommand extends BaseCommand {
 		stage.rollbackChests();
 
 		// ゲームリストから削除
-		StageManager.stages.remove(args.get(0));
+		StageManager.removeStage(args.get(0));
 
 		// ゲームデータファイルを削除
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "stageData";
