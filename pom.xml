@@ -77,7 +77,7 @@
                   </replacements>
               </configuration>
           </plugin>
-          <!-- Jar Plugin -->
+          <!-- Jar Plugin
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-jar-plugin</artifactId>
@@ -88,7 +88,7 @@
                       </manifestEntries>
                   </archive>
               </configuration>
-          </plugin>
+          </plugin>-->
           <!-- Maven Source -->
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
