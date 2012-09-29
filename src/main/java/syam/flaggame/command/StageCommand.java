@@ -222,8 +222,8 @@ public class StageCommand extends BaseCommand{
 	 */
 	private void sendAvailableAction(){
 		List<String> col = new ArrayList<String>();
-		for (Configables conf : Configables.values()){
-			col.add(conf.name());
+		for (stageAction action : stageAction.values()){
+			col.add(action.name());
 		}
 		Actions.message(sender, null, "&cそのアクションは存在しません！");
 		Actions.message(sender, null, "&6 " + Util.join(col, "/").toLowerCase());
