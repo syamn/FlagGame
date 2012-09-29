@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import syam.flaggame.command.BaseCommand;
 import syam.flaggame.command.CheckCommand;
+import syam.flaggame.command.ConfirmCommand;
 import syam.flaggame.command.HelpCommand;
 import syam.flaggame.command.InfoCommand;
 import syam.flaggame.command.JoinCommand;
@@ -34,6 +35,7 @@ import syam.flaggame.command.StatsCommand;
 import syam.flaggame.command.TopCommand;
 import syam.flaggame.command.TpCommand;
 import syam.flaggame.command.WatchCommand;
+import syam.flaggame.command.queue.ConfirmQueue;
 import syam.flaggame.database.Database;
 import syam.flaggame.game.Game;
 import syam.flaggame.listener.DeathNotifierListener;
@@ -117,6 +119,7 @@ public class FlagGame extends JavaPlugin{
 	private GameManager gm;
 	private StageFileManager gfm;
 	private Debug debug;
+	private ConfirmQueue queue;
 
 	// ** Variable **
 	// 存在するゲーム <String 一意のゲームID, Game>
@@ -186,6 +189,7 @@ public class FlagGame extends JavaPlugin{
 		// コマンド登録
 		debug.startTimer("commands");
 		registerCommands();
+		queue = new ConfirmQueue(this);
 		debug.endTimer("commands");
 
 		// データベース連携
@@ -333,6 +337,7 @@ public class FlagGame extends JavaPlugin{
 		commands.add(new LeaveCommand());
 		commands.add(new StatsCommand());
 		commands.add(new TopCommand());
+		commands.add(new ConfirmCommand());
 
 		// Start Commands
 		commands.add(new ReadyCommand());
@@ -424,6 +429,14 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public static List<BaseCommand> getCommands(){
 		return commands;
+	}
+
+	/**
+	 * Confirmコマンドキューを返す
+	 * @return ConfirmQueue
+	 */
+	public ConfirmQueue getQueue(){
+		return queue;
 	}
 
 	/**
