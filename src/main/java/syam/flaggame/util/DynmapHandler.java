@@ -278,14 +278,15 @@ public class DynmapHandler{
 	 * dynmap連携を無効にする
 	 */
 	public void disableDynmap(){
-		// Set markers
-		set = markerapi.getMarkerSet(dynmapID);
+		if (markerapi != null){
+			set = markerapi.getMarkerSet(dynmapID);
 
-		if (set != null){
-			set.deleteMarkerSet();
-			set = null;
+			if (set != null){
+				set.deleteMarkerSet();
+				set = null;
+			}
+			markers.clear();
 		}
-		markers.clear();
 		activated = false;
 	}
 
