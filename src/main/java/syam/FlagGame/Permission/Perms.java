@@ -28,10 +28,11 @@ public enum Perms {
 	WATCH			("user.watch"),
 
 	// Admin Commands
-	READY	("admin.ready"),
-	SELECT	("admin.select"),
-	START	("admin.start"),
-	TP		("admin.tp"),
+	READY		("admin.ready"),
+	SELECT		("admin.select"),
+	START		("admin.start"),
+	TP			("admin.tp"),
+	ROLLBACK	("admin.rollback"),
 
 	// Setup Commands
 	CREATE	("admin.setup.create"),
