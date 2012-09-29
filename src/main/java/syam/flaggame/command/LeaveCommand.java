@@ -1,6 +1,7 @@
 package syam.flaggame.command;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import syam.flaggame.command.queue.Queueable;
 import syam.flaggame.enums.GameResult;
 import syam.flaggame.enums.GameTeam;
 import syam.flaggame.game.Game;
@@ -19,7 +21,7 @@ import syam.flaggame.player.PlayerManager;
 import syam.flaggame.player.PlayerProfile;
 import syam.flaggame.util.Actions;
 
-public class LeaveCommand extends BaseCommand{
+public class LeaveCommand extends BaseCommand implements Queueable{
 	public LeaveCommand(){
 		bePlayer = true;
 		name = "leave";
@@ -69,30 +71,11 @@ public class LeaveCommand extends BaseCommand{
 					return;
 				}
 
-				game.remPlayer(player, team);
-
-				// アイテムをすべてその場にドロップさせる
-				player.getInventory().setHelmet(null);
-				Actions.dropInventoryItems(player);
-
-				player.teleport(world.getSpawnLocation(), TeleportCause.PLUGIN);
-
-				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aから途中退場しました！");
-				Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
-
-				// exit++
-				PlayerManager.getProfile(player.getName()).addExit();
-
-				// 参加者チェック 全員抜けたらゲーム終了
-				Iterator<Entry<GameTeam, Set<String>>> entryIte = game.getPlayersMap().entrySet().iterator();
-				while(entryIte.hasNext()){
-					Entry<GameTeam, Set<String>> entry = entryIte.next();
-					if (entry.getValue().size() <= 0){
-						GameTeam t = entry.getKey();
-						game.finish(GameResult.STOP, null, "&6"+t.getColor()+t.getTeamName()+"チーム &6の参加者が居なくなりました");
-						break;
-					}
-				}
+				// confirmキュー追加
+				plugin.getQueue().addQueue(sender, this, args, 15);
+				Actions.message(sender, null, "&d途中退場回数は記録されます。本当にこのゲームを途中退場しますか？");
+				Actions.message(sender, null, "&d退場するには &a/flag confirm &dコマンドを入力してください。");
+				Actions.message(sender, null, "&a/flag confirm &dコマンドは15秒間のみ有効です。");
 			}
 			// ゲーム待機中
 			else if (game.isReady()){
@@ -111,6 +94,54 @@ public class LeaveCommand extends BaseCommand{
 			else{
 				Actions.message(null, player, "&c内部エラー: LeaveCommand.class");
 				log.warning(logPrefix+ "Internal Exception on LeaveCommand.class, Please report this.");
+			}
+		}
+	}
+
+	/**
+	 * ゲーム中に離脱する際確認する
+	 */
+	@Override
+	public void executeQueue(List<String> args) {
+		// 参加しているゲームを取得する
+		Game game = null;
+		GameTeam team = null;
+		for (Game g : GameManager.getGames().values()){
+			if (g.getPlayerTeam(player) != null){
+				game = g;
+				team = g.getPlayerTeam(player);
+				break;
+			}
+		}
+		if (game == null || !game.isStarting()){
+			Actions.message(sender, null, "&c既にゲームは終了しています！");
+			return;
+		}
+
+		// 途中退場処理
+
+		game.remPlayer(player, team);
+
+		// アイテムをすべてその場にドロップさせる
+		player.getInventory().setHelmet(null);
+		Actions.dropInventoryItems(player);
+
+		player.teleport(player.getWorld().getSpawnLocation(), TeleportCause.PLUGIN);
+
+		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aから途中退場しました！");
+		Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
+
+		// exit++
+		PlayerManager.getProfile(player.getName()).addExit();
+
+		// 参加者チェック 全員抜けたらゲーム終了
+		Iterator<Entry<GameTeam, Set<String>>> entryIte = game.getPlayersMap().entrySet().iterator();
+		while(entryIte.hasNext()){
+			Entry<GameTeam, Set<String>> entry = entryIte.next();
+			if (entry.getValue().size() <= 0){
+				GameTeam t = entry.getKey();
+				game.finish(GameResult.STOP, null, "&6"+t.getColor()+t.getTeamName()+"チーム &6の参加者が居なくなりました");
+				break;
 			}
 		}
 	}
