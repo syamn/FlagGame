@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import syam.flaggame.command.queue.Queueable;
 import syam.flaggame.enums.config.Configables;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.SetupManager;
@@ -20,7 +21,7 @@ import syam.flaggame.util.Util;
  * StageCommand (StageCommand.java)
  * @author syam(syamn)
  */
-public class StageCommand extends BaseCommand{
+public class StageCommand extends BaseCommand implements Queueable{
 	public StageCommand(){
 		bePlayer = true;
 		name = "stage";
@@ -56,10 +57,10 @@ public class StageCommand extends BaseCommand{
 				return;
 			case DELETE:
 				if (checkPerm(Perms.DELETE)) { delete(); }
-				delete(); return;
+				return;
 			case ROLLBACK:
 				if (checkPerm(Perms.ROLLBACK)) { rollback(); }
-				rollback(); return;
+				return;
 
 			// 定義漏れ
 			default:
@@ -117,32 +118,11 @@ public class StageCommand extends BaseCommand{
 			return;
 		}
 
-		// ステージロールバック
-		stage.rollbackFlags();
-		stage.rollbackChests();
-
-		// ゲームリストから削除
-		StageManager.removeStage(args.get(0));
-
-		// ゲームデータファイルを削除
-		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "stageData";
-		boolean deleted = false;
-		try{
-			File file = new File(fileDir + System.getProperty("file.separator") + stage.getFileName());
-			if (file.exists()){
-				deleted = file.delete();
-			}
-		}catch (Exception ex){
-			deleted = false;
-			ex.printStackTrace();
-		}
-
-		if (!deleted){
-			Actions.message(sender, null, "&cステージ'"+args.get(1)+"'のデータファイル削除中にエラーが発生しました！");
-		}else{
-			Actions.message(sender, null, "&aステージ'"+args.get(1)+"'を削除しました！");
-			plugin.getDynmap().updateRegions();
-		}
+		// confirmキュー追加
+		plugin.getQueue().addQueue(sender, this, args, 10);
+		Actions.message(sender, null, "&dステージ'&7"+args.get(1)+"&d'を削除しようとしています！");
+		Actions.message(sender, null, "&d続行するには &a/flag confirm &dコマンドを入力してください！");
+		Actions.message(sender, null, "&a/flag confirm &dコマンドは10秒間のみ有効です。");
 	}
 
 	private void rollback(){
@@ -191,6 +171,59 @@ public class StageCommand extends BaseCommand{
 
 
 	/* ***** ここまで ********************************************** */
+	/**
+	 * キュー実行処理
+	 */
+	@Override
+	public void executeQueue(List<String> args) {
+		if (stageAction.DELETE.name().equalsIgnoreCase(args.get(0))){
+			if (args.size() <= 1){
+				Actions.message(sender, null, "&cステージ名が不正です");
+				return;
+			}
+			Stage stage = StageManager.getStage(args.get(1));
+			if (stage == null){
+				Actions.message(sender, null, "&cその名前のステージは存在しません！");
+				return;
+			}
+
+			if (stage.isUsing()){
+				Actions.message(sender, null, "&cそのステージは現在受付中または開始中のため削除できません");
+				return;
+			}
+
+			// ステージロールバック
+			stage.rollbackFlags();
+			stage.rollbackChests();
+
+			// ゲームリストから削除
+			StageManager.removeStage(args.get(0));
+
+			// ゲームデータファイルを削除
+			String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") + "stageData";
+			boolean deleted = false;
+			try{
+				File file = new File(fileDir + System.getProperty("file.separator") + stage.getFileName());
+				if (file.exists()){
+					deleted = file.delete();
+				}
+			}catch (Exception ex){
+				deleted = false;
+				ex.printStackTrace();
+			}
+
+			if (!deleted){
+				Actions.message(sender, null, "&cステージ'"+args.get(1)+"'のデータファイル削除中にエラーが発生しました！");
+			}else{
+				Actions.message(sender, null, "&aステージ'"+args.get(1)+"'を削除しました！");
+				plugin.getDynmap().updateRegions();
+			}
+		}else{
+			Actions.message(sender, null, "&c内部エラーが発生しました。開発者までご連絡ください。");
+			log.warning(logPrefix+sender.getName() + " send invalid queue! (StageCommand.class)");
+		}
+	}
+
 	/**
 	 * アクションごとの権限をチェックする
 	 * @param perm Perms
