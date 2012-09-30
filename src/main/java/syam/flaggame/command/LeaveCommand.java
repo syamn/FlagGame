@@ -126,7 +126,12 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 		player.getInventory().setHelmet(null);
 		Actions.dropInventoryItems(player);
 
-		player.teleport(player.getWorld().getSpawnLocation(), TeleportCause.PLUGIN);
+		// テレポート
+		Location tpLoc = game.getStage().getSpecSpawn();
+		if (tpLoc == null){
+			tpLoc = player.getWorld().getSpawnLocation();
+		}
+		player.teleport(tpLoc, TeleportCause.PLUGIN);
 
 		String stageName = game.getName();
 		if (game.isRandom()) stageName = "ランダムステージ";
