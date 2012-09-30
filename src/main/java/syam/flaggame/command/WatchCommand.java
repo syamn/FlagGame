@@ -46,6 +46,7 @@ public class WatchCommand extends BaseCommand{
 		}
 		player.teleport(specSpawn, TeleportCause.PLUGIN);
 		Actions.message(null, player, "&aステージ'"+args.get(0)+"'の観戦者スポーン地点へ移動しました！");
+		Actions.message(null, player, "&2 '&6/flag leave&2' コマンドで元の地点へ戻ることができます！");
 	}
 
 	@Override
