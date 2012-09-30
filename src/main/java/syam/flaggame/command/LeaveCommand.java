@@ -128,8 +128,11 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 
 		player.teleport(player.getWorld().getSpawnLocation(), TeleportCause.PLUGIN);
 
-		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aから途中退場しました！");
-		Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
+		String stageName = game.getName();
+		if (game.isRandom()) stageName = "ランダムステージ";
+
+		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+stageName+"'&aから途中退場しました！");
+		Actions.message(null, player, "&aゲーム'"+stageName+"'から抜けました！");
 
 		// exit++
 		PlayerManager.getProfile(player.getName()).addExit();
