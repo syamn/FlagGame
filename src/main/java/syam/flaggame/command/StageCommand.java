@@ -127,7 +127,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 
 	private void rollback(){
 		if (args.size() <= 1){
-			Actions.message(sender, null, "&cステージ名または -all を入力してください！");
+			Actions.message(sender, null, "&cステージ名または -all を指定してください！");
 			return;
 		}
 		boolean all = false;

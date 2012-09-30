@@ -4,6 +4,7 @@ import java.util.Random;
 
 import syam.flaggame.game.Game;
 import syam.flaggame.game.Stage;
+import syam.flaggame.manager.GameManager;
 import syam.flaggame.manager.StageManager;
 import syam.flaggame.permission.Perms;
 import syam.flaggame.util.Actions;
@@ -29,6 +30,15 @@ public class ReadyCommand extends BaseCommand {
 
 		// ランダムゲーム
 		if (args.get(0).equalsIgnoreCase("random")){
+			if(GameManager.getRandomGame() == null){
+				if (GameManager.getRandomGame().isReady()){
+					Actions.message(sender, null, "&c現在既にランダムステージが参加受付中です");
+					return;
+				}else{
+					GameManager.setRandomGame(null);
+				}
+			}
+
 			stage = StageManager.getRandomAvailableStage();
 			random = true;
 		}
