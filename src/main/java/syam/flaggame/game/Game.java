@@ -199,7 +199,7 @@ public class Game implements IGame{
 
 		// フラッグブロックとチェストをロールバックする
 		stage.rollbackFlags();
-		stage.rollbackChests();
+		stage.rollbackChests(sender);
 
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();

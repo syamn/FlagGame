@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -102,20 +104,34 @@ public class Stage implements IStage{
 	/**
 	 * コンテナブロックを2ブロック下の同じコンテナから要素をコピーする
 	 */
-	public int rollbackChests(){
+	public int rollbackChests(CommandSender sender){
 		int count = 0;
+		Player player = null;
+
+		if (sender != null){
+			if (sender instanceof Player){
+				player = (Player) sender;
+			}
+		}
+
 		for (Location loc : chests){
 			Block toBlock = loc.getBlock();
 			Block fromBlock = toBlock.getRelative(BlockFace.DOWN, 2);
 
 			// インベントリインターフェースを持たないブロックはスキップ
 			if (!(toBlock.getState() instanceof InventoryHolder)){
-				log.warning(logPrefix+ "Block is not InventoryHolder!Rollback skipping.. Block: "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+				log.warning(logPrefix+ "Block is not InventoryHolder!Rollback skipping.. Block: "+ Actions.getBlockLocationString(toBlock.getLocation()));
+				if (player != null){
+					Actions.message(null, player, "&cエラー: インベントリホルダではありません: "+Actions.getBlockLocationString(toBlock.getLocation()));
+				}
 				continue;
 			}
 			// 2ブロック下とブロックIDが違えばスキップ
 			if (toBlock.getTypeId() != fromBlock.getTypeId()){
-				log.warning(logPrefix+ "BlockID unmatched!Rollback skipping.. Block: "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+				log.warning(logPrefix+ "BlockID unmatched!Rollback skipping.. Block: "+ Actions.getBlockLocationString(toBlock.getLocation()));
+				if (player != null){
+					Actions.message(null, player, "&cエラー: 2ブロック下と違うブロックです: "+Actions.getBlockLocationString(toBlock.getLocation()));
+				}
 				continue;
 			}
 
@@ -126,7 +142,10 @@ public class Stage implements IStage{
 				toContainer = (InventoryHolder) toBlock.getState();
 				fromContainer = (InventoryHolder) fromBlock.getState();
 			}catch(ClassCastException ex){
-				log.warning(logPrefix+ "Container can't cast to InventoryHolder! Rollback skipping.. ToBlock: "+ Actions.getBlockLocationString(fromBlock.getLocation()));
+				log.warning(logPrefix+ "Container can't cast to InventoryHolder! Rollback skipping.. Block: "+ Actions.getBlockLocationString(toBlock.getLocation()));
+				if (player != null){
+					Actions.message(null, player, "&cエラー: イベントリホルダにキャストできません: "+Actions.getBlockLocationString(toBlock.getLocation()));
+				}
 				continue;
 			}
 
@@ -143,6 +162,9 @@ public class Stage implements IStage{
 			count++;
 		}
 		return count;
+	}
+	public int rollbackChests(){
+		return this.rollbackChests(null);
 	}
 
 
