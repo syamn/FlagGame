@@ -161,7 +161,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 
 				// ステージロールバック
 				stage.rollbackFlags();
-				stage.rollbackChests();
+				stage.rollbackChests(sender);
 				i++;
 			}
 
