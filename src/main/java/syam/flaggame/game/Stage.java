@@ -150,22 +150,21 @@ public class Stage implements IStage{
 			}
 
 			// チェスト内容コピー
-			ItemStack[] oldIs = null;
 			try{
-				oldIs = fromContainer.getInventory().getContents().clone();
+				ItemStack[] oldIs = fromContainer.getInventory().getContents().clone();
+				ItemStack[] newIs = new ItemStack[oldIs.length];
+				for (int i = 0; i < oldIs.length; i++){
+					if (oldIs[i] == null) continue;
+					// newIs[i] = oldIs[i].clone(); // ItemStackシャローコピー不可
+					newIs[i] = new ItemStack(oldIs[i]); // ディープコピー
+				}
+
+				toContainer.getInventory().setContents(newIs);
 			}catch (NullPointerException npe){
 				Actions.message(null, player, "&6"+this.getName()+"エラー:&c Occurred NullPointerException: "+Actions.getBlockLocationString(toBlock.getLocation()));
 				npe.printStackTrace();
 				continue;
 			}
-			ItemStack[] newIs = new ItemStack[oldIs.length];
-			for (int i = 0; i < oldIs.length; i++){
-				if (oldIs[i] == null) continue;
-				// newIs[i] = oldIs[i].clone(); // ItemStackシャローコピー不可
-				newIs[i] = new ItemStack(oldIs[i]); // ディープコピー
-			}
-
-			toContainer.getInventory().setContents(newIs);
 			count++;
 		}
 		return count;
