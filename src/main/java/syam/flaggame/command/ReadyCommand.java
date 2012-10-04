@@ -30,7 +30,7 @@ public class ReadyCommand extends BaseCommand {
 
 		// ランダムゲーム
 		if (args.get(0).equalsIgnoreCase("random")){
-			if(GameManager.getRandomGame() == null){
+			if(GameManager.getRandomGame() != null){
 				if (GameManager.getRandomGame().isReady()){
 					Actions.message(sender, null, "&c現在既にランダムステージが参加受付中です");
 					return;
