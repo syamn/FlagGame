@@ -77,7 +77,15 @@ public enum GameTeam {
 	 * 相手のGameTeamを返す
 	 * @return GameTeam
 	 */
-	public GameTeam getAgainstTeam(final GameTeam team){
+	public GameTeam getAgainstTeam(){
+		return getAgainstTeam(this);
+	}
+
+	/**
+	 * 相手のGameTeamを返す
+	 * @return GameTeam
+	 */
+	public static GameTeam getAgainstTeam(final GameTeam team){
 		if (team.equals(GameTeam.RED)){
 			return GameTeam.BLUE;
 		}

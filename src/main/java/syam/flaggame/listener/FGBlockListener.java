@@ -109,7 +109,7 @@ public class FGBlockListener implements Listener{
 
 			// フラッグ破壊 各チームへメッセージ表示
 			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
-			game.message(bTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
+			game.message(pTeam.getAgainstTeam(), msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
 
 			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
 
@@ -199,7 +199,7 @@ public class FGBlockListener implements Listener{
 
 			// フラッグ設置 各チームへメッセージ表示
 			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
-			game.message(bTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
+			game.message(pTeam.getAgainstTeam(), msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
 
 			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
 
