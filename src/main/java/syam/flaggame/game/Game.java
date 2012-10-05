@@ -275,6 +275,9 @@ public class Game implements IGame{
 				PlayerManager.getProfile(player.getName()).updateLastJoinedGame();
 				PlayerManager.getProfile(player.getName()).addPlayed();
 
+				// 参加ゲーム更新
+				PlayerManager.getPlayer(player).setPlayingGame(this);
+
 				// メッセージ通知
 				Actions.message(null, player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
 			}
@@ -425,6 +428,9 @@ public class Game implements IGame{
 					player.getInventory().setLeggings(null);
 					player.getInventory().setBoots(null);
 				}
+
+				// 参加中のゲーム情報更新
+				PlayerManager.getPlayer(name).setPlayingGame(null);
 			}
 		}
 
@@ -879,9 +885,12 @@ public class Game implements IGame{
 	public void timer(){
 		// タイマータスク
 		//timerThreadID = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+		timerThreadID = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new GameTimerTask(this.plugin, this), 0L, 20L);
+
+		/*
 		timerThreadID = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run(){
-				/* 1秒ごとに呼ばれる */
+				// 1秒ごとに呼ばれる
 
 				// 残り時間がゼロになった
 				if (remainSec <= 0){
@@ -907,6 +916,7 @@ public class Game implements IGame{
 				remainSec--;
 			}
 		}, 0L, 20L);
+		*/
 	}
 	/**
 	 * タイマータスクが稼働中の場合停止する
@@ -927,7 +937,9 @@ public class Game implements IGame{
 	public int getRemainTime(){
 		return remainSec;
 	}
-
+	public void tickRemainTime(){
+		remainSec--;
+	}
 
 	/* getter / setter */
 	public String getName(){
