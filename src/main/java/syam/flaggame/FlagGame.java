@@ -41,6 +41,7 @@ import syam.flaggame.game.Game;
 import syam.flaggame.listener.DeathNotifierListener;
 import syam.flaggame.listener.FGBlockListener;
 import syam.flaggame.listener.FGEntityListener;
+import syam.flaggame.listener.FGInventoryListener;
 import syam.flaggame.listener.FGPlayerListener;
 import syam.flaggame.manager.GameManager;
 import syam.flaggame.manager.StageFileManager;
@@ -109,6 +110,7 @@ public class FlagGame extends JavaPlugin{
 	private final FGPlayerListener playerListener = new FGPlayerListener(this);
 	private final FGBlockListener blockListener = new FGBlockListener(this);
 	private final FGEntityListener entityListener = new FGEntityListener(this);
+	private final FGInventoryListener inventoryListener = new FGInventoryListener(this);
 	private final DeathNotifierListener dnListener = new DeathNotifierListener(this);
 
 	// ** Commands **
@@ -184,6 +186,7 @@ public class FlagGame extends JavaPlugin{
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(entityListener, this);
+		pm.registerEvents(inventoryListener, this);
 		debug.endTimer("listeners");
 
 		// コマンド登録
