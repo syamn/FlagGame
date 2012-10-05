@@ -199,7 +199,7 @@ public class FGBlockListener implements Listener{
 
 			// フラッグ設置 各チームへメッセージ表示
 			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
-			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
+			game.message(bTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
 
 			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
 
