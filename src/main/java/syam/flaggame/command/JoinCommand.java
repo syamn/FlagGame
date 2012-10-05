@@ -12,26 +12,46 @@ public class JoinCommand extends BaseCommand {
 	public JoinCommand(){
 		bePlayer = true;
 		name = "join";
-		argLength = 1;
-		usage = "<game> <- join the game";
+		argLength = 0;
+		usage = "[game] <- join the game";
 	}
 
 	@Override
 	public void execute() {
 		boolean random = false;
 		Stage stage = null;
+		Game game = null;
 
-		if (args.get(0).equalsIgnoreCase("random")){
-			random = true;
-		}else{
-			stage = StageManager.getStage(args.get(0));
-			if (stage == null){
-				Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
+		// 引数があれば指定したステージに参加
+		if (args.size() >= 1){
+			if (args.get(0).equalsIgnoreCase("random")){
+				random = true;
+			}else{
+				stage = StageManager.getStage(args.get(0));
+				if (stage == null){
+					Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
+					return;
+				}
+			}
+		}
+		// 引数がなければ自動補完
+		else{
+			if (GameManager.getGames().size() <= 0){
+				Actions.message(null, player, "&c現在受付中のゲームはありません！");
 				return;
+			}else if (GameManager.getGames().size() >= 2){
+				Actions.message(null, player, "&c複数のゲームが受付中です！参加するステージを指定してください！");
+				return;
+			}
+			// 受付中のステージが1つのみなら自動補完
+			else{
+				for (Game g : GameManager.getGames().values()){
+					stage = g.getStage();
+					break;
+				}
 			}
 		}
 
-		Game game = null;
 		if (!random){
 			if (stage.isUsing() && stage.getGame() != null){
 				game = stage.getGame();

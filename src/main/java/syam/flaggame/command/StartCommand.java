@@ -13,27 +13,43 @@ public class StartCommand extends BaseCommand{
 	public StartCommand(){
 		bePlayer = false;
 		name = "start";
-		argLength = 1;
-		usage = "<stage> <- start game";
+		argLength = 0;
+		usage = "[stage] <- start game";
 	}
 
 	@Override
 	public void execute() {
-		if (args.size() == 0){
-			Actions.message(sender, null, "&cステージ名を入力してください！");
-			return;
-		}
-
 		Game game = null;
-		if (args.get(0).equalsIgnoreCase("random")){
-			// ランダムステージ
-			game = GameManager.getRandomGame();
-			if (game == null || !game.isReady()){
-				Actions.message(sender, null, "&c参加受付状態のランダムステージはありません！");
+
+		// 引数があれば指定したステージを開始
+		if (args.size() >= 1){
+			if (args.get(0).equalsIgnoreCase("random")){
+				// ランダムステージ
+				game = GameManager.getRandomGame();
+				if (game == null || !game.isReady()){
+					Actions.message(sender, null, "&c参加受付状態のランダムステージはありません！");
+					return;
+				}
+			}else{
+				game = GameManager.getGame(args.get(0));
+			}
+		}
+		// 引数がなければ自動補完
+		else{
+			if (GameManager.getGames().size() <= 0){
+				Actions.message(null, player, "&c現在受付中のゲームはありません！");
+				return;
+			}else if (GameManager.getGames().size() >= 2){
+				Actions.message(null, player, "&c複数のゲームが受付中です！開始するステージを指定してください！");
 				return;
 			}
-		}else{
-			game = GameManager.getGame(args.get(0));
+			// 受付中のステージが1つのみなら自動補完
+			else{
+				for (Game g : GameManager.getGames().values()){
+					game = g;
+					break;
+				}
+			}
 		}
 
 		if (game == null || !game.isReady()){
