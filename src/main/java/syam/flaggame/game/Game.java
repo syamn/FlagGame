@@ -19,6 +19,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
@@ -752,6 +754,18 @@ public class Game implements IGame{
 				if (name == null) continue;
 				final Player player = Bukkit.getPlayer(name);
 				if (player != null && player.isOnline()){
+					// イスに座っているときにワープできない不具合修正
+					Entity vehicle = player.getVehicle();
+					if (vehicle != null){
+						// アイテムに座っている＝イスプラグインを使って座っている
+						if (vehicle instanceof Item){
+							vehicle.remove(); // アイテム削除
+						}else{
+							// その他、ボートやマインカートなら単にeject
+							vehicle.eject();
+						}
+					}
+
 					// 現在地点が別ワールドならプレイヤーデータに戻る地点を書き込む
 					if (!player.getWorld().equals(loc.getWorld())){
 						PlayerManager.getProfile(player.getName()).setTpBackLocation(player.getLocation());
