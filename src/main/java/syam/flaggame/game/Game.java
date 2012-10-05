@@ -433,6 +433,9 @@ public class Game implements IGame{
 		stage.setGame(null);
 		GameManager.removeGame(this.getName());
 
+		// 破壊
+		clean();
+
 		// フラッグブロックロールバック 終了時はロールバックしない
 		//rollbackFlags();
 		// 初期化
@@ -513,9 +516,30 @@ public class Game implements IGame{
 		GameManager.removeGame(this.getName());
 
 		cancelTimerTask();
+		clean();
 
 		// 初期化
 		//init();
+	}
+
+	/**
+	 * メモリ使用削減・GCで拾われやすくするために、このインスタンスを可能な限り破棄する
+	 * finish() が呼ばれ、再度このインスタンスを参照しなくなった時に呼び出す
+	 */
+	private void clean(){
+		if (stage != null && this.equals(stage.getGame())){
+			stage.setUsing(false);
+			stage.setGame(null);
+		}
+
+		cancelTimerTask();
+
+		this.playersMap = null;
+		this.redPlayers = null;
+		this.bluePlayers = null;
+		this.teamKilledCount = null;
+		this.GameID = null;
+		this.stage = null;
 	}
 
 	/**
