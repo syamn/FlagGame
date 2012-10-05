@@ -509,6 +509,8 @@ public class Game implements IGame{
 		stage.setGame(null);
 		GameManager.removeGame(this.getName());
 
+		cancelTimerTask();
+
 		// 初期化
 		//init();
 	}
