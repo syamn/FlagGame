@@ -53,6 +53,8 @@ public class GameManager {
 		return games.get(gameName);
 	}
 
+
+
 	/* *********** */
 	public static void setRandomGame(Game game){
 		waitingRandomGame = game;

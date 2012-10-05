@@ -6,7 +6,16 @@ package syam.flaggame.game;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
 import syam.flaggame.FlagGame;
+import syam.flaggame.util.Actions;
+import syam.flaggame.util.Cuboid;
 
 /**
  * GameTimerTask (GameTimerTask.java)
@@ -20,10 +29,18 @@ public class GameTimerTask implements Runnable{
 
 	private final FlagGame plugin;
 	private Game game;
+	private Cuboid cuboid = null;
 
+	/**
+	 * コンストラクタ
+	 * @param plugin FlagGame
+	 * @param game Game
+	 */
 	public GameTimerTask(final FlagGame plugin, final Game game){
 		this.plugin = plugin;
+
 		this.game = game;
+		this.cuboid = game.getStage().getStage();
 	}
 
 	@Override
@@ -51,7 +68,50 @@ public class GameTimerTask implements Runnable{
 			game.message(msgPrefix+ "&aゲーム終了まで あと "+remainMin+" 分です！");
 		}
 
+		// プレイヤーの座標チェック
+		if (cuboid != null){
+			checkPlayersLocation();
+		}
+
 		// remainsec--
 		game.tickRemainTime();
+	}
+
+	/**
+	 * プレイヤーがステージ外に出ていないかチェックを行う
+	 */
+	private void checkPlayersLocation(){
+		// ゲーム参加者リストを回す
+		for (String name : game.getPlayersSet()){
+			Player player = Bukkit.getPlayer(name);
+
+			if (player == null || !player.isOnline())
+				continue;
+
+			// ステージ外に出ていればチームスポーン地点に戻す
+			if (!cuboid.isIn(player.getLocation())){
+				Entity vehicle = player.getVehicle();
+				if (vehicle != null){
+					// アイテムに座っている＝イスプラグインを使って座っている
+					if (vehicle instanceof Item){
+						vehicle.remove(); // アイテム削除
+					}else{
+						// その他、ボートやマインカートなら単に降りる
+						//vehicle.eject();
+						player.leaveVehicle();
+					}
+				}
+
+				Location loc = game.getStage().getSpawn(game.getPlayerTeam(player));
+				// ステージエリアの設定有無
+				if (loc == null){
+					player.setHealth(0);
+					Actions.message(null, player, "&cステージエリア外に出たため死にました！");
+				}else{
+					player.teleport(loc, TeleportCause.PLUGIN);
+					Actions.message(null, player, "&cステージエリア外に出たためスポーン地点に戻されました！");
+				}
+			}
+		}
 	}
 }

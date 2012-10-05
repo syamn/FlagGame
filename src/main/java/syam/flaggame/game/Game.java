@@ -798,7 +798,8 @@ public class Game implements IGame{
 							vehicle.remove(); // アイテム削除
 						}else{
 							// その他、ボートやマインカートなら単にeject
-							vehicle.eject();
+							//vehicle.eject();
+							player.leaveVehicle();
 						}
 					}
 
