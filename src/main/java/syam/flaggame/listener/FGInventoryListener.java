@@ -52,7 +52,7 @@ public class FGInventoryListener implements Listener{
 		for (Game game : GameManager.getGames().values()){
 			GameTeam team = game.getPlayerTeam(player);
 			if (team != null){
-				// ゲーム参加中のプレイヤー
+				// ゲーム参加中のプレイヤーはイベントキャンセル
 				event.setCurrentItem(new ItemStack(team.getBlockID(), 1, (short)0, team.getBlockData()));
 
 				event.setCancelled(true);

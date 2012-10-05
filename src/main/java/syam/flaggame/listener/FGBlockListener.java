@@ -58,27 +58,30 @@ public class FGBlockListener implements Listener{
 
 		// フラッグブロックかチェックする
 		for (Stage stage : StageManager.getStages().values()){
-			// フラッグチェック
-			Flag flag = stage.getFlag(loc);
-			if (flag == null){
-				// フラッグブロックでなければ、ステージエリア外かチェックする 7/26追加
-				Cuboid stageArea = stage.getStage();
-				// ステージエリア内なら破壊を禁止
-				if (stageArea != null && stageArea.isIn(loc)){
-					if (stage.isStageProtected())
-						event.setCancelled(true);
-					return; // ステージエリアの被りが無い前提で返す
+			Flag flag = null;
+
+			if (stage.isFlag(loc)){
+				flag = stage.getFlag(loc);
+			}else{
+				if (stage.hasStage()){
+					Cuboid stageArea = stage.getStage();
+					if (stageArea.isIn(loc)){
+						if (stage.isStageProtected()){
+							event.setCancelled(true);
+						}
+						return; // ステージエリアの被りが無い前提で返す
+					}
 				}
 				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
 			}
 
 			// 開始状態チェック
-			if (!stage.isUsing())
+			if (!stage.isUsing() || stage.getGame() == null){
+				event.setCancelled(true); // フラッグなので保護
 				continue;
+			}
 
 			Game game = stage.getGame();
-			if (game == null)
-				continue;
 
 			/* フラッグが壊された */
 
@@ -105,16 +108,10 @@ public class FGBlockListener implements Listener{
 			}
 
 			// フラッグ破壊 各チームへメッセージ表示
-			if (bTeam == GameTeam.BLUE){
-				// 青チームのブロックが破壊された
-				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
-				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
-			}else if (bTeam == GameTeam.RED){
-				// 赤チームのブロックが破壊された
-				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
-				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
-			}
-			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag!");
+			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
+			game.message(bTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
+
+			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
 
 			// 破壊カウント追加
 			PlayerManager.getProfile(player.getName()).addBreak();
@@ -151,27 +148,32 @@ public class FGBlockListener implements Listener{
 
 		// フラッグブロックかチェックする
 		for (Stage stage : StageManager.getStages().values()){
-			// フラッグチェック
-			Flag flag = stage.getFlag(loc);
-			if (flag == null){
-				// フラッグブロックでなければ、ステージエリア外かチェックする 7/26追加
-				Cuboid stageArea = stage.getStage();
-				// ステージエリア内なら破壊を禁止
-				if (stageArea != null && stageArea.isIn(loc)){
-					if (stage.isStageProtected())
-						event.setCancelled(true);
-					return; // ステージエリアの被りが無い前提で返す
+			Flag flag = null;
+
+			if (stage.isFlag(loc)){
+				flag = stage.getFlag(loc);
+			}else{
+				if (stage.hasStage()){
+					Cuboid stageArea = stage.getStage();
+					if (stageArea.isIn(loc)){
+						if (stage.isStageProtected()){
+							event.setCancelled(true);
+						}
+						return; // ステージエリアの被りが無い前提で返す
+					}
 				}
 				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
 			}
 
 			// 開始状態チェック
-			if (!stage.isUsing())
+			if (!stage.isUsing() || stage.getGame() == null){
+				event.setCancelled(true); // フラッグなので保護
 				continue;
+			}
 
 			Game game = stage.getGame();
-			if (game == null)
-				continue;
+
+			/* フラッグを設置した */
 
 			// プレイヤーと設置したブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
@@ -196,16 +198,10 @@ public class FGBlockListener implements Listener{
 			}
 
 			// フラッグ設置 各チームへメッセージ表示
-			if (bTeam == GameTeam.BLUE){
-				// 青チームのブロックが設置された
-				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
-				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
-			}else if (bTeam == GameTeam.RED){
-				// 赤チームのブロックが設置された
-				game.message(GameTeam.RED, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
-				game.message(GameTeam.BLUE, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
-			}
-			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag!");
+			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
+			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
+
+			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
 
 			// 設置カウント追加
 			PlayerManager.getProfile(player.getName()).addPlace();
@@ -236,7 +232,7 @@ public class FGBlockListener implements Listener{
 			Sign sign = (Sign)state;
 
 			/* 特殊看板設置 */
-			if(event.getLine(0).trim().toLowerCase().endsWith("[flaggame]")){
+			if(event.getLine(0).toLowerCase().indexOf("[flaggame]") != -1){
 				// 権限チェック
 				if (!Perms.SIGN.has(player)){
 					event.setLine(0, "Denied!");

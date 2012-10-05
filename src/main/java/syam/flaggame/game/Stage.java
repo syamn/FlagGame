@@ -193,6 +193,14 @@ public class Stage implements IStage{
 		return flags.get(loc);
 	}
 	/**
+	 * フラッグブロックかどうか返す
+	 * @param loc location
+	 * @return boolean
+	 */
+	public boolean isFlag(Location loc){
+		return flags.containsKey(loc);
+	}
+	/**
 	 * フラッグブロックを削除する
 	 * @param loc 削除するフラッグのブロック座標
 	 */
@@ -295,6 +303,9 @@ public class Stage implements IStage{
 			return null;
 		}
 	}
+	public boolean isChest(Location loc){
+		return chests.contains(loc);
+	}
 	/**
 	 * チェストブロックを削除する
 	 * @param loc 削除するチェストのブロック座標
@@ -350,7 +361,6 @@ public class Stage implements IStage{
 
 	/* ***** エリア関係 ***** */
 
-
 	// ステージ
 	public void setStage(Location pos1, Location pos2){
 		stageArea = new Cuboid(pos1, pos2);
@@ -360,6 +370,13 @@ public class Stage implements IStage{
 	}
 	public Cuboid getStage(){
 		return this.stageArea;
+	}
+	public boolean hasStage(){
+		if (this.stageArea == null){
+			return false;
+		}else{
+			return true;
+		}
 	}
 	public void setStageProtected(boolean protect){
 		this.stageProtect = protect;

@@ -36,26 +36,20 @@ public class FGEntityListener implements Listener{
 	public void onEntityDamageByEntity(final EntityDamageByEntityEvent event){
 		Entity entity = event.getEntity();
 
+		// ゲーム用ワールドでなければ返す
+		if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
+			return;
+
 		Player damager = null;
 		Player attacker = null;
 
 		// プレイヤー対プレイヤーの直接攻撃
-		if ((event.getCause() == DamageCause.ENTITY_ATTACK) &&
-				(entity instanceof Player) && (event.getDamager() instanceof Player)){
-			// ゲーム用ワールドでなければ返す
-			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
-				return;
-
+		if ((event.getCause() == DamageCause.ENTITY_ATTACK) && (entity instanceof Player) && (event.getDamager() instanceof Player)){
 			damager = (Player) entity; // 攻撃された人
 			attacker = (Player) event.getDamager(); // 攻撃した人
 		}
 		// 矢・雪球・卵など
-		else if((event.getCause() == DamageCause.PROJECTILE) &&
-					(entity instanceof Player) && (event.getDamager() instanceof Projectile)){
-			// ゲーム用ワールドでなければ返す
-			if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld()))
-				return;
-
+		else if((event.getCause() == DamageCause.PROJECTILE) && (entity instanceof Player) && (event.getDamager() instanceof Projectile)){
 			// プレイヤーが打ったもの
 			if (((Projectile) event.getDamager()).getShooter() instanceof Player){
 				damager = (Player) entity; // 攻撃された人
@@ -63,7 +57,6 @@ public class FGEntityListener implements Listener{
 			}
 		}
 
-		// ダメージを受けたプレイヤー、与えたプレイヤーどちらかがnullなら何もしない
 		if (damager == null || attacker == null)
 			return;
 
@@ -83,6 +76,8 @@ public class FGEntityListener implements Listener{
 				event.setDamage(0);
 				event.setCancelled(true);
 				Actions.message(null, attacker, "&c同じチームメンバーには攻撃できません！");
+
+				return;
 			}
 		}
 	}

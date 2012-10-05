@@ -62,80 +62,85 @@ public class FGPlayerListener implements Listener{
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 
-		if(block != null){
-			// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && SetupManager.getManager(player) != null &&
-					player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && Perms.SET.has(player)){
-				Configables conf = SetupManager.getManager(player);
+		if (block == null){
+			return;
+		}
 
-				Stage stage = SetupManager.getSelectedStage(player);
-				if (stage == null){
-					Actions.message(null, player, "&c先に編集するゲームを選択してください！");
-					return;
-				}
-
-				Location loc = block.getLocation();
-
-				// ゲーム用ワールドでなければ返す
-				if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
-					Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
-					return;
-				}
-
-				// 設定によって処理を分ける
-				switch (conf){
-					// フラッグモード
-					case FLAG:
-						// 既にフラッグブロックなら解除する
-						if (stage.getFlag(loc) != null){
-							stage.removeFlag(loc);
-							Actions.message(null, player, "&aステージ'"+stage.getName()+"'のフラッグを削除しました！");
-							return;
-						}
-
-						// フラッグタイプを取得
-						FlagType type = SetupManager.getSelectedFlagType(player);
-						if (type == null){
-							Actions.message(null, player, "&cフラッグタイプが指定されていません！");
-							return;
-						}
-
-						// 新規フラッグ登録 TODO: とりあえずロールバックブロックをAirにする
-						new Flag(plugin, stage, loc, type, 0, (byte) 0);
-						Actions.message(null, player, "&aステージ'"+stage.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
-						break;
-
-					// チェストモード
-					case CHEST:
-						// チェスト、かまど、ディスペンサーのどれかでなければ返す
-						if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
-							Actions.message(null, player, "&cこのブロックはコンテナインターフェースを持っていません！");
-							return;
-						}
-						// 既にフラッグブロックになっているか判定
-						if (stage.getChest(loc) == null){
-							// 選択
-							stage.setChest(loc);
-							Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを設定しました！");
-						}else{
-							// 削除
-							stage.removeChest(loc);
-							Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを削除しました！");
-						}
-						break;
-				}
-
-				event.setCancelled(true);
-				event.setUseInteractedBlock(Result.DENY);
-				event.setUseItemInHand(Result.DENY);
+		// 管理モードで権限を持ち、かつ設定したツールでブロックを右クリックした
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && SetupManager.getManager(player) != null &&
+				player.getItemInHand().getTypeId() == plugin.getConfigs().getToolID() && Perms.SET.has(player)){
+			Configables conf = SetupManager.getManager(player);
+			Stage stage = SetupManager.getSelectedStage(player);
+			if (stage == null){
+				Actions.message(null, player, "&c先に編集するゲームを選択してください！");
+				return;
 			}
-			// 看板を右クリックした
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){
-				Sign sign = (Sign) block.getState();
-				// 1行目チェック
-				if (sign.getLine(0).equals("§a[FlagGame]")){
-					clickFlagSign(player, block);
-				}
+
+			Location loc = block.getLocation();
+
+			// ゲーム用ワールドでなければ返す
+			if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
+				Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
+				return;
+			}
+
+			switch (conf){
+				// フラッグモード
+				case FLAG:
+					// 既にフラッグブロックなら解除する
+					if (stage.isFlag(loc)){
+						stage.removeFlag(loc);
+						Actions.message(null, player, "&aステージ'"+stage.getName()+"'のフラッグを削除しました！");
+						return;
+					}
+
+					// フラッグタイプを取得
+					FlagType type = SetupManager.getSelectedFlagType(player);
+					if (type == null){
+						Actions.message(null, player, "&cフラッグの種類が指定されていません！");
+						return;
+					}
+
+					// 新規フラッグ登録
+					new Flag(plugin, stage, loc, type, 0, (byte) 0);
+					Actions.message(null, player, "&aステージ'"+stage.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
+					break;
+
+				// チェストモード
+				case CHEST:
+					// チェスト、かまど、ディスペンサーのどれかでなければ返す
+					if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
+						Actions.message(null, player, "&cこのブロックはコンテナインターフェースを持っていません！");
+						return;
+					}
+					// 既にチェストブロックになっているか判定
+					if (stage.isChest(loc)){
+						// 削除
+						stage.removeChest(loc);
+						Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを削除しました！");
+					}else{
+						// 選択
+						stage.setChest(loc);
+						Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを設定しました！");
+					}
+					break;
+
+				// 他は何もしない
+				default:
+					break;
+			}
+
+			event.setCancelled(true);
+			event.setUseInteractedBlock(Result.DENY);
+			event.setUseItemInHand(Result.DENY);
+		}
+
+		// 看板を右クリックした
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getState() instanceof Sign){
+			Sign sign = (Sign) block.getState();
+			// 1行目チェック
+			if (sign.getLine(0).equals("§a[FlagGame]")){
+				clickFlagSign(player, block);
 			}
 		}
 	}
@@ -182,7 +187,6 @@ public class FGPlayerListener implements Listener{
 		}
 	}
 
-
 	// プレイヤーがリスポーンした
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerRespawn(final PlayerRespawnEvent event){
@@ -198,7 +202,6 @@ public class FGPlayerListener implements Listener{
 			// 開始されていないゲームはチェックしない
 			if (!game.isStarting()) continue;
 
-			// チームに所属していれば、チームのスポーン地点へ移動させる
 			GameTeam team = game.getPlayerTeam(player);
 			if (team != null){
 				Location loc = game.getStage().getSpawn(team);
@@ -206,13 +209,13 @@ public class FGPlayerListener implements Listener{
 					// 所属チームのスポーン地点設定なし
 					Actions.message(null, player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
 					log.warning(logPrefix+ "Player "+player.getName()+" died, But undefined spawn-location. Game: " + game.getStage().getName() + " Team: " +team.name());
-					// ワールドスポーンに戻す
+
 					event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().getGameWorld()).getSpawnLocation());
-					return;
 				}else{
 					// 設定あり
+					Actions.message(null, player, msgPrefix+ "&c[*]&6このゲームはあと &a"+Actions.getTimeString(game.getRemainTime())+"&6 残っています！");
+
 					event.setRespawnLocation(loc);
-					Actions.message(null, player, msgPrefix+ "&6このゲームはあと "+Actions.getTimeString(game.getRemainTime())+" 残っています！");
 					player.getInventory().setHelmet(new ItemStack(team.getBlockID(), 1, (short)0, team.getBlockData()));
 				}
 				return; // 複数ゲーム所属はあり得ないのでここで返す
@@ -222,8 +225,6 @@ public class FGPlayerListener implements Listener{
 		// フラッグゲームワールドスポーンに戻す
 		event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().getGameWorld()).getSpawnLocation());
 	}
-
-
 
 	// プレイヤーがコマンドを使おうとした
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -245,11 +246,7 @@ public class FGPlayerListener implements Listener{
 
 		// 存在するゲームを回す
 		for (Game game : GameManager.getGames().values()){
-			if (!game.isReady() && !game.isStarting())
-				return;
-
-			GameTeam team = game.getPlayerTeam(player);
-			if (team != null){
+			if (game.isJoined(player)){
 				// ゲーム中のプレイヤー 禁止コマンドを操作
 				for (String s : plugin.getConfigs().getDisableCommands()){
 					// 禁止コマンドと同じコマンドがある
@@ -269,12 +266,11 @@ public class FGPlayerListener implements Listener{
 	public void onPlayerDeath(final PlayerDeathEvent event){
 		Player deader = event.getEntity();
 
-		// ゲームワールド以外は何もしない
 		if (deader.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			return;
 		}
 
-		// 通常の死亡メッセージ非表示
+		// ゲームワールドでは通常の死亡メッセージ非表示
 		event.setDeathMessage(null);
 		String deathMsg = "";
 
@@ -283,14 +279,16 @@ public class FGPlayerListener implements Listener{
 
 		// 死亡理由不明は何もしない
 		if (cause == null) return;
+
 		// エンティティによって殺された
 		if (cause instanceof EntityDamageByEntityEvent){
 			Entity killerEntity = ((EntityDamageByEntityEvent) cause).getDamager();
-			// エンティティ→プレイヤーによって殺された
+
+			// プレイヤーによって直接殺された
 			if (killerEntity instanceof Player){
 				killer = (Player) killerEntity;
 			}
-			// エンティティ→プレイヤーによって発射された物(矢など)によって殺された
+			// プレイヤーによって発射された物(矢など)によって殺された
 			else if (killerEntity instanceof Projectile && ((Projectile) killerEntity).getShooter() instanceof Player){
 				killer = (Player) ((Projectile) killerEntity).getShooter();
 			}
@@ -301,8 +299,7 @@ public class FGPlayerListener implements Listener{
 			if (!game.isStarting()) continue;
 
 			// ダメージを受けたプレイヤーがゲームに参加しているプレイヤーか
-			GameTeam dTeam = game.getPlayerTeam(deader);
-			if (dTeam != null){
+			if (game.isJoined(deader)){
 				PlayerManager.getProfile(deader.getName()).addDeath(); // death数追加
 				game.getStage().getProfile().addDeath();
 			}else{
@@ -310,11 +307,15 @@ public class FGPlayerListener implements Listener{
 			}
 
 			// プレイヤーによって殺され、そのプレイヤーが同じゲームに参加しているか
-			if (killer == null) continue;
-			GameTeam aTeam = game.getPlayerTeam(killer);
-			if (aTeam != null){
+			if (killer == null) return;
+
+			if (game.isJoined(killer)){
+				GameTeam aTeam = game.getPlayerTeam(killer);
+				GameTeam dTeam = game.getPlayerTeam(deader);
+
 				deathMsg = msgPrefix+"&6["+game.getStage().getName()+"] "+aTeam.getColor()+killer.getName()+"&6 が "+dTeam.getColor()+deader.getName()+"&6 を倒しました！";
 				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().getGameWorld()),deathMsg);
+				//game.message(deathMsg); ワールドキャストでも邪魔ならこっちでゲーム参加者にだけキャスト
 
 				// チームキル数追加
 				game.addKillCount(aTeam);
@@ -322,11 +323,6 @@ public class FGPlayerListener implements Listener{
 				PlayerManager.getProfile(killer.getName()).addKill(); // kill数追加
 				game.getStage().getProfile().addKill();
 
-				//for (Player player : Bukkit.getOnlinePlayers())
-				//	Actions.message(null, player, deathMsg);
-
-				//Actions.broadcastMessage(deathMsg); // 死亡したプレイヤーには送信されない？
-				//game.message(deathMsg); ブロードキャストがうるさそうならこっちでゲーム参加者にだけキャスト
 				game.log(" Player ("+aTeam.name()+")"+killer.getName()+" Killed ("+dTeam.name()+")"+deader.getName()+"!");
 				return;
 			}
@@ -343,14 +339,15 @@ public class FGPlayerListener implements Listener{
 		for (Game game : GameManager.getGames().values()){
 			if (!game.isStarting()) continue;
 
-			GameTeam team = game.getPlayerTeam(player);
-
 			// チームに所属していてこの設定が有効なら、アナウンスしてHPをゼロにする
-			if (team != null && plugin.getConfigs().getDeathWhenLogout()){
+			if (game.isJoined(player) && plugin.getConfigs().getDeathWhenLogout()){
 				player.setHealth(0);
-				//game.message(msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
-				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().getGameWorld()),
-						msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました");
+
+				GameTeam team = game.getPlayerTeam(player);
+				String deathMsg = msgPrefix+ team.getColor()+team.getTeamName()+"チーム &6のプレイヤー'"+team.getColor()+player.getName()+"&6'がログアウトしたため死亡しました";
+				Actions.worldcastMessage(Bukkit.getWorld(plugin.getConfigs().getGameWorld()), deathMsg);
+				//game.message(deathMsg);
+
 				game.log(" Player "+player.getName()+" Died because Logged out!");
 			}
 		}
@@ -366,12 +363,10 @@ public class FGPlayerListener implements Listener{
 			@Override
 			public void run() {
 				for (Game game : GameManager.getGames().values()){
-					if (!game.isStarting() && !game.isReady()) continue;
-
-					GameTeam team = game.getPlayerTeam(player);
 					// ゲーム参加ユーザは何もしない
-					if (team != null)
+					if (game.isJoined(player)){
 						return;
+					}
 				}
 
 				for (Game game : GameManager.getGames().values()){
@@ -460,7 +455,6 @@ public class FGPlayerListener implements Listener{
 		}
 
 		// そのブロックがどのゲームのチーム拠点にも所属していない
-
 		// ドアなら自由に開閉可能にする
 		if (door) return true;
 
@@ -471,9 +465,9 @@ public class FGPlayerListener implements Listener{
 				// ステージ保護があるかどうか
 				if (stage.isStageProtected()){
 					// そのゲームに参加しているプレイヤーかどうか取得
-					if (stage.isUsing() && stage.getGame() != null && stage.getGame().getPlayerTeam(player) != null){
+					if (stage.isUsing() && stage.getGame() != null && stage.getGame().isJoined(player)){
 						// チェスト登録されているものか取得
-						if (stage.getChest(loc) != null){
+						if (stage.isChest(loc)){
 							return true;
 						}
 						// 未登録チェストはダミー扱いで開閉禁止
@@ -563,6 +557,7 @@ public class FGPlayerListener implements Listener{
 				Actions.message(null, player, msgPrefix+ "&aHealed!");
 
 				break;
+
 			// 自殺
 			case KILL:
 				for (Game game : GameManager.getGames().values()){
@@ -576,8 +571,10 @@ public class FGPlayerListener implements Listener{
 				player.setHealth(0);
 				player.setFoodLevel(0);
 				break;
+
 			default:
 				Actions.message(null, player, msgPrefix+"&cSorry I forgot this sign-action. Please contact server staff!");
+				log.warning(logPrefix+player.getName()+": Sorry I forgot this sign-action. Please contact server staff!");
 		}
 
 	}

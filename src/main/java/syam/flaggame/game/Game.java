@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -688,16 +689,21 @@ public class Game implements IGame{
 	public Map<GameTeam, Set<String>> getPlayersMap(){
 		return playersMap;
 	}
-
+	public Set<String> getPlayersSet() {
+		Set<String> ret = new HashSet<String>();
+		for (Set<String> teamSet : playersMap.values()){
+			ret.addAll(teamSet);
+		}
+		return ret;
+	}
 
 	public boolean isJoined(String playerName) {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
+		return getPlayersSet().contains(playerName);
 	}
 
 	public boolean isJoined(Player player) {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
+		if (player == null) return false;
+		return this.isJoined(player.getName());
 	}
 
 	/* ***** 参加しているプレイヤーへのアクション関係 ***** */
@@ -902,12 +908,6 @@ public class Game implements IGame{
 	/* getter / setter */
 	public String getName(){
 		return this.getStage().getName();
-	}
-
-	@Override
-	public Set<String> getPlayersSet() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
 	}
 
 	@Override

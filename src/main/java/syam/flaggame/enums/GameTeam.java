@@ -1,5 +1,7 @@
 package syam.flaggame.enums;
 
+import syam.flaggame.exception.FlagGameException;
+
 
 /**
  * ゲームチーム
@@ -69,5 +71,23 @@ public enum GameTeam {
 	 */
 	public String getColor(){
 		return colorTag;
+	}
+
+	/**
+	 * 相手のGameTeamを返す
+	 * @return GameTeam
+	 */
+	public GameTeam getAgainstTeam(final GameTeam team){
+		if (team.equals(GameTeam.RED)){
+			return GameTeam.BLUE;
+		}
+		else if(team.equals(GameTeam.BLUE)){
+			return GameTeam.RED;
+		}
+		else{
+			String error = "Request team is not defined";
+			if (team != null) error += ": " + team.name();
+			throw new FlagGameException(error);
+		}
 	}
 }
