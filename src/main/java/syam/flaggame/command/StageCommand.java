@@ -79,7 +79,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 		}
 
 		// random拒否
-		if(args.get(1).equalsIgnoreCase("random")){
+		if(args.get(1).equalsIgnoreCase("random") || args.get(1).startsWith("-")){
 			Actions.message(sender, null, "&cこのステージ名は使用できません！");
 			return;
 		}
