@@ -1,10 +1,12 @@
 package syam.flaggame.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 import syam.flaggame.FlagGame;
 import syam.flaggame.game.Game;
+import syam.flaggame.game.Stage;
 
 public class GameManager {
 	// Logger
@@ -53,7 +55,21 @@ public class GameManager {
 		return games.get(gameName);
 	}
 
+	/**
+	 * 受付中のゲームリストを返す
+	 * @return List<Stage>
+	 */
+	public static ArrayList<Game> getReadyingGames(){
+		ArrayList<Game> ret = new ArrayList<Game>();
 
+		for (Game game : games.values()){
+			if (game.isReady()){
+				ret.add(game);
+			}
+		}
+
+		return ret;
+	}
 
 	/* *********** */
 	public static void setRandomGame(Game game){

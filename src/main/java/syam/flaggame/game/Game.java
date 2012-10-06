@@ -856,9 +856,9 @@ public class Game implements IGame{
 		}
 
 		if (!random){
-			Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6"+stage.getName()+"'&2が始まります！");
+			Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6"+stage.getName()+"&2'が始まります！");
 		}else{
-			Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'ランダムステージ'&2が始まります！");
+			Actions.broadcastMessage(msgPrefix+"&2まもなくゲーム'&6ランダムステージ&2'が始まります！");
 		}
 
 		// タイマータスク起動

@@ -89,7 +89,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 
 				String stageName = game.getName();
 				if (game.isRandom() && game.isReady()) stageName = "ランダムステージ";
-				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+stageName+"'&aのエントリーを取り消しました！");
+				Actions.broadcastMessage(msgPrefix+ "&a'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+stageName+"&a'のエントリーを取り消しました！");
 
 				Actions.message(null, player, "&aゲーム'"+stageName+"'の参加申請を取り消しました！");
 			}
