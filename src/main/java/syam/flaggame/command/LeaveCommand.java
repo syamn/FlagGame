@@ -87,8 +87,11 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 				// プレイヤーリストから削除
 				game.remPlayer(player, team);
 
-				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"'&aのエントリーを取り消しました！");
-				Actions.message(null, player, "&aゲーム'"+game.getName()+"'の参加申請を取り消しました！");
+				String stageName = game.getName();
+				if (game.isRandom() && game.isReady()) stageName = "ランダムステージ";
+				Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+stageName+"'&aのエントリーを取り消しました！");
+
+				Actions.message(null, player, "&aゲーム'"+stageName+"'の参加申請を取り消しました！");
 			}
 			// 例外
 			else{
@@ -133,11 +136,8 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 		}
 		player.teleport(tpLoc, TeleportCause.PLUGIN);
 
-		String stageName = game.getName();
-		if (game.isRandom() && game.isReady()) stageName = "ランダムステージ";
-
-		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+stageName+"&a'から途中退場しました！");
-		Actions.message(null, player, "&aゲーム'"+stageName+"'から抜けました！");
+		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"&a'から途中退場しました！");
+		Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
 
 		// exit++
 		PlayerManager.getProfile(player.getName()).addExit();
