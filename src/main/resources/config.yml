@@ -21,6 +21,8 @@ UseDynmap: false
 #==================#
 # Countdown time(sec) when starting the game
 StartCountdownInSec: 10
+# If it true, Play effects when place/break flag
+UseFlagEffects: true
 # If it true, Kills player when logout during the game
 DeathWhenLogout: true
 # If it true, Same teams damage will be disabled

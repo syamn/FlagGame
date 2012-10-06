@@ -47,6 +47,7 @@ public class ConfigurationManager {
 	private boolean useDynmap = new Boolean(false);
 	/* Games Configs */
 	private int startCountdownInSec = new Integer(10);
+	private boolean useFlagEffects = new Boolean(true);
 	private boolean deathWhenLogout = new Boolean(true);
 	private boolean disableRegainHP = new Boolean(true);
 	private boolean disableTeamPVP = new Boolean(true);
@@ -101,6 +102,7 @@ public class ConfigurationManager {
 		useDynmap = plugin.getConfig().getBoolean("UseDynmap", false);
 		/* Games Configs */
 		startCountdownInSec = plugin.getConfig().getInt("StartCountdownInSec", 10);
+		useFlagEffects = plugin.getConfig().getBoolean("UseFlagEffects", true);
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
 		disableRegainHP = plugin.getConfig().getBoolean("DisableRegainHealth", true);
 		disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
@@ -153,6 +155,9 @@ public class ConfigurationManager {
 	/* Games Configs */
 	public int getStartCountdownInSec(){
 		return this.startCountdownInSec;
+	}
+	public boolean getUseFlagEffects(){
+		return this.useFlagEffects;
 	}
 	public boolean getDeathWhenLogout(){
 		return this.deathWhenLogout;

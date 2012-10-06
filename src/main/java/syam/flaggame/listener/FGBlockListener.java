@@ -119,8 +119,10 @@ public class FGBlockListener implements Listener{
 			stage.getProfile().addBreak();
 
 			// エフェクト
-			loc.getWorld().createExplosion(loc, 0F, false);
-			loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+			if (plugin.getConfigs().getUseFlagEffects()){
+				loc.getWorld().createExplosion(loc, 0F, false);
+				loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+			}
 
 			return;
 		}
@@ -213,8 +215,10 @@ public class FGBlockListener implements Listener{
 			stage.getProfile().addPlace();
 
 			// エフェクト
-			loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
-			loc.getWorld().playEffect(loc, Effect.SMOKE, 4, 2);
+			if (plugin.getConfigs().getUseFlagEffects()){
+				loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+				loc.getWorld().playEffect(loc, Effect.SMOKE, 4, 2);
+			}
 
 			return;
 		}
