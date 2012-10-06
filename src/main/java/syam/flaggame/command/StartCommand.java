@@ -1,5 +1,6 @@
 package syam.flaggame.command;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import syam.flaggame.game.Game;
@@ -36,19 +37,17 @@ public class StartCommand extends BaseCommand{
 		}
 		// 引数がなければ自動補完
 		else{
-			if (GameManager.getGames().size() <= 0){
+			ArrayList<Game> readyingGames = GameManager.getReadyingGames();
+			if (readyingGames.size() <= 0){
 				Actions.message(null, player, "&c現在受付中のゲームはありません！");
 				return;
-			}else if (GameManager.getGames().size() >= 2){
+			}else if (readyingGames.size() >= 2){
 				Actions.message(null, player, "&c複数のゲームが受付中です！開始するステージを指定してください！");
 				return;
 			}
 			// 受付中のステージが1つのみなら自動補完
 			else{
-				for (Game g : GameManager.getGames().values()){
-					game = g;
-					break;
-				}
+				game = readyingGames.get(0);
 			}
 		}
 
