@@ -1,5 +1,7 @@
 package syam.flaggame.command;
 
+import java.util.ArrayList;
+
 import syam.flaggame.enums.GameTeam;
 import syam.flaggame.game.Game;
 import syam.flaggame.game.Stage;
@@ -36,19 +38,17 @@ public class JoinCommand extends BaseCommand {
 		}
 		// 引数がなければ自動補完
 		else{
-			if (GameManager.getGames().size() <= 0){
-				Actions.message(null, player, "&c現在受付中のゲームはありません！");
+			ArrayList<Game> readyingGames = GameManager.getReadyingGames();
+			if (readyingGames.size() <= 0){
+				Actions.message(null, player, "&c現在、参加受付中のゲームはありません！");
 				return;
-			}else if (GameManager.getGames().size() >= 2){
+			}else if (readyingGames.size() >= 2){
 				Actions.message(null, player, "&c複数のゲームが受付中です！参加するステージを指定してください！");
 				return;
 			}
 			// 受付中のステージが1つのみなら自動補完
 			else{
-				for (Game g : GameManager.getGames().values()){
-					stage = g.getStage();
-					break;
-				}
+				stage = readyingGames.get(0).getStage();
 			}
 		}
 
