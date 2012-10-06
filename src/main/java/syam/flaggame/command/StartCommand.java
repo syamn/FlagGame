@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import syam.flaggame.game.Game;
-import syam.flaggame.game.Stage;
 import syam.flaggame.manager.GameManager;
 import syam.flaggame.manager.StageManager;
 import syam.flaggame.permission.Perms;

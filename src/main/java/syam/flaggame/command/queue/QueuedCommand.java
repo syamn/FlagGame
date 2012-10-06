@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import syam.flaggame.command.BaseCommand;
 import syam.flaggame.util.Actions;
 
 /**

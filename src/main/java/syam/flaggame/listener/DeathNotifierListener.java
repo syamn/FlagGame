@@ -8,9 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.titankingdoms.nodinchan.deathnotifier.events.DeathEvent;
-
 import syam.flaggame.FlagGame;
+
+import com.titankingdoms.nodinchan.deathnotifier.events.DeathEvent;
 
 public class DeathNotifierListener implements Listener {
 	public static final Logger log = FlagGame.log;

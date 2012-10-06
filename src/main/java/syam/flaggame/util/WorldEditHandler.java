@@ -6,6 +6,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import syam.flaggame.FlagGame;
+
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.LocalSession;
@@ -14,8 +16,6 @@ import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
-
-import syam.flaggame.FlagGame;
 
 /**
  * WorldEditの選択領域を取得するためのWorldEditハンドラ

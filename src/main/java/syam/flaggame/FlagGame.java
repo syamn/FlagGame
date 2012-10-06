@@ -68,41 +68,6 @@ public class FlagGame extends JavaPlugin{
 	 *  参加チームの選択
 	 */
 
-	/*
-	 * DONE:
-	 * フラッグは新規クラス Flag を作って各ゲームに List<Flag> または HashMap<Location, Flag> で持たせる(後者のがいい？)
-	 * → どちらのチームのものか(またはセンターか)、元と今のブロックのIDとデータ値、そのフラッグのポイント(ゲームの勝敗判定に使う点数)
-	 *
-	 * 分かりづらいのでコマンドをサブコマンドでクラスを分ける
-	 *
-	 * 死亡メッセージをワールド外で非表示にする (DeathNotify開発)
-	 *
-	 * Valut連携、お金の概念にフック
-	 *
-	 * 設定コマンドの見直し
-	 * フラッグ設定方法の見直し
-	 *
-	 * ゲーム参加者だけにメッセージキャストする等で使うので、一つの変数(リスト？マップ？配列はナシ)に参加プレイヤーを格納したい
-	 *  → チーム毎も必須か 現状維持で HashMap<List,List>を使う
-	 *
-	 * WorldEdit/Guard連携、イベントワールド全域保護、試合中はステージ外への移動を禁止 → onMoveでチェックすると重そうなので使わない
-	 *
-	 * スタート時のカウントダウン
-	 *
-	 * プレイヤーログイン時の待機ゲームアナウンス
-	 *
-	 * 観戦席設置
-	 *
-	 * プレイヤーも専用クラスを作る
-	 *
-	 * 参加申請後の取り消し
-	 *
-	 * BukkitAPIメソッド呼び出しを行うメソッドではAsyncからSyncにタイマーを変更する → ただしメインスレッドに掛かる負荷も検討
-	 *
-	 * 順位表
-	 *
-	 */
-
 	// ** Logger **
 	public final static Logger log = Logger.getLogger("FlagGame");
 	public final static String logPrefix = "[FlagGame] ";
@@ -126,8 +91,6 @@ public class FlagGame extends JavaPlugin{
 	private ConfirmQueue queue;
 
 	// ** Variable **
-	// 存在するゲーム <String 一意のゲームID, Game>
-	//public HashMap<String, OldGame> games = new HashMap<String, OldGame>();
 	// プレイヤーデータベース
 	private static Database database;
 

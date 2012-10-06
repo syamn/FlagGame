@@ -1,9 +1,7 @@
 package syam.flaggame.command;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import syam.flaggame.enums.GameTeam;
 import syam.flaggame.game.Stage;

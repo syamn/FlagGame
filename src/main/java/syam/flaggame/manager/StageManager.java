@@ -6,7 +6,6 @@ package syam.flaggame.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import syam.flaggame.game.Stage;

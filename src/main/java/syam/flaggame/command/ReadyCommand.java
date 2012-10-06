@@ -1,7 +1,5 @@
 package syam.flaggame.command;
 
-import java.util.Random;
-
 import syam.flaggame.game.Game;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.GameManager;
