@@ -3,6 +3,7 @@ package syam.flaggame.listener;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -117,6 +118,10 @@ public class FGBlockListener implements Listener{
 			PlayerManager.getProfile(player.getName()).addBreak();
 			stage.getProfile().addBreak();
 
+			// エフェクト
+			loc.getWorld().createExplosion(loc, 0F, false);
+			loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+
 			return;
 		}
 
@@ -206,6 +211,10 @@ public class FGBlockListener implements Listener{
 			// 設置カウント追加
 			PlayerManager.getProfile(player.getName()).addPlace();
 			stage.getProfile().addPlace();
+
+			// エフェクト
+			loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+			loc.getWorld().playEffect(loc, Effect.SMOKE, 4, 2);
 
 			return;
 		}
