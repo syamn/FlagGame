@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import syam.flaggame.FlagGame;
 import syam.flaggame.game.Game;
-import syam.flaggame.game.Stage;
 
 public class GameManager {
 	// Logger
@@ -64,6 +63,22 @@ public class GameManager {
 
 		for (Game game : games.values()){
 			if (game.isReady()){
+				ret.add(game);
+			}
+		}
+
+		return ret;
+	}
+
+	/**
+	 * 受付中のゲームリストを返す
+	 * @return List<Stage>
+	 */
+	public static ArrayList<Game> getStartingGames(){
+		ArrayList<Game> ret = new ArrayList<Game>();
+
+		for (Game game : games.values()){
+			if (game.isStarting()){
 				ret.add(game);
 			}
 		}
