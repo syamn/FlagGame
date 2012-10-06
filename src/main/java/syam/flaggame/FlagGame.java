@@ -37,6 +37,7 @@ import syam.flaggame.command.TpCommand;
 import syam.flaggame.command.WatchCommand;
 import syam.flaggame.command.queue.ConfirmQueue;
 import syam.flaggame.database.Database;
+import syam.flaggame.enums.GameResult;
 import syam.flaggame.game.Game;
 import syam.flaggame.listener.DeathNotifierListener;
 import syam.flaggame.listener.FGBlockListener;
@@ -48,6 +49,7 @@ import syam.flaggame.manager.StageFileManager;
 import syam.flaggame.manager.StageManager;
 import syam.flaggame.permission.Perms;
 import syam.flaggame.player.PlayerManager;
+import syam.flaggame.util.Actions;
 import syam.flaggame.util.Debug;
 import syam.flaggame.util.DynmapHandler;
 import syam.flaggame.util.Metrics;
@@ -239,12 +241,20 @@ public class FlagGame extends JavaPlugin{
 	 */
 	public void onDisable(){
 		// 開始中のゲームをすべて終わらせる
+		boolean readying = false;
 		for (Game game : GameManager.getGames().values()){
 			if (game.isStarting()){
 				game.cancelTimerTask();
-				game.finish();
+				game.finish(GameResult.STOP, null, "Unloading FlagGame Plugin");
 				game.log("Game finished because disabling plugin..");
 			}
+			else if (game.isReady()){
+				game.message(msgPrefix+ "&cあなたのエントリーはプラグインが無効になったため取り消されました");
+				readying = true;
+			}
+		}
+		if (readying){
+			Actions.broadcastMessage(msgPrefix+ "プラグインが無効にされたため、参加受付中のゲームは削除されました");
 		}
 
 		// プレイヤープロファイルを保存
