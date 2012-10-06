@@ -25,6 +25,8 @@ StartCountdownInSec: 10
 DeathWhenLogout: true
 # If it true, Same teams damage will be disabled
 DisableTeamPVP: true
+# If it true, Prevent regain health on game world
+DisableRegainHealth: true
 # Lists of disabled commands during the game
 DisableCommands:
 - /spawn

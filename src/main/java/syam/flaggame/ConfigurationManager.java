@@ -48,6 +48,7 @@ public class ConfigurationManager {
 	/* Games Configs */
 	private int startCountdownInSec = new Integer(10);
 	private boolean deathWhenLogout = new Boolean(true);
+	private boolean disableRegainHP = new Boolean(true);
 	private boolean disableTeamPVP = new Boolean(true);
 	private List<String> disableCommands = defaultDisableCommands;
 	/* MySQL Configs */
@@ -101,6 +102,7 @@ public class ConfigurationManager {
 		/* Games Configs */
 		startCountdownInSec = plugin.getConfig().getInt("StartCountdownInSec", 10);
 		deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
+		disableRegainHP = plugin.getConfig().getBoolean("DisableRegainHealth", true);
 		disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
 		disableCommands = plugin.getConfig().getStringList("DisableCommands");
 		/* MySQL Configs */
@@ -154,6 +156,9 @@ public class ConfigurationManager {
 	}
 	public boolean getDeathWhenLogout(){
 		return this.deathWhenLogout;
+	}
+	public boolean getDisableRegainHP(){
+		return this.disableRegainHP;
 	}
 	public boolean getDisableTeamPVP(){
 		return this.disableTeamPVP;

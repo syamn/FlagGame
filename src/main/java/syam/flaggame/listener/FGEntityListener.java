@@ -86,16 +86,16 @@ public class FGEntityListener implements Listener{
 	// 体力が回復した
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityRegainHealth(final EntityRegainHealthEvent event){
-		Entity entity = event.getEntity();
-
 		// ゲーム用ワールドでなければ返す
-		if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
+		if (event.getEntity().getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
 			return;
 		}
 
-		// プレイヤーならイベントキャンセル
-		if (entity instanceof Player){
-			event.setCancelled(true);
+		// 設定確認、プレイヤーならイベントキャンセル
+		if (plugin.getConfigs().getDisableRegainHP()){
+			if (event.getEntity() instanceof Player){
+				event.setCancelled(true);
+			}
 		}
 	}
 }
