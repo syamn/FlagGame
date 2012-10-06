@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import syam.flaggame.FlagGame;
 import syam.flaggame.enums.GameTeam;
@@ -79,6 +80,22 @@ public class FGEntityListener implements Listener{
 
 				return;
 			}
+		}
+	}
+
+	// 体力が回復した
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onEntityRegainHealth(final EntityRegainHealthEvent event){
+		Entity entity = event.getEntity();
+
+		// ゲーム用ワールドでなければ返す
+		if (entity.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
+			return;
+		}
+
+		// プレイヤーならイベントキャンセル
+		if (entity instanceof Player){
+			event.setCancelled(true);
 		}
 	}
 }
