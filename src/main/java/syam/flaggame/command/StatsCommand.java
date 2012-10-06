@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.permission.Perms;
 import syam.flaggame.player.FGPlayer;
 import syam.flaggame.player.PlayerManager;
@@ -20,7 +21,7 @@ public class StatsCommand extends BaseCommand{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		PlayerProfile prof = null;
 		boolean other = false;
 
@@ -28,14 +29,12 @@ public class StatsCommand extends BaseCommand{
 		if (args.size() <= 0){
 			// check console
 			if (!(sender instanceof Player)){
-				Actions.message(sender, null, "&c情報を表示するユーザ名を入力してください");
-				return;
+				throw new CommandException("&c情報を表示するユーザ名を入力してください");
 			}
 
 			// check permission
 			if (!Perms.STATS_SELF.has(sender)){
-				Actions.message(sender, null, "&cあなたはこのコマンドを使う権限がありません");
-				return;
+				throw new CommandException("&cあなたはこのコマンドを使う権限がありません");
 			}
 
 			prof = PlayerManager.getProfile(player.getName());
@@ -46,8 +45,7 @@ public class StatsCommand extends BaseCommand{
 
 			// check permission
 			if (!Perms.STATS_OTHER.has(sender)){
-				Actions.message(sender, null, "&cあなたは他人の情報を見る権限がありません");
-				return;
+				throw new CommandException("&cあなたは他人の情報を見る権限がありません");
 			}
 
 			FGPlayer fgPlayer = PlayerManager.getPlayer(args.get(0));
@@ -61,16 +59,14 @@ public class StatsCommand extends BaseCommand{
 				prof = new PlayerProfile(args.get(0), false);
 
 				if (!prof.isLoaded()){
-					Actions.message(sender, null, "&c指定したプレイヤーの情報が見つかりません");
-					return;
+					throw new CommandException("&c指定したプレイヤーの情報が見つかりません");
 				}
 			}
 		}
 
 		// check null
 		if (prof == null){
-			Actions.message(sender, null, "&cプレイヤー情報が正しく読み込めませんでした");
-			return;
+			throw new CommandException("&cプレイヤー情報が正しく読み込めませんでした");
 		}
 
 		// メッセージ送信

@@ -4,6 +4,7 @@
  */
 package syam.flaggame.command;
 
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.util.Actions;
 
 /**
@@ -19,10 +20,10 @@ public class ConfirmCommand extends BaseCommand {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		boolean ran = this.plugin.getQueue().confirmQueue(sender);
 		if (!ran){
-			Actions.message(sender, null, "&cあなたの実行待ちコマンドはありません！");
+			throw new CommandException("&cあなたの実行待ちコマンドはありません！");
 		}
 	}
 

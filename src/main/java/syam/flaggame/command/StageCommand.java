@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import syam.flaggame.command.queue.Queueable;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.SetupManager;
 import syam.flaggame.manager.StageManager;
@@ -29,7 +30,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		// サブ引数なし
 		if (args.size() <= 0){
 			sendAvailableAction();
@@ -71,22 +72,19 @@ public class StageCommand extends BaseCommand implements Queueable{
 
 	/* ***** ここから各アクション関数 ****************************** */
 
-	private void create(){
+	private void create() throws CommandException{
 		if (args.size() <= 1){
-			Actions.message(sender, null, "&cステージ名を指定してください！");
-			return;
+			throw new CommandException("&cステージ名を指定してください！");
 		}
 
 		// random拒否
 		if(args.get(1).equalsIgnoreCase("random") || args.get(1).startsWith("-")){
-			Actions.message(sender, null, "&cこのステージ名は使用できません！");
-			return;
+			throw new CommandException("&cこのステージ名は使用できません！");
 		}
 
 		Stage stage = StageManager.getStage(args.get(1));
 		if (stage != null){
-			Actions.message(sender, null, "&cそのステージ名は既に存在します！");
-			return;
+			throw new CommandException("&cそのステージ名は既に存在します！");
 		}
 
 		// 新規ゲーム登録
@@ -101,20 +99,17 @@ public class StageCommand extends BaseCommand implements Queueable{
 		Actions.message(sender, null, "&a新規ステージ'"+stage.getName()+"'を登録して選択しました！");
 	}
 
-	private void delete(){
+	private void delete() throws CommandException{
 		if (args.size() <= 1){
-			Actions.message(sender, null, "&cステージ名を入力してください！");
-			return;
+			throw new CommandException("&cステージ名を入力してください！");
 		}
 		Stage stage = StageManager.getStage(args.get(1));
 		if (stage == null){
-			Actions.message(sender, null, "&cその名前のステージは存在しません！");
-			return;
+			throw new CommandException("&cその名前のステージは存在しません！");
 		}
 
 		if (stage.isUsing()){
-			Actions.message(sender, null, "&cそのステージは現在受付中または開始中のため削除できません");
-			return;
+			throw new CommandException("&cそのステージは現在受付中または開始中のため削除できません");
 		}
 
 		// confirmキュー追加
@@ -124,10 +119,9 @@ public class StageCommand extends BaseCommand implements Queueable{
 		Actions.message(sender, null, "&a/flag confirm &dコマンドは10秒間のみ有効です。");
 	}
 
-	private void rollback(){
+	private void rollback() throws CommandException{
 		if (args.size() <= 1){
-			Actions.message(sender, null, "&cステージ名または -all を指定してください！");
-			return;
+			throw new CommandException("&cステージ名または -all を指定してください！");
 		}
 		boolean all = false;
 		if (args.get(1).equalsIgnoreCase("-all")){
@@ -137,13 +131,11 @@ public class StageCommand extends BaseCommand implements Queueable{
 		if (!all){
 			Stage stage = StageManager.getStage(args.get(1));
 			if (stage == null){
-				Actions.message(sender, null, "&cその名前のステージは存在しません！");
-				return;
+				throw new CommandException("&cその名前のステージは存在しません！");
 			}
 
 			if (stage.isUsing()){
-				Actions.message(sender, null, "&cそのステージは現在使用中のためロールバックできません！");
-				return;
+				throw new CommandException("&cそのステージは現在使用中のためロールバックできません！");
 			}
 
 			// ステージロールバック

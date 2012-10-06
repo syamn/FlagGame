@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import syam.flaggame.enums.GameTeam;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.StageManager;
 import syam.flaggame.permission.Perms;
@@ -18,7 +19,7 @@ public class InfoCommand extends BaseCommand {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		// 引数が無ければすべてのステージデータを表示する
 		if (args.size() == 0){
 			int stagecount = StageManager.getStages().size();
@@ -53,8 +54,7 @@ public class InfoCommand extends BaseCommand {
 		else {
 			Stage stage = StageManager.getStage(args.get(0));
 			if (stage == null){
-				Actions.message(sender, null, "&cそのゲーム名は存在しません！");
-				return;
+				throw new CommandException("&cそのステージは存在しません！");
 			}
 
 			Actions.message(sender, null, "&a ==================&b GameDetail &a==================");

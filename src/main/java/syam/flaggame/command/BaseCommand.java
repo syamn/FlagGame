@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import syam.flaggame.FlagGame;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.util.Actions;
 
 public abstract class BaseCommand {
@@ -64,15 +65,25 @@ public abstract class BaseCommand {
 		}
 
 		// 実行
-		execute();
+		try {
+			execute();
+		}
+		catch (CommandException ex) {
+			Throwable error = ex;
+			while (error instanceof CommandException){
+				Actions.message(sender, null, error.getMessage());
+				error = error.getCause();
+			}
+		}
 		return true;
 	}
 
 	/**
 	 * コマンドを実際に実行する
 	 * @return 成功すればtrue それ以外はfalse
+	 * @throws CommandException
 	 */
-	public abstract void execute();
+	public abstract void execute() throws CommandException;
 
 	/**
 	 * コマンド実行に必要な権限を持っているか検証する

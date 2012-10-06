@@ -3,6 +3,7 @@ package syam.flaggame.command;
 import java.util.ArrayList;
 import java.util.Set;
 
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Game;
 import syam.flaggame.manager.GameManager;
 import syam.flaggame.manager.StageManager;
@@ -18,7 +19,7 @@ public class StartCommand extends BaseCommand{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		Game game = null;
 
 		// 引数があれば指定したステージを開始
@@ -27,8 +28,7 @@ public class StartCommand extends BaseCommand{
 				// ランダムステージ
 				game = GameManager.getRandomGame();
 				if (game == null || !game.isReady()){
-					Actions.message(sender, null, "&c参加受付状態のランダムステージはありません！");
-					return;
+					throw new CommandException("&c参加受付状態のランダムステージはありません！");
 				}
 			}else{
 				game = GameManager.getGame(args.get(0));
@@ -38,11 +38,9 @@ public class StartCommand extends BaseCommand{
 		else{
 			ArrayList<Game> readyingGames = GameManager.getReadyingGames();
 			if (readyingGames.size() <= 0){
-				Actions.message(null, player, "&c現在受付中のゲームはありません！");
-				return;
+				throw new CommandException("&c現在受付中のゲームはありません！");
 			}else if (readyingGames.size() >= 2){
-				Actions.message(null, player, "&c複数のゲームが受付中です！開始するステージを指定してください！");
-				return;
+				throw new CommandException("&c複数のゲームが受付中です！開始するステージを指定してください！");
 			}
 			// 受付中のステージが1つのみなら自動補完
 			else{
@@ -53,17 +51,15 @@ public class StartCommand extends BaseCommand{
 		if (game == null || !game.isReady()){
 			// そのステージが本当にあるかチェック
 			if (StageManager.getStage(args.get(0)) == null){
-				Actions.message(sender, null, "&cステージ'"+args.get(0)+"'が見つかりません");
+				throw new CommandException("&cステージ'"+args.get(0)+"'が見つかりません");
 			}else{
-				Actions.message(sender, null, "&cステージ'"+args.get(0)+"'は参加受付状態ではありません");
+				throw new CommandException("&cステージ'"+args.get(0)+"'は参加受付状態ではありません");
 			}
-			return;
 		}
 
 		for (Set<String> teamSet : game.getPlayersMap().values()){
 			if (teamSet.size() <= 0){
-				Actions.message(sender, null, "&cプレイヤーが参加していないチームがあります");
-				return;
+				throw new CommandException("&cプレイヤーが参加していないチームがあります");
 			}
 		}
 

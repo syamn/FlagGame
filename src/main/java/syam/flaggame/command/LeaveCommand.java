@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import syam.flaggame.command.queue.Queueable;
 import syam.flaggame.enums.GameResult;
 import syam.flaggame.enums.GameTeam;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Game;
 import syam.flaggame.manager.GameManager;
 import syam.flaggame.permission.Perms;
@@ -30,7 +31,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		// 参加しているゲームを取得する
 		Game game = null;
 		GameTeam team = null;
@@ -48,8 +49,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 		if (game == null){
 			// check permission
 			if (!Perms.LEAVE_SPECTATE.has(sender)){
-				Actions.message(sender, null, "&cあなたはゲームに参加していません");
-				return;
+				throw new CommandException("&cあなたはゲームに参加していません");
 			}
 
 			// ゲームワールド内
@@ -58,7 +58,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 			}
 			// 別ワールド
 			else{
-				Actions.message(null, player, "&cこのゲームワールド外からこのコマンドを使うことはできません！");
+				throw new CommandException("&cこのゲームワールド外からこのコマンドを使うことはできません！");
 			}
 		}
 		// ゲームに参加しているプレイヤー
@@ -67,8 +67,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 			if (game.isStarting()){
 				// check permission
 				if (!Perms.LEAVE_GAME.has(sender)){
-					Actions.message(sender, null, "&cゲームを途中退場する権限がありません");
-					return;
+					throw new CommandException("&cゲームを途中退場する権限がありません");
 				}
 
 				// confirmキュー追加
@@ -81,8 +80,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 			else if (game.isReady()){
 				// check permission
 				if (!Perms.LEAVE_READY.has(sender)){
-					Actions.message(sender, null, "&cゲームのエントリーを取り消す権限がありません");
-					return;
+					throw new CommandException("&cゲームのエントリーを取り消す権限がありません");
 				}
 				// プレイヤーリストから削除
 				game.remPlayer(player, team);

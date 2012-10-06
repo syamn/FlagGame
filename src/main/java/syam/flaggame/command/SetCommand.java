@@ -11,6 +11,7 @@ import syam.flaggame.enums.FlagType;
 import syam.flaggame.enums.GameTeam;
 import syam.flaggame.enums.config.ConfigType;
 import syam.flaggame.enums.config.Configables;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.SetupManager;
 import syam.flaggame.permission.Perms;
@@ -32,9 +33,10 @@ public class SetCommand extends BaseCommand {
 
 	/**
 	 * コマンド実行時に呼ばれる
+	 * @throws CommandException
 	 */
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		// flag set のみ (サブ引数なし)
 		if (args.size() <= 0){
 			if (SetupManager.getManager(player) != null){
@@ -52,8 +54,7 @@ public class SetCommand extends BaseCommand {
 		// ゲーム取得
 		Stage stage = SetupManager.getSelectedStage(player);
 		if (stage == null){
-			Actions.message(null, player, "&c先に編集するゲームを選択してください");
-			return;
+			throw new CommandException("&c先に編集するゲームを選択してください");
 		}
 
 		// 開始中でないかチェック
@@ -79,8 +80,7 @@ public class SetCommand extends BaseCommand {
 		// 設定タイプが ConfigType.SIMPLE の場合はサブ引数が2つ以上必要
 		if (conf.getConfigType() == ConfigType.SIMPLE){
 			if (args.size() < 2){
-				Actions.message(sender, null, "&c引数が足りません！ 設定する値を入力してください！");
-				return;
+				throw new CommandException("&c引数が足りません！ 設定する値を入力してください！");
 			}
 		}
 
@@ -125,7 +125,7 @@ public class SetCommand extends BaseCommand {
 	/* ***** ここから各設定関数 ****************************** */
 
 	// 一般
-	private void setStage(Stage game){
+	private void setStage(Stage game) throws CommandException{
 		// WorldEdit選択領域取得
 		Block[] corners = WorldEditHandler.getWorldEditRegion(player);
 		// エラー プレイヤーへのメッセージ送信はWorldEditHandlerクラスで処理
@@ -136,8 +136,7 @@ public class SetCommand extends BaseCommand {
 
 		// ワールドチェック
 		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
-			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
-			return;
+			throw new CommandException("&c指定しているエリアはゲームワールドではありません！");
 		}
 
 		// ステージ設定
@@ -150,12 +149,12 @@ public class SetCommand extends BaseCommand {
 	 * 拠点エリア設定
 	 * @param game
 	 * @return true
+	 * @throws CommandException
 	 */
-	private void setBase(Stage game){
+	private void setBase(Stage game) throws CommandException{
 		// 引数チェック
 		if (args.size() < 2){
-			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
-			return;
+			throw new CommandException("&c引数が足りません！設定するチームを指定してください！");
 		}
 
 		// チーム取得
@@ -167,8 +166,7 @@ public class SetCommand extends BaseCommand {
 			}
 		}
 		if (team == null){
-			Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
-			return;
+			throw new CommandException("&cチーム'"+args.get(1)+"'が見つかりません！");
 		}
 
 		// WorldEdit選択領域取得
@@ -181,8 +179,7 @@ public class SetCommand extends BaseCommand {
 
 		// ワールドチェック
 		if (block1.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
-			Actions.message(null, player, "&c指定しているエリアはゲームワールドではありません！");
-			return;
+			throw new CommandException("&c指定しているエリアはゲームワールドではありません！");
 		}
 
 		// 拠点設定
@@ -195,12 +192,12 @@ public class SetCommand extends BaseCommand {
 	 * スポーン地点設定
 	 * @param game
 	 * @return true
+	 * @throws CommandException
 	 */
-	private void setSpawn(Stage game){
+	private void setSpawn(Stage game) throws CommandException{
 		// 引数チェック
 		if (args.size() < 2){
-			Actions.message(sender, null, "&c引数が足りません！設定するチームを指定してください！");
-			return;
+			throw new CommandException("&c引数が足りません！設定するチームを指定してください！");
 		}
 
 		// チーム取得
@@ -212,8 +209,7 @@ public class SetCommand extends BaseCommand {
 			}
 		}
 		if (team == null){
-			Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
-			return;
+			throw new CommandException("&cチーム'"+args.get(1)+"'が見つかりません！");
 		}
 
 		// スポーン地点設定
@@ -226,12 +222,12 @@ public class SetCommand extends BaseCommand {
 	 * フラッグ管理モード
 	 * @param game
 	 * @return true
+	 * @throws CommandException
 	 */
-	private void setFlag(Stage game){
+	private void setFlag(Stage game) throws CommandException{
 		// 引数チェック
 		if (args.size() < 2){
-			Actions.message(sender, null, "&c引数が足りません！フラッグの種類を指定してください！");
-			return;
+			throw new CommandException("&c引数が足りません！フラッグの種類を指定してください！");
 		}
 
 		// フラッグタイプチェック
@@ -241,8 +237,7 @@ public class SetCommand extends BaseCommand {
 				type = ft;
 		}
 		if (type == null){
-			Actions.message(null, player, "&cフラッグの種類を正しく指定してください！");
-			return;
+			throw new CommandException("&cフラッグの種類を正しく指定してください！");
 		}
 
 		// マネージャーセット
@@ -276,18 +271,16 @@ public class SetCommand extends BaseCommand {
 	}
 
 	// オプション
-	private void setGameTime(Stage game){
+	private void setGameTime(Stage game) throws CommandException{
 		int num = 60 * 10; // デフォルト10分
 		try{
 			num = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
-			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return;
+			throw new CommandException("&cオプションの値が整数ではありません！");
 		}
 
 		if (num <= 0){
-			Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
-			return;
+			throw new CommandException("&c値が不正です！正数を入力してください！");
 		}
 		game.setGameTime(num);
 
@@ -295,18 +288,16 @@ public class SetCommand extends BaseCommand {
 		if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
 		Actions.message(sender, null, "&aステージ'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
 	}
-	private void setTeamLimit(Stage game){
+	private void setTeamLimit(Stage game) throws CommandException{
 		int cnt = 8; // デフォルト8人
 		try{
 			cnt = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
-			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return;
+			throw new CommandException("&cオプションの値が整数ではありません！");
 		}
 
 		if (cnt <= 0){
-			Actions.message(sender, null, "&c値が不正です！正数を入力してください！");
-			return;
+			throw new CommandException("&c値が不正です！正数を入力してください！");
 		}
 
 		game.setTeamLimit(cnt);
@@ -314,17 +305,15 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aステージ'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setAward(Stage game){
+	private void setAward(Stage game) throws CommandException{
 		int award = 300; // デフォルト300コイン
 		try{
 			award = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
-			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return;
+			throw new CommandException("&cオプションの値が整数ではありません！");
 		}
 		if (award < 0){
-			Actions.message(sender, null, "&c値が不正です！負数は指定できません！");
-			return;
+			throw new CommandException("&c値が不正です！負数は指定できません！");
 		}
 
 		game.setAward(award);
@@ -332,24 +321,22 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aステージ'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setEntryFee(Stage game){
+	private void setEntryFee(Stage game) throws CommandException{
 		int entryfee = 100; // デフォルト100コイン
 		try{
 			entryfee = Integer.parseInt(args.get(1));
 		}catch(NumberFormatException ex){
-			Actions.message(sender, null, "&cオプションの値が整数ではありません！");
-			return;
+			throw new CommandException("&cオプションの値が整数ではありません！");
 		}
 		if (entryfee < 0){
-			Actions.message(sender, null, "&c値が不正です！負数は指定できません！");
-			return;
+			throw new CommandException("&c値が不正です！負数は指定できません！");
 		}
 
 		game.setEntryFee(entryfee);
 		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
-	private void setStageProtect(Stage stage){
+	private void setStageProtect(Stage stage) throws CommandException{
 		Boolean protect = true; // デフォルトtrue
 		String value = args.get(1).trim();
 
@@ -358,8 +345,7 @@ public class SetCommand extends BaseCommand {
 		}else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("no")){
 			protect = false;
 		}else{
-			Actions.message(sender, null, "&c値が不正です！true または false を指定してください！");
-			return;
+			throw new CommandException("&c値が不正です！true または false を指定してください！");
 		}
 
 		String result = "&a有効";
@@ -369,7 +355,7 @@ public class SetCommand extends BaseCommand {
 		Actions.message(sender, null, "&aステージ'"+stage.getName()+"'の保護は "+result+" &aに設定されました！");
 		plugin.getDynmap().updateRegion(stage);
 	}
-	private void setStageAvailable(Stage stage){
+	private void setStageAvailable(Stage stage) throws CommandException{
 		Boolean available = true; // デフォルトtrue
 		String value = args.get(1).trim();
 
@@ -378,8 +364,7 @@ public class SetCommand extends BaseCommand {
 		}else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("no")){
 			available = false;
 		}else{
-			Actions.message(sender, null, "&c値が不正です！true または false を指定してください！");
-			return;
+			throw new CommandException("&c値が不正です！true または false を指定してください！");
 		}
 
 		// TODO:ステージを有効化するときは、ステージが開始出来る状態かチェックする

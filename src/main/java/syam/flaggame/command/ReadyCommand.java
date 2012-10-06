@@ -1,5 +1,6 @@
 package syam.flaggame.command;
 
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Game;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.GameManager;
@@ -16,11 +17,10 @@ public class ReadyCommand extends BaseCommand {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		// flag ready - ゲームを開始準備中にする
 		if (args.size() == 0){
-			Actions.message(sender, null, "&cステージ名を入力してください！");
-			return;
+			throw new CommandException("&cステージ名を入力してください！");
 		}
 
 		Stage stage = null;
@@ -30,8 +30,7 @@ public class ReadyCommand extends BaseCommand {
 		if (args.get(0).equalsIgnoreCase("random")){
 			if(GameManager.getRandomGame() != null){
 				if (GameManager.getRandomGame().isReady()){
-					Actions.message(sender, null, "&c現在既にランダムステージが参加受付中です");
-					return;
+					throw new CommandException("&c現在、既にランダムステージが参加受付中です");
 				}else{
 					GameManager.setRandomGame(null);
 				}
@@ -46,40 +45,35 @@ public class ReadyCommand extends BaseCommand {
 		}
 
 		if (stage == null){
-			Actions.message(sender, null, "&cステージ'"+args.get(0)+"'が見つかりません");
-			return;
+			throw new CommandException("&cステージ'"+args.get(0)+"'が見つかりません");
 		}
 
 		// ** ステージチェック **
 		if (!stage.isAvailable()){
-			Actions.message(sender, null, "&cステージ'"+stage.getName()+"'は現在使えません");
-			return;
+			throw new CommandException("&cステージ'"+stage.getName()+"'は現在使えません");
 		}
 
 		if (stage.isUsing()){
 			if (stage.getGame() == null){
-				Actions.message(sender, null, "&cステージ'"+stage.getName()+"'は現在使用中です");
+				throw new CommandException("&cステージ'"+stage.getName()+"'は現在使用中です");
 			}else{
 				if (stage.getGame().isStarting()){
-					Actions.message(sender, null, "&cこのゲームは既に始まっています");
+					throw new CommandException("&cこのゲームは既に始まっています");
 				}
 				else if (stage.getGame().isReady()){
-					Actions.message(sender, null, "&cこのゲームは既に参加受付中です");
+					throw new CommandException("&cこのゲームは既に参加受付中です");
 				}
 			}
-			return;
 		}
 
 		// ステージエリアチェック
 		if (stage.getStage() == null){
-			Actions.message(sender, null, "&cステージエリアが正しく設定されていません");
-			return;
+			throw new CommandException("&cステージエリアが正しく設定されていません");
 		}
 
 		// スポーン地点チェック
 		if (stage.getSpawns().size() != 2){
-			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
-			return;
+			throw new CommandException("&cチームスポーン地点が正しく設定されていません");
 		}
 
 		// ready

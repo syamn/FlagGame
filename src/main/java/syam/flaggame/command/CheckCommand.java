@@ -9,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 
 import syam.flaggame.enums.GameTeam;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.StageManager;
 import syam.flaggame.permission.Perms;
@@ -23,16 +24,14 @@ public class CheckCommand extends BaseCommand{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		Stage stage = StageManager.getStage(args.get(0));
 		if (stage == null){
-			Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません");
-			return;
+			throw new CommandException("&cステージ'"+args.get(0)+"'が見つかりません");
 		}
 
 		if (stage.isUsing()){
-			Actions.message(null, player, "&cステージ'"+args.get(0)+"'は既に使われています！");
-			return;
+			throw new CommandException("&cステージ'"+args.get(0)+"'は既に使われています！");
 		}
 
 		// 設定状況をチェックする

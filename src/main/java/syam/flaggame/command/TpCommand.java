@@ -3,6 +3,7 @@ package syam.flaggame.command;
 import org.bukkit.Location;
 
 import syam.flaggame.enums.GameTeam;
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.SetupManager;
 import syam.flaggame.manager.StageManager;
@@ -18,11 +19,10 @@ public class TpCommand extends BaseCommand{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		if (args.get(0).equalsIgnoreCase("spawn")){
 			if (args.size() < 2){
-				Actions.message(null, player, "&c引数が足りません！");
-				return;
+				throw new CommandException("&c引数が足りません！");
 			}
 			// ゲーム取得
 			Stage stage = null;
@@ -36,8 +36,7 @@ public class TpCommand extends BaseCommand{
 
 			// それも無ければエラーを返す
 			if (stage == null){
-				Actions.message(null, player, "&c先にゲームを選択してください");
-				return;
+				throw new CommandException("&c先にゲームを選択してください");
 			}
 
 			// チーム取得
@@ -47,25 +46,22 @@ public class TpCommand extends BaseCommand{
 				{	team = tm; break;	}
 			}
 			if (team == null){
-				Actions.message(null, player, "&cチーム'"+args.get(1)+"'が見つかりません！");
-				return;
+				throw new CommandException("&cチーム'"+args.get(1)+"'が見つかりません！");
 			}
 
 			Location loc = stage.getSpawn(team);
 
 			if (loc == null){
-				Actions.message(null, player, "&c"+team.getTeamName()+"チームのスポーン地点は未設定です！");
-				return;
+				throw new CommandException("&c"+team.getTeamName()+"チームのスポーン地点は未設定です！");
 			}
 
 			// テレポート
 			player.teleport(loc);
 			Actions.message(null, player, "&a"+team.getTeamName()+"チームのスポーン地点にテレポートしました！");
-			return;
 		}
-
-		Actions.message(null, player, "&cそのエリアは未定義です");
-		return;
+		else{
+			Actions.message(null, player, "&cそのエリアは未定義です");
+		}
 	}
 
 	@Override

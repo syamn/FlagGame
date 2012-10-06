@@ -1,5 +1,6 @@
 package syam.flaggame.command;
 
+import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.SetupManager;
 import syam.flaggame.manager.StageManager;
@@ -17,7 +18,7 @@ public class SelectCommand extends BaseCommand {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws CommandException {
 		if (args.size() >= 1){
 			// flag select (ステージ名) - 選択
 			Stage stage = StageManager.getStage(args.get(0));
@@ -35,8 +36,7 @@ public class SelectCommand extends BaseCommand {
 					Actions.message(null, player, msg);
 				}
 			}else{
-				Actions.message(null, player, "&cステージ'"+args.get(0)+"'が見つかりません！");
-				return;
+				throw new CommandException("&cステージ'"+args.get(0)+"'が見つかりません！");
 			}
 		}else{
 			// flag select - 選択解除
