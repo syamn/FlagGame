@@ -90,6 +90,7 @@ public class FGBlockListener implements Listener{
 			GameTeam pTeam = game.getPlayerTeam(player);
 			if (pTeam == null){
 				Actions.message(null, player, "&cあなたはこのゲームに参加していません！");
+				event.setCancelled(true);
 				return;
 			}
 
@@ -191,6 +192,7 @@ public class FGBlockListener implements Listener{
 			GameTeam pTeam = game.getPlayerTeam(player);
 			if (pTeam == null){
 				Actions.message(null, player, "&cあなたはこのゲームに参加していません！");
+				event.setCancelled(true);
 				return;
 			}
 			GameTeam bTeam = null;

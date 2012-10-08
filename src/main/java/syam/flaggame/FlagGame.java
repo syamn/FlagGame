@@ -217,7 +217,7 @@ public class FlagGame extends JavaPlugin{
 			}
 		}
 		if (readying){
-			Actions.broadcastMessage(msgPrefix+ "プラグインが無効にされたため、参加受付中のゲームは削除されました");
+			Actions.broadcastMessage(msgPrefix+ "&cプラグインが無効にされたため、参加受付中のゲームは削除されました");
 		}
 
 		// プレイヤープロファイルを保存
