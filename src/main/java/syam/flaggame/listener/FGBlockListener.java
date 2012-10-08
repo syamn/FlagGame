@@ -84,10 +84,15 @@ public class FGBlockListener implements Listener{
 
 			Game game = stage.getGame();
 
-			/* フラッグが壊された */
+			/* ゲーム中のステージでフラッグが壊された */
 
 			// プレイヤーと壊されたブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
+			if (pTeam == null){
+				Actions.message(null, player, "&cあなたはこのゲームに参加していません！");
+				return;
+			}
+
 			GameTeam bTeam = null;
 			int id = block.getTypeId();
 			byte data = block.getData();
@@ -180,10 +185,14 @@ public class FGBlockListener implements Listener{
 
 			Game game = stage.getGame();
 
-			/* フラッグを設置した */
+			/* ゲーム中のステージでフラッグを設置した */
 
 			// プレイヤーと設置したブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
+			if (pTeam == null){
+				Actions.message(null, player, "&cあなたはこのゲームに参加していません！");
+				return;
+			}
 			GameTeam bTeam = null;
 			int id = block.getTypeId();
 			byte data = block.getData();
