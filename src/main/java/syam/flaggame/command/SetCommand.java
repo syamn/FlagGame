@@ -112,7 +112,7 @@ public class SetCommand extends BaseCommand {
 			case PROTECT: // ステージ保護
 				setStageProtect(stage); return;
 			case AVAILABLE: // 有効設定
-				setStageAvailable(stage);
+				setStageAvailable(stage); return;
 
 			// 定義漏れ
 			default:
