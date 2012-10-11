@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemStack;
 
 import syam.flaggame.FlagGame;
@@ -39,7 +40,7 @@ public class FGInventoryListener implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onInventoryClick(final InventoryClickEvent event){
 		// getSlot() == 39: 装備(頭)インベントリ
-		if (event.getSlot() != 39){
+		if (event.getSlotType() != SlotType.ARMOR || event.getSlot() != 39){
 			return;
 		}
 
