@@ -36,13 +36,13 @@ public class QueuedCommand {
 		// タイムアウトチェック
 		this.requestDate.add(13, this.timeoutSec);
 		if (!this.requestDate.after(Calendar.getInstance())){
-			Actions.message(sender, null, "&cこのコマンドは時間切れです！元のコマンドをもう一度入力してください！");
+			Actions.message(sender, "&cこのコマンドは時間切れです！元のコマンドをもう一度入力してください！");
 			return;
 		}
 
 		// 多重進入防止
 		if (already){
-			Actions.message(sender, null, "&cこのコマンドは既に実行されています！再度実行するには元のコマンドから入力し直してください！");
+			Actions.message(sender, "&cこのコマンドは既に実行されています！再度実行するには元のコマンドから入力し直してください！");
 			return;
 		}
 		already = true;

@@ -43,7 +43,7 @@ public class WorldEditHandler{
 		// プラグインが見つからない
 		if (plugin == null){
 			if (bPlayer != null && bPlayer.isOnline())
-				Actions.message(null, bPlayer, msgPrefix+ "&cWorldEdit is not loaded!");
+				Actions.message(bPlayer, msgPrefix+ "&cWorldEdit is not loaded!");
 			return null;
 		}
 
@@ -78,7 +78,7 @@ public class WorldEditHandler{
 
 		// セレクタが立方体セレクタか判定
 		if (!(session.getRegionSelector() instanceof CuboidRegionSelector)){
-			Actions.message(null, bPlayer, msgPrefix+ "&cFlagGame supports only cuboid regions!");
+			Actions.message(bPlayer, msgPrefix+ "&cFlagGame supports only cuboid regions!");
 			return null;
 		}
 
@@ -100,7 +100,7 @@ public class WorldEditHandler{
 			return corners;
 		}catch (IncompleteRegionException ex){
 			// 正しく領域が選択されていない例外
-			Actions.message(null, bPlayer, msgPrefix+ "&cWorldEdit region is not fully selected!");
+			Actions.message(bPlayer, msgPrefix+ "&cWorldEdit region is not fully selected!");
 		}
 		catch (Exception ex){
 			// その他一般例外

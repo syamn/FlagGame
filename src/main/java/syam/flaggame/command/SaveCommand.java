@@ -20,7 +20,7 @@ public class SaveCommand extends BaseCommand{
 		StageManager.saveAll();
 		PlayerManager.saveAll();
 
-		Actions.message(sender, null, "&aStages/Players Saved!");
+		Actions.message(sender, "&aStages/Players Saved!");
 	}
 
 	@Override

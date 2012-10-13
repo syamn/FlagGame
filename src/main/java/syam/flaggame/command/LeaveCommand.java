@@ -72,9 +72,9 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 
 				// confirmキュー追加
 				plugin.getQueue().addQueue(sender, this, args, 15);
-				Actions.message(sender, null, "&d途中退場回数は記録されます。本当にこのゲームを途中退場しますか？");
-				Actions.message(sender, null, "&d退場するには &a/flag confirm &dコマンドを入力してください。");
-				Actions.message(sender, null, "&a/flag confirm &dコマンドは15秒間のみ有効です。");
+				Actions.message(sender, "&d途中退場回数は記録されます。本当にこのゲームを途中退場しますか？");
+				Actions.message(sender, "&d退場するには &a/flag confirm &dコマンドを入力してください。");
+				Actions.message(sender, "&a/flag confirm &dコマンドは15秒間のみ有効です。");
 			}
 			// ゲーム待機中
 			else if (game.isReady()){
@@ -89,11 +89,11 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 				if (game.isRandom() && game.isReady()) stageName = "ランダムステージ";
 				Actions.broadcastMessage(msgPrefix+ "&a'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+stageName+"&a'のエントリーを取り消しました！");
 
-				Actions.message(null, player, "&aゲーム'"+stageName+"'の参加申請を取り消しました！");
+				Actions.message(player, "&aゲーム'"+stageName+"'の参加申請を取り消しました！");
 			}
 			// 例外
 			else{
-				Actions.message(null, player, "&c内部エラー: LeaveCommand.class");
+				Actions.message(player, "&c内部エラー: LeaveCommand.class");
 				log.warning(logPrefix+ "Internal Exception on LeaveCommand.class, Please report this.");
 			}
 		}
@@ -115,7 +115,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 			}
 		}
 		if (game == null || !game.isStarting()){
-			Actions.message(sender, null, "&c既にゲームは終了しています！");
+			Actions.message(sender, "&c既にゲームは終了しています！");
 			return;
 		}
 
@@ -135,7 +135,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 		player.teleport(tpLoc, TeleportCause.PLUGIN);
 
 		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"&a'から途中退場しました！");
-		Actions.message(null, player, "&aゲーム'"+game.getName()+"'から抜けました！");
+		Actions.message(player, "&aゲーム'"+game.getName()+"'から抜けました！");
 
 		// exit++
 		PlayerManager.getProfile(player.getName()).addExit();
@@ -162,11 +162,11 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 			player.teleport(loc, TeleportCause.PLUGIN);
 			prof.setTpBackLocation(null);
 
-			Actions.message(null, player, "&aテレポートしました！");
+			Actions.message(player, "&aテレポートしました！");
 		}else{
 			player.teleport(def, TeleportCause.PLUGIN);
 
-			Actions.message(null, player, "&aゲームワールドのスポーン地点に戻りました！");
+			Actions.message(player, "&aゲームワールドのスポーン地点に戻りました！");
 		}
 	}
 

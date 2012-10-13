@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permissible;
 
 import syam.flaggame.FlagGame;
 
@@ -46,17 +47,16 @@ public class Actions {
 	 * @param player Player (null可)l
 	 * @param message メッセージ
 	 */
-	public static void message(CommandSender sender, Player player, String message){
-		if (message != null){
-			message = message
-					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
-					.replaceAll("%version", FlagGame.getInstance().getDescription().getVersion());
-			if (player != null){
-				player.sendMessage(message);
-			}
-			else if (sender != null){
-				sender.sendMessage(message);
-			}
+	public static void message(CommandSender sender, String message){
+		if (message != null && sender != null){
+			message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			sender.sendMessage(message);
+		}
+	}
+	public static void message(Player player, String message){
+		if (message != null && player != null){
+			message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			player.sendMessage(message);
 		}
 	}
 
@@ -66,9 +66,7 @@ public class Actions {
 	 */
 	public static void broadcastMessage(String message){
 		if (message != null){
-			message = message
-					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
-					.replaceAll("%version", FlagGame.getInstance().getDescription().getVersion());
+			message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 			//debug(message);//debug
 			Bukkit.broadcastMessage(message);
 		}
@@ -80,9 +78,7 @@ public class Actions {
 	 */
 	public static void worldcastMessage(World world, String message){
 		if (world != null && message != null){
-			message = message
-					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
-					.replaceAll("%version", FlagGame.getInstance().getDescription().getVersion());
+			message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 			for(Player player: world.getPlayers()){
 				player.sendMessage(message);
 			}
@@ -95,18 +91,13 @@ public class Actions {
 	 * @param message メッセージ
 	 */
 	public static void permcastMessage(String permission, String message){
-		// 動かなかった どうして？
-		//int i = Bukkit.getServer().broadcast(message, permission);
-
-		// OK
 		int i = 0;
 		for (Player player : Bukkit.getServer().getOnlinePlayers()){
 			if (player.hasPermission(permission)){
-				Actions.message(null, player, message);
+				Actions.message(player, message);
 				i++;
 			}
 		}
-
 		log.info("Received "+i+"players: "+message);
 	}
 
@@ -120,16 +111,16 @@ public class Actions {
 	 * @return
 	 */
 	public static String combine(String[] s, String glue)
-    {
-      int k = s.length;
-      if (k == 0){ return null; }
-      StringBuilder out = new StringBuilder();
-      out.append(s[0]);
-      for (int x = 1; x < k; x++){
-        out.append(glue).append(s[x]);
-      }
-      return out.toString();
-    }
+	{
+		int k = s.length;
+		if (k == 0){ return null; }
+		StringBuilder out = new StringBuilder();
+		out.append(s[0]);
+		for (int x = 1; x < k; x++){
+			out.append(glue).append(s[x]);
+		}
+		return out.toString();
+	}
 	/**
 	 * コマンドをコンソールから実行する
 	 * @param command
@@ -181,7 +172,7 @@ public class Actions {
 	public static void debug(String msg){
 		OfflinePlayer syamn = Bukkit.getServer().getOfflinePlayer("syamn");
 		if (syamn.isOnline()){
-			Actions.message(null, (Player) syamn, msg);
+			Actions.message((Player) syamn, msg);
 		}
 	}
 

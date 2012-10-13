@@ -64,7 +64,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 
 			// 定義漏れ
 			default:
-				Actions.message(sender, null, "&アクションが不正です 開発者にご連絡ください");
+				Actions.message(sender, "&アクションが不正です 開発者にご連絡ください");
 				log.warning(logPrefix+ "Undefined action: "+action.name()+"! Please report this!");
 				break;
 		}
@@ -96,7 +96,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 		plugin.getDynmap().updateRegions();
 		plugin.getFileManager().saveStages();
 
-		Actions.message(sender, null, "&a新規ステージ'"+stage.getName()+"'を登録して選択しました！");
+		Actions.message(sender, "&a新規ステージ'"+stage.getName()+"'を登録して選択しました！");
 	}
 
 	private void delete() throws CommandException{
@@ -114,9 +114,9 @@ public class StageCommand extends BaseCommand implements Queueable{
 
 		// confirmキュー追加
 		plugin.getQueue().addQueue(sender, this, args, 10);
-		Actions.message(sender, null, "&dステージ'&7"+args.get(1)+"&d'を削除しようとしています！");
-		Actions.message(sender, null, "&d続行するには &a/flag confirm &dコマンドを入力してください！");
-		Actions.message(sender, null, "&a/flag confirm &dコマンドは10秒間のみ有効です。");
+		Actions.message(sender, "&dステージ'&7"+args.get(1)+"&d'を削除しようとしています！");
+		Actions.message(sender, "&d続行するには &a/flag confirm &dコマンドを入力してください！");
+		Actions.message(sender, "&a/flag confirm &dコマンドは10秒間のみ有効です。");
 	}
 
 	private void rollback() throws CommandException{
@@ -142,7 +142,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 			stage.rollbackFlags();
 			stage.rollbackChests(sender);
 
-			Actions.message(sender, null, "&aステージ'"+stage.getName()+"'をロールバックしました！");
+			Actions.message(sender, "&aステージ'"+stage.getName()+"'をロールバックしました！");
 
 		}else{
 			int i = 0;
@@ -156,7 +156,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 				i++;
 			}
 
-			Actions.message(sender, null, "&a全"+i+"ステージをロールバックしました！");
+			Actions.message(sender, "&a全"+i+"ステージをロールバックしました！");
 		}
 	}
 
@@ -169,17 +169,17 @@ public class StageCommand extends BaseCommand implements Queueable{
 	public void executeQueue(List<String> args) {
 		if (stageAction.DELETE.name().equalsIgnoreCase(args.get(0))){
 			if (args.size() <= 1){
-				Actions.message(sender, null, "&cステージ名が不正です");
+				Actions.message(sender, "&cステージ名が不正です");
 				return;
 			}
 			Stage stage = StageManager.getStage(args.get(1));
 			if (stage == null){
-				Actions.message(sender, null, "&cその名前のステージは存在しません！");
+				Actions.message(sender, "&cその名前のステージは存在しません！");
 				return;
 			}
 
 			if (stage.isUsing()){
-				Actions.message(sender, null, "&cそのステージは現在受付中または開始中のため削除できません");
+				Actions.message(sender, "&cそのステージは現在受付中または開始中のため削除できません");
 				return;
 			}
 
@@ -204,13 +204,13 @@ public class StageCommand extends BaseCommand implements Queueable{
 			}
 
 			if (!deleted){
-				Actions.message(sender, null, "&cステージ'"+args.get(1)+"'のデータファイル削除中にエラーが発生しました！");
+				Actions.message(sender, "&cステージ'"+args.get(1)+"'のデータファイル削除中にエラーが発生しました！");
 			}else{
-				Actions.message(sender, null, "&aステージ'"+args.get(1)+"'を削除しました！");
+				Actions.message(sender, "&aステージ'"+args.get(1)+"'を削除しました！");
 				plugin.getDynmap().updateRegions();
 			}
 		}else{
-			Actions.message(sender, null, "&c内部エラーが発生しました。開発者までご連絡ください。");
+			Actions.message(sender, "&c内部エラーが発生しました。開発者までご連絡ください。");
 			log.warning(logPrefix+sender.getName() + " send invalid queue! (StageCommand.class)");
 		}
 	}
@@ -224,7 +224,7 @@ public class StageCommand extends BaseCommand implements Queueable{
 		if (perm.has(sender)){
 			return true;
 		}else{
-			Actions.message(sender, null, "&cこのアクションを実行する権限がありません！");
+			Actions.message(sender, "&cこのアクションを実行する権限がありません！");
 			return false;
 		}
 	}
@@ -249,8 +249,8 @@ public class StageCommand extends BaseCommand implements Queueable{
 		for (stageAction action : stageAction.values()){
 			col.add(action.name());
 		}
-		Actions.message(sender, null, "&cそのアクションは存在しません！");
-		Actions.message(sender, null, "&6 " + Util.join(col, "/").toLowerCase());
+		Actions.message(sender, "&cそのアクションは存在しません！");
+		Actions.message(sender, "&6 " + Util.join(col, "/").toLowerCase());
 	}
 
 	@Override

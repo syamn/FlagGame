@@ -148,7 +148,7 @@ public class SetupManager {
 		if (conf != null){
 			setManager(player, null);
 			if (!silent)
-				Actions.message(null, player, "&a"+conf.getConfigName()+"管理モードを解除しました！");
+				Actions.message(player, "&a"+conf.getConfigName()+"管理モードを解除しました！");
 		}
 		if (getSelectedFlagType(player) != null){
 			setSelectedFlagType(player, null);

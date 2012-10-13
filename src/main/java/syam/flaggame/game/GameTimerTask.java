@@ -106,10 +106,10 @@ public class GameTimerTask implements Runnable{
 				// ステージエリアの設定有無
 				if (loc == null){
 					player.setHealth(0);
-					Actions.message(null, player, "&cステージエリア外に出たため死にました！");
+					Actions.message(player, "&cステージエリア外に出たため死にました！");
 				}else{
 					player.teleport(loc, TeleportCause.PLUGIN);
-					Actions.message(null, player, "&cステージエリア外に出たためスポーン地点に戻されました！");
+					Actions.message(player, "&cステージエリア外に出たためスポーン地点に戻されました！");
 				}
 			}
 		}

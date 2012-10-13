@@ -24,9 +24,9 @@ public class InfoCommand extends BaseCommand {
 		if (args.size() == 0){
 			int stagecount = StageManager.getStages().size();
 
-			Actions.message(sender, null, "&a ===============&b StageList("+stagecount+") &a===============");
+			Actions.message(sender, "&a ===============&b StageList("+stagecount+") &a===============");
 			if (stagecount == 0){
-				Actions.message(sender, null, " &7読み込まれているステージがありません");
+				Actions.message(sender, " &7読み込まれているステージがありません");
 			}else{
 				for (Stage stage : StageManager.getStages().values()){
 					// ゲームステータス取得
@@ -44,10 +44,10 @@ public class InfoCommand extends BaseCommand {
 					String s = "&6"+stage.getName()+"&b: 状態=&f"+status+"&b 制限時間=&6"+Actions.getTimeString(stage.getGameTime())+"&b フラッグ数=&6"+stage.getFlags().size();
 
 					// メッセージ送信
-					Actions.message(sender, null, s);
+					Actions.message(sender, s);
 				}
 			}
-			Actions.message(sender, null, "&a ============================================");
+			Actions.message(sender, "&a ============================================");
 		}
 
 		// 引数があれば指定したゲームについての詳細情報を表示する
@@ -57,7 +57,7 @@ public class InfoCommand extends BaseCommand {
 				throw new CommandException("&cそのステージは存在しません！");
 			}
 
-			Actions.message(sender, null, "&a ==================&b GameDetail &a==================");
+			Actions.message(sender, "&a ==================&b GameDetail &a==================");
 
 			// ゲームステータス取得
 			String status = "&7待機中";
@@ -96,12 +96,12 @@ public class InfoCommand extends BaseCommand {
 			String s4 = "&b プレイヤーリスト&7("+cnt_players+"人)&b: "+players;
 
 			// メッセージ送信
-			Actions.message(sender, null, s1);
-			Actions.message(sender, null, s2);
-			Actions.message(sender, null, s3);
-			Actions.message(sender, null, s4);
+			Actions.message(sender, s1);
+			Actions.message(sender, s2);
+			Actions.message(sender, s3);
+			Actions.message(sender, s4);
 
-			Actions.message(sender, null, "&a ================================================");
+			Actions.message(sender, "&a ================================================");
 		}
 	}
 

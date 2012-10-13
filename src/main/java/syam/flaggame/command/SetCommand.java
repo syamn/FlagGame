@@ -42,7 +42,7 @@ public class SetCommand extends BaseCommand {
 			if (SetupManager.getManager(player) != null){
 				SetupManager.removeManager(player, false);
 			}else{
-				Actions.message(null, player, "&c設定項目を指定してください！");
+				Actions.message(player, "&c設定項目を指定してください！");
 				sendAvailableConf();
 			}
 			return;
@@ -59,7 +59,7 @@ public class SetCommand extends BaseCommand {
 
 		// 開始中でないかチェック
 		if (stage.isUsing()){
-			Actions.message(sender, null, "&cこのステージは受付中か開始中のため設定変更できません！");
+			Actions.message(sender, "&cこのステージは受付中か開始中のため設定変更できません！");
 			return;
 		}
 
@@ -72,7 +72,7 @@ public class SetCommand extends BaseCommand {
 			}
 		}
 		if (conf == null){
-			Actions.message(sender, null, "&cその設定項目は存在しません！");
+			Actions.message(sender, "&cその設定項目は存在しません！");
 			sendAvailableConf();
 			return;
 		}
@@ -116,7 +116,7 @@ public class SetCommand extends BaseCommand {
 
 			// 定義漏れ
 			default:
-				Actions.message(sender, null, "&c設定項目が不正です 開発者にご連絡ください");
+				Actions.message(sender, "&c設定項目が不正です 開発者にご連絡ください");
 				log.warning(logPrefix+ "Undefined configables! Please report this!");
 				break;
 		}
@@ -142,7 +142,7 @@ public class SetCommand extends BaseCommand {
 		// ステージ設定
 		game.setStage(block1.getLocation(), block2.getLocation());
 
-		Actions.message(null, player, "&aステージ'"+game.getName()+"'のエリアを設定しました！");
+		Actions.message(player, "&aステージ'"+game.getName()+"'のエリアを設定しました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	/**
@@ -185,7 +185,7 @@ public class SetCommand extends BaseCommand {
 		// 拠点設定
 		game.setBase(team, block1.getLocation(), block2.getLocation());
 
-		Actions.message(null, player, "&a"+team.getTeamName()+"チームの拠点を設定しました！");
+		Actions.message(player, "&a"+team.getTeamName()+"チームの拠点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	/**
@@ -215,7 +215,7 @@ public class SetCommand extends BaseCommand {
 		// スポーン地点設定
 		game.setSpawn(team, player.getLocation());
 
-		Actions.message(null, player, "&a"+team.getTeamName()+"チームのスポーン地点を設定しました！");
+		Actions.message(player, "&a"+team.getTeamName()+"チームのスポーン地点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	/**
@@ -244,7 +244,7 @@ public class SetCommand extends BaseCommand {
 		SetupManager.setManager(player, Configables.FLAG);
 		SetupManager.setSelectedFlagType(player, type);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
-		Actions.message(null, player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
+		Actions.message(player, "&aフラッグ管理モードを開始しました。選択ツール: " + tool);
 	}
 	/**
 	 * チェスト管理モード
@@ -255,7 +255,7 @@ public class SetCommand extends BaseCommand {
 		// マネージャーセット
 		SetupManager.setManager(player, Configables.CHEST);
 		String tool = Material.getMaterial(plugin.getConfigs().getToolID()).name();
-		Actions.message(null, player, "&aチェスト管理モードを開始しました。選択ツール: " + tool);
+		Actions.message(player, "&aチェスト管理モードを開始しました。選択ツール: " + tool);
 	}
 	/**
 	 * 観戦者スポーン地点
@@ -266,7 +266,7 @@ public class SetCommand extends BaseCommand {
 		// 観戦者スポーン地点設定
 		game.setSpecSpawn(player.getLocation());
 
-		Actions.message(null, player, "&aステージ'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
+		Actions.message(player, "&aステージ'"+game.getName()+"'の観戦者スポーン地点を設定しました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 
@@ -286,7 +286,7 @@ public class SetCommand extends BaseCommand {
 
 		String sec = num+"秒";
 		if (num >= 60) sec = sec + "("+Actions.getTimeString(num)+")";
-		Actions.message(sender, null, "&aステージ'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
+		Actions.message(sender, "&aステージ'"+game.getName()+"'のゲーム時間は "+sec+" に設定されました！");
 	}
 	private void setTeamLimit(Stage game) throws CommandException{
 		int cnt = 8; // デフォルト8人
@@ -302,7 +302,7 @@ public class SetCommand extends BaseCommand {
 
 		game.setTeamLimit(cnt);
 
-		Actions.message(sender, null, "&aステージ'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
+		Actions.message(sender, "&aステージ'"+game.getName()+"'のチーム毎人数上限値は "+cnt+"人 に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	private void setAward(Stage game) throws CommandException{
@@ -318,7 +318,7 @@ public class SetCommand extends BaseCommand {
 
 		game.setAward(award);
 
-		Actions.message(sender, null, "&aステージ'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
+		Actions.message(sender, "&aステージ'"+game.getName()+"'の賞金は "+award+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	private void setEntryFee(Stage game) throws CommandException{
@@ -333,7 +333,7 @@ public class SetCommand extends BaseCommand {
 		}
 
 		game.setEntryFee(entryfee);
-		Actions.message(sender, null, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
+		Actions.message(sender, "&aゲーム'"+game.getName()+"'の参加料は "+entryfee+"Coin に設定されました！");
 		plugin.getDynmap().updateRegion(game);
 	}
 	private void setStageProtect(Stage stage) throws CommandException{
@@ -352,7 +352,7 @@ public class SetCommand extends BaseCommand {
 		if (!protect) result = "&c無効";
 
 		stage.setStageProtected(protect);
-		Actions.message(sender, null, "&aステージ'"+stage.getName()+"'の保護は "+result+" &aに設定されました！");
+		Actions.message(sender, "&aステージ'"+stage.getName()+"'の保護は "+result+" &aに設定されました！");
 		plugin.getDynmap().updateRegion(stage);
 	}
 	private void setStageAvailable(Stage stage) throws CommandException{
@@ -376,7 +376,7 @@ public class SetCommand extends BaseCommand {
 		if (!available) result = "&c不可";
 
 		stage.setAvailable(available);
-		Actions.message(sender, null, "&aステージ'"+stage.getName()+"'は使用"+result+"&aに設定されました！");
+		Actions.message(sender, "&aステージ'"+stage.getName()+"'は使用"+result+"&aに設定されました！");
 	}
 
 	/* ***** ここまで **************************************** */
@@ -390,8 +390,8 @@ public class SetCommand extends BaseCommand {
 			col.add(conf.name());
 		}
 
-		Actions.message(sender, null, "&6 " + Util.join(col, "/").toLowerCase());
-		//Actions.message(sender, null, "&6 stage / base / spawn / flag / chest / gametime / teamlimit / award / entryfee / protect");
+		Actions.message(sender, "&6 " + Util.join(col, "/").toLowerCase());
+		//Actions.message(sender, "&6 stage / base / spawn / flag / chest / gametime / teamlimit / award / entryfee / protect");
 	}
 
 	@Override

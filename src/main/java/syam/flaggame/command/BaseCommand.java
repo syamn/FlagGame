@@ -51,7 +51,7 @@ public abstract class BaseCommand {
 
 		// 実行にプレイヤーであることが必要かチェックする
 		if (bePlayer && !(sender instanceof Player)){
-			Actions.message(sender, null, "&cThis command cannot run from Console!");
+			Actions.message(sender, "&cThis command cannot run from Console!");
 			return true;
 		}
 		if (sender instanceof Player){
@@ -60,7 +60,7 @@ public abstract class BaseCommand {
 
 		// 権限チェック
 		if (!permission()){
-			Actions.message(sender, null, "&cYou don't have permission to use this!");
+			Actions.message(sender, "&cYou don't have permission to use this!");
 			return true;
 		}
 
@@ -71,7 +71,7 @@ public abstract class BaseCommand {
 		catch (CommandException ex) {
 			Throwable error = ex;
 			while (error instanceof CommandException){
-				Actions.message(sender, null, error.getMessage());
+				Actions.message(sender, error.getMessage());
 				error = error.getCause();
 			}
 		}
@@ -95,6 +95,6 @@ public abstract class BaseCommand {
 	 * コマンドの使い方を送信する
 	 */
 	public void sendUsage(){
-		Actions.message(sender, null, "&c/"+this.command+" "+name+" "+usage);
+		Actions.message(sender, "&c/"+this.command+" "+name+" "+usage);
 	}
 }

@@ -122,7 +122,7 @@ public class Stage implements IStage{
 			if (!(toBlock.getState() instanceof InventoryHolder)){
 				log.warning(logPrefix+ "Block is not InventoryHolder!Rollback skipping.. Block: "+ Actions.getBlockLocationString(toBlock.getLocation()));
 				if (player != null){
-					Actions.message(null, player, "&6"+this.getName()+"エラー:&c インベントリホルダではありません: "+Actions.getBlockLocationString(toBlock.getLocation()));
+					Actions.message(player, "&6"+this.getName()+"エラー:&c インベントリホルダではありません: "+Actions.getBlockLocationString(toBlock.getLocation()));
 				}
 				continue;
 			}
@@ -130,7 +130,7 @@ public class Stage implements IStage{
 			if (toBlock.getTypeId() != fromBlock.getTypeId()){
 				log.warning(logPrefix+ "BlockID unmatched!Rollback skipping.. Block: "+ Actions.getBlockLocationString(toBlock.getLocation()));
 				if (player != null){
-					Actions.message(null, player, "&6"+this.getName()+"エラー:&c 2ブロック下と違うブロックです: "+Actions.getBlockLocationString(toBlock.getLocation()));
+					Actions.message(player, "&6"+this.getName()+"エラー:&c 2ブロック下と違うブロックです: "+Actions.getBlockLocationString(toBlock.getLocation()));
 				}
 				continue;
 			}
@@ -144,7 +144,7 @@ public class Stage implements IStage{
 			}catch(ClassCastException ex){
 				log.warning(logPrefix+ "Container can't cast to InventoryHolder! Rollback skipping.. Block: "+ Actions.getBlockLocationString(toBlock.getLocation()));
 				if (player != null){
-					Actions.message(null, player, "&6"+this.getName()+"エラー:&c イベントリホルダにキャストできません: "+Actions.getBlockLocationString(toBlock.getLocation()));
+					Actions.message(player, "&6"+this.getName()+"エラー:&c イベントリホルダにキャストできません: "+Actions.getBlockLocationString(toBlock.getLocation()));
 				}
 				continue;
 			}
@@ -161,7 +161,7 @@ public class Stage implements IStage{
 
 				toContainer.getInventory().setContents(newIs);
 			}catch (NullPointerException npe){
-				Actions.message(null, player, "&6"+this.getName()+"エラー:&c Occurred NullPointerException: "+Actions.getBlockLocationString(toBlock.getLocation()));
+				Actions.message(player, "&6"+this.getName()+"エラー:&c Occurred NullPointerException: "+Actions.getBlockLocationString(toBlock.getLocation()));
 				npe.printStackTrace();
 				continue;
 			}

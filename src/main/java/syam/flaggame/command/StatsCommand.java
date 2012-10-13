@@ -71,7 +71,7 @@ public class StatsCommand extends BaseCommand{
 
 		// メッセージ送信
 		for (String line : buildStrings(prof, other)){
-			Actions.message(sender, null, line);
+			Actions.message(sender, line);
 		}
 	}
 

@@ -89,7 +89,7 @@ public class FGBlockListener implements Listener{
 			// プレイヤーと壊されたブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
 			if (pTeam == null){
-				Actions.message(null, player, "&cあなたはこのゲームに参加していません！");
+				Actions.message(player, "&cあなたはこのゲームに参加していません！");
 				event.setCancelled(true);
 				return;
 			}
@@ -110,7 +110,7 @@ public class FGBlockListener implements Listener{
 			// 自分のチームのフラッグは破壊させない
 			if (bTeam == pTeam){
 				event.setCancelled(true);
-				Actions.message(null, player, "&cこれは自分のチームのフラッグです！");
+				Actions.message(player, "&cこれは自分のチームのフラッグです！");
 				continue;
 			}
 
@@ -191,7 +191,7 @@ public class FGBlockListener implements Listener{
 			// プレイヤーと設置したブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
 			if (pTeam == null){
-				Actions.message(null, player, "&cあなたはこのゲームに参加していません！");
+				Actions.message(player, "&cあなたはこのゲームに参加していません！");
 				event.setCancelled(true);
 				return;
 			}
@@ -211,7 +211,7 @@ public class FGBlockListener implements Listener{
 			// 相手のチームのフラッグは設置させない
 			if (bTeam != pTeam){
 				event.setCancelled(true);
-				Actions.message(null, player, "&c相手チームのフラッグは設置できません！");
+				Actions.message(player, "&c相手チームのフラッグは設置できません！");
 				continue;
 			}
 
@@ -260,7 +260,7 @@ public class FGBlockListener implements Listener{
 				// 権限チェック
 				if (!Perms.SIGN.has(player)){
 					event.setLine(0, "Denied!");
-					Actions.message(null, player, "&cYou don't have permission to do this!");
+					Actions.message(player, "&cYou don't have permission to do this!");
 					return;
 				}
 				event.setLine(0, "&a[FlagGame]");

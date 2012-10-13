@@ -168,7 +168,7 @@ public class Game implements IGame{
 	 */
 	public void start(CommandSender sender){
 		if (started){
-			Actions.message(sender, null, "&cこのゲームは既に始まっています");
+			Actions.message(sender, "&cこのゲームは既に始まっています");
 			return;
 		}
 
@@ -184,19 +184,19 @@ public class Game implements IGame{
 		}
 		*/
 		if (redPlayers.size() <= 0 || bluePlayers.size() <= 0){
-			Actions.message(sender, null, "&cプレイヤーが参加していないチームがあります");
+			Actions.message(sender, "&cプレイヤーが参加していないチームがあります");
 			return;
 		}
 
 		// ステージエリアチェック
 		if (stage.getStage() == null){
-			Actions.message(sender, null, "&cステージエリアが正しく設定されていません");
+			Actions.message(sender, "&cステージエリアが正しく設定されていません");
 			return;
 		}
 
 		// スポーン地点の再チェック
 		if (stage.getSpawns().size() != 2){
-			Actions.message(sender, null, "&cチームスポーン地点が正しく設定されていません");
+			Actions.message(sender, "&cチームスポーン地点が正しく設定されていません");
 			return;
 		}
 
@@ -279,7 +279,7 @@ public class Game implements IGame{
 				PlayerManager.getPlayer(player).setPlayingGame(this);
 
 				// メッセージ通知
-				Actions.message(null, player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
+				Actions.message(player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
 			}
 		}
 		String blue = "", red = "";
@@ -379,10 +379,10 @@ public class Game implements IGame{
 				if (player != null && player.isOnline()){
 					// 入金
 					if (Actions.addMoney(name, stage.getAward())){
-						Actions.message(null, player, "&a[+]おめでとうございます！賞金として"+stage.getAward()+"Coinを得ました！");
+						Actions.message(player, "&a[+]おめでとうございます！賞金として"+stage.getAward()+"Coinを得ました！");
 						log("+ Player "+name+" received "+stage.getAward()+ "Coin!");
 					}else{
-						Actions.message(null, player, "&c報酬受け取りにエラーが発生しました。管理人までご連絡ください。");
+						Actions.message(player, "&c報酬受け取りにエラーが発生しました。管理人までご連絡ください。");
 						log("* [Error] Player "+name+" received "+stage.getAward()+ "Coin ?");
 					}
 				}
@@ -753,7 +753,7 @@ public class Game implements IGame{
 				if (name == null) continue;
 				Player player = Bukkit.getPlayer(name);
 				if (player != null && player.isOnline())
-					Actions.message(null, player, message);
+					Actions.message(player, message);
 			}
 		}
 	}
@@ -771,7 +771,7 @@ public class Game implements IGame{
 			if (name == null) continue;
 			Player player = Bukkit.getServer().getPlayer(name);
 			if (player != null && player.isOnline())
-				Actions.message(null, player, message);
+				Actions.message(player, message);
 		}
 	}
 	/**

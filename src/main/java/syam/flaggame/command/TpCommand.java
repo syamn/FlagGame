@@ -57,10 +57,10 @@ public class TpCommand extends BaseCommand{
 
 			// テレポート
 			player.teleport(loc);
-			Actions.message(null, player, "&a"+team.getTeamName()+"チームのスポーン地点にテレポートしました！");
+			Actions.message(player, "&a"+team.getTeamName()+"チームのスポーン地点にテレポートしました！");
 		}
 		else{
-			Actions.message(null, player, "&cそのエリアは未定義です");
+			Actions.message(player, "&cそのエリアは未定義です");
 		}
 	}
 

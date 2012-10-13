@@ -24,7 +24,7 @@ public class ReloadCommand extends BaseCommand {
 		// 権限管理プラグイン再設定
 		Perms.setupPermissionHandler();
 
-		Actions.message(sender, null, "&aConfiguration reloaded!");
+		Actions.message(sender, "&aConfiguration reloaded!");
 	}
 
 	@Override

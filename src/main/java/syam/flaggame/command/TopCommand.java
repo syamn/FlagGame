@@ -50,7 +50,7 @@ public class TopCommand extends BaseCommand{
 				sendRanking(sender, PlayerStat.getStat(args.get(0)), 1);
 			}
 			else{
-				Actions.message(sender, null, "&c表示するランキングの種類が不正です！");
+				Actions.message(sender, "&c表示するランキングの種類が不正です！");
 				sendAvailableStat();
 			}
 
@@ -60,7 +60,7 @@ public class TopCommand extends BaseCommand{
 		else{
 			stat = PlayerStat.getStat(args.get(0));
 			if (stat == null){
-				Actions.message(sender, null, "&c表示するランキングの種類が不正です！");
+				Actions.message(sender, "&c表示するランキングの種類が不正です！");
 				sendAvailableStat();
 				return;
 			}
@@ -87,7 +87,7 @@ public class TopCommand extends BaseCommand{
 		HashMap<Integer, ArrayList<String>> rankersList = database.read("SELECT `" + stat.getColumnName() + "`, player_id FROM " + tablePrefix + "records WHERE `" + stat.getColumnName() + "` > 0 ORDER BY `" + stat.getColumnName() + "` DESC");
 
 		// ヘッダ送信
-		Actions.message(sender, null, "&e-- FlagGame &a" + stat.getDescription() + " &e順位表 --");
+		Actions.message(sender, "&e-- FlagGame &a" + stat.getDescription() + " &e順位表 --");
 
 		// ランキング送信
 		boolean isFirstRow = true;
@@ -95,7 +95,7 @@ public class TopCommand extends BaseCommand{
 			// ランキングの終末
 			if (i > rankersList.size()){
 				if (isFirstRow){
-					Actions.message(sender, null, "&7表示するプレイヤーがいません");
+					Actions.message(sender, "&7表示するプレイヤーがいません");
 				}
 				break;
 			}
@@ -107,7 +107,7 @@ public class TopCommand extends BaseCommand{
 			}
 
 			// 送信
-			Actions.message(sender, null, i + ". &a" + rankersList.get(i).get(0) + " " + suffix + "&7 - &f" + rankerName.get(1).get(0));
+			Actions.message(sender, i + ". &a" + rankersList.get(i).get(0) + " " + suffix + "&7 - &f" + rankerName.get(1).get(0));
 			isFirstRow = false;
 		}
 	}
@@ -121,7 +121,7 @@ public class TopCommand extends BaseCommand{
 			col.add(ps.name());
 		}
 
-		Actions.message(sender, null, "&6 " + Util.join(col, "/").toLowerCase());
+		Actions.message(sender, "&6 " + Util.join(col, "/").toLowerCase());
 	}
 
 	@Override

@@ -72,7 +72,7 @@ public class FGPlayerListener implements Listener{
 			Configables conf = SetupManager.getManager(player);
 			Stage stage = SetupManager.getSelectedStage(player);
 			if (stage == null){
-				Actions.message(null, player, "&c先に編集するゲームを選択してください！");
+				Actions.message(player, "&c先に編集するゲームを選択してください！");
 				return;
 			}
 
@@ -80,7 +80,7 @@ public class FGPlayerListener implements Listener{
 
 			// ゲーム用ワールドでなければ返す
 			if (loc.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
-				Actions.message(null, player, "&cここはゲーム用ワールドではありません！");
+				Actions.message(player, "&cここはゲーム用ワールドではありません！");
 				return;
 			}
 
@@ -90,38 +90,38 @@ public class FGPlayerListener implements Listener{
 					// 既にフラッグブロックなら解除する
 					if (stage.isFlag(loc)){
 						stage.removeFlag(loc);
-						Actions.message(null, player, "&aステージ'"+stage.getName()+"'のフラッグを削除しました！");
+						Actions.message(player, "&aステージ'"+stage.getName()+"'のフラッグを削除しました！");
 						return;
 					}
 
 					// フラッグタイプを取得
 					FlagType type = SetupManager.getSelectedFlagType(player);
 					if (type == null){
-						Actions.message(null, player, "&cフラッグの種類が指定されていません！");
+						Actions.message(player, "&cフラッグの種類が指定されていません！");
 						return;
 					}
 
 					// 新規フラッグ登録
 					new Flag(plugin, stage, loc, type, 0, (byte) 0);
-					Actions.message(null, player, "&aステージ'"+stage.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
+					Actions.message(player, "&aステージ'"+stage.getName()+"'の"+type.getTypeName()+"フラッグを登録しました！");
 					break;
 
 				// チェストモード
 				case CHEST:
 					// チェスト、かまど、ディスペンサーのどれかでなければ返す
 					if (block.getType() != Material.CHEST && block.getType() != Material.FURNACE && block.getType() != Material.DISPENSER){
-						Actions.message(null, player, "&cこのブロックはコンテナインターフェースを持っていません！");
+						Actions.message(player, "&cこのブロックはコンテナインターフェースを持っていません！");
 						return;
 					}
 					// 既にチェストブロックになっているか判定
 					if (stage.isChest(loc)){
 						// 削除
 						stage.removeChest(loc);
-						Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを削除しました！");
+						Actions.message(player, "&aステージ'"+stage.getName()+"'のチェストを削除しました！");
 					}else{
 						// 選択
 						stage.setChest(loc);
-						Actions.message(null, player, "&aステージ'"+stage.getName()+"'のチェストを設定しました！");
+						Actions.message(player, "&aステージ'"+stage.getName()+"'のチェストを設定しました！");
 					}
 					break;
 
@@ -207,13 +207,13 @@ public class FGPlayerListener implements Listener{
 				Location loc = game.getStage().getSpawn(team);
 				if (loc == null){
 					// 所属チームのスポーン地点設定なし
-					Actions.message(null, player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
+					Actions.message(player, msgPrefix+ "&cあなたのチームのスポーン地点が設定されていません");
 					log.warning(logPrefix+ "Player "+player.getName()+" died, But undefined spawn-location. Game: " + game.getStage().getName() + " Team: " +team.name());
 
 					event.setRespawnLocation(Bukkit.getWorld(plugin.getConfigs().getGameWorld()).getSpawnLocation());
 				}else{
 					// 設定あり
-					Actions.message(null, player, msgPrefix+ "&c[*]&6このゲームはあと &a"+Actions.getTimeString(game.getRemainTime())+"&6 残っています！");
+					Actions.message(player, msgPrefix+ "&c[*]&6このゲームはあと &a"+Actions.getTimeString(game.getRemainTime())+"&6 残っています！");
 
 					event.setRespawnLocation(loc);
 					player.getInventory().setHelmet(new ItemStack(team.getBlockID(), 1, (short)0, team.getBlockData()));
@@ -253,7 +253,7 @@ public class FGPlayerListener implements Listener{
 					if (s.trim().equalsIgnoreCase(cmd)){
 						// コマンド実行キャンセル
 						event.setCancelled(true);
-						Actions.message(null, player, msgPrefix+"このコマンドは試合中に使えません！");
+						Actions.message(player, msgPrefix+"このコマンドは試合中に使えません！");
 						return;
 					}
 				}
@@ -382,27 +382,27 @@ public class FGPlayerListener implements Listener{
 
 						// アナウンス
 						if (!game.isRandom()){
-							Actions.message(null, player, "&b* ===================================");
-							Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
-							Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
-							Actions.message(null, player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
-							Actions.message(null, player, "&b* ===================================");
+							Actions.message(player, "&b* ===================================");
+							Actions.message(player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'の参加受付が行われています！");
+							Actions.message(player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+							Actions.message(player, msgPrefix+"&2 '&6/flag join "+game.getName()+"&2' コマンドで参加してください！");
+							Actions.message(player, "&b* ===================================");
 						}else{
-							Actions.message(null, player, "&b* ===================================");
-							Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6ランダムステージ&2'の参加受付が行われています！");
-							Actions.message(null, player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
-							Actions.message(null, player, msgPrefix+"&2 '&6/flag join random&2' コマンドで参加してください！");
-							Actions.message(null, player, "&b* ===================================");
+							Actions.message(player, "&b* ===================================");
+							Actions.message(player, msgPrefix+"&2フラッグゲーム'&6ランダムステージ&2'の参加受付が行われています！");
+							Actions.message(player, msgPrefix+"&2 参加料:&6 "+entryFeeMsg+ "&2   賞金:&6 "+awardMsg);
+							Actions.message(player, msgPrefix+"&2 '&6/flag join random&2' コマンドで参加してください！");
+							Actions.message(player, "&b* ===================================");
 						}
 
 					}
 					// 開始中ゲーム
 					else if (game.isStarting()){
 						// 観戦アナウンス
-						Actions.message(null, player, "&b* ===================================");
-						Actions.message(null, player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'が始まっています！");
-						Actions.message(null, player, msgPrefix+"&2 '&6/flag watch "+game.getName()+"&2' コマンドで観戦することができます！");
-						Actions.message(null, player, "&b* ===================================");
+						Actions.message(player, "&b* ===================================");
+						Actions.message(player, msgPrefix+"&2フラッグゲーム'&6"+game.getName()+"&2'が始まっています！");
+						Actions.message(player, msgPrefix+"&2 '&6/flag watch "+game.getName()+"&2' コマンドで観戦することができます！");
+						Actions.message(player, "&b* ===================================");
 					}
 				}
 			}
@@ -446,7 +446,7 @@ public class FGPlayerListener implements Listener{
 
 			// プレイヤーとブロックのチームが違えばイベントをキャンセルする
 			if (playerTeam != blockTeam){
-				if (sendFalseMessage) Actions.message(null, player, msgPrefix+"&cここは相手の拠点です！");
+				if (sendFalseMessage) Actions.message(player, msgPrefix+"&cここは相手の拠点です！");
 				return false; // 開けない
 			}
 			else{
@@ -472,11 +472,11 @@ public class FGPlayerListener implements Listener{
 						}
 						// 未登録チェストはダミー扱いで開閉禁止
 						else{
-							if (sendFalseMessage) Actions.message(null, player, msgPrefix+"&cこれはダミーブロックです！");
+							if (sendFalseMessage) Actions.message(player, msgPrefix+"&cこれはダミーブロックです！");
 							return false;
 						}
 					}else{
-						if (sendFalseMessage) Actions.message(null, player, msgPrefix+"&cあなたはこのゲームに参加していません！");
+						if (sendFalseMessage) Actions.message(player, msgPrefix+"&cあなたはこのゲームに参加していません！");
 						return false;
 					}
 				}else{
@@ -503,7 +503,7 @@ public class FGPlayerListener implements Listener{
 				action = sa;
 		}
 		if (action == null){
-			Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
+			Actions.message(player, "&cThis sign is broken! Please contact server staff!");
 			return;
 		}
 
@@ -519,7 +519,7 @@ public class FGPlayerListener implements Listener{
 							signTeam = gt;
 					}
 					if (signTeam == null){
-						Actions.message(null, player, "&cThis sign is broken! Please contact server staff!");
+						Actions.message(player, "&cThis sign is broken! Please contact server staff!");
 						return;
 					}
 					for (Game game : GameManager.getGames().values()){
@@ -530,12 +530,12 @@ public class FGPlayerListener implements Listener{
 						}
 					}
 					if (playerTeam == null){
-						Actions.message(null, player, "&cこの看板はフラッグゲーム中にのみ使うことができます");
+						Actions.message(player, "&cこの看板はフラッグゲーム中にのみ使うことができます");
 						return;
 					}
 
 					if (playerTeam != signTeam){
-						Actions.message(null, player, "&cこれはあなたのチームの看板ではありません！");
+						Actions.message(player, "&cこれはあなたのチームの看板ではありません！");
 						return;
 					}
 				}
@@ -554,7 +554,7 @@ public class FGPlayerListener implements Listener{
 				player.setFoodLevel(nowFL);
 				player.setFireTicks(0); // 燃えてれば消してあげる
 
-				Actions.message(null, player, msgPrefix+ "&aHealed!");
+				Actions.message(player, msgPrefix+ "&aHealed!");
 
 				break;
 
@@ -573,7 +573,7 @@ public class FGPlayerListener implements Listener{
 				break;
 
 			default:
-				Actions.message(null, player, msgPrefix+"&cSorry I forgot this sign-action. Please contact server staff!");
+				Actions.message(player, msgPrefix+"&cSorry I forgot this sign-action. Please contact server staff!");
 				log.warning(logPrefix+player.getName()+": Sorry I forgot this sign-action. Please contact server staff!");
 		}
 

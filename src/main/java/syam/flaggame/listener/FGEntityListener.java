@@ -76,7 +76,7 @@ public class FGEntityListener implements Listener{
 			if (damagerTeam != null && attackerTeam != null && damagerTeam == attackerTeam){
 				event.setDamage(0);
 				event.setCancelled(true);
-				Actions.message(null, attacker, "&c同じチームメンバーには攻撃できません！");
+				Actions.message(attacker, "&c同じチームメンバーには攻撃できません！");
 
 				return;
 			}

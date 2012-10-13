@@ -97,7 +97,7 @@ public class JoinCommand extends BaseCommand {
 			if (!Actions.takeMoney(player.getName(), game.getStage().getEntryFee())){
 				throw new CommandException("&c参加料の引き落としにエラーが発生しました。管理人までご連絡ください。");
 			}else{
-				Actions.message(null, player, "&c参加料として "+game.getStage().getEntryFee()+"Coin を支払いました！");
+				Actions.message(player, "&c参加料として "+game.getStage().getEntryFee()+"Coin を支払いました！");
 			}
 		}
 
@@ -111,7 +111,7 @@ public class JoinCommand extends BaseCommand {
 
 		// 参加後に人数チェックして定員通知
 		if ((game.getPlayersSet(GameTeam.RED).size() >= limit) && (game.getPlayersSet(GameTeam.BLUE).size() >= limit)){
-			Actions.message(null, player, "&aこのゲームは参加定員("+limit*2+"人)に達しています！");
+			Actions.message(player, "&aこのゲームは参加定員("+limit*2+"人)に達しています！");
 		}
 	}
 

@@ -31,9 +31,9 @@ public class SelectCommand extends BaseCommand {
 
 				String msg = "&aステージ'&6"+stage.getName()+"&a'を選択しました！";
 				if (selectRegion(stage)){
-					Actions.message(null, player, msg + "(+WorldEdit)");
+					Actions.message(player, msg + "(+WorldEdit)");
 				}else{
-					Actions.message(null, player, msg);
+					Actions.message(player, msg);
 				}
 			}else{
 				throw new CommandException("&cステージ'"+args.get(0)+"'が見つかりません！");
@@ -44,7 +44,7 @@ public class SelectCommand extends BaseCommand {
 				SetupManager.setSelectedStage(player, null);
 			}
 			SetupManager.removeManager(player, false);
-			Actions.message(null, player, "&aステージの選択を解除しました！");
+			Actions.message(player, "&aステージの選択を解除しました！");
 		}
 	}
 
