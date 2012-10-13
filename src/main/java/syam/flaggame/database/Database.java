@@ -133,21 +133,33 @@ public class Database {
 	 * @return クエリ成功ならtrue、他はfalse
 	 */
 	public boolean write(String sql){
+		return write(sql, new Object[0]);
+	}
+	public boolean write(String sql, Object... obj){
 		// 接続確認
 		if (isConnected()){
+			PreparedStatement statement = null;
 			try{
-				PreparedStatement statement = connection.prepareStatement(sql);
+				statement = connection.prepareStatement(sql);
+				// バインド
+				if (obj != null && obj.length > 0){
+					for (int i = 0; i < obj.length; i++){
+						statement.setObject(i + 1, obj[i]);
+					}
+				}
 				statement.executeUpdate(); // 実行
-
-				// 後処理
-				statement.close();
-
-				return true;
 			}catch (SQLException ex){
 				printErrors(ex);
-
 				return false;
 			}
+			finally{
+				// 後処理
+				try {
+					if (statement != null)
+						statement.close();
+				}catch (SQLException ex) { printErrors(ex); }
+			}
+			return true;
 		}
 		// 未接続
 		else{
@@ -163,13 +175,23 @@ public class Database {
 	 * @return SQLクエリで得られたデータ
 	 */
 	public HashMap<Integer, ArrayList<String>> read(String sql){
-		ResultSet resultSet;
+		return read(sql, new Object[0]);
+	}
+	public HashMap<Integer, ArrayList<String>> read(String sql, Object... obj){
+		ResultSet resultSet = null;
 		HashMap<Integer, ArrayList<String>> rows = new HashMap<Integer, ArrayList<String>>();
 
 		// 接続確認
 		if (isConnected()){
+			PreparedStatement statement = null;
 			try{
-				PreparedStatement statement = connection.prepareStatement(sql);
+				statement = connection.prepareStatement(sql);
+				// バインド
+				if (obj != null && obj.length > 0){
+					for (int i = 0; i < obj.length; i++){
+						statement.setObject(i + 1, obj[i]);
+					}
+				}
 				resultSet = statement.executeQuery(); // 実行
 
 				// 結果のレコード数だけ繰り返す
@@ -184,12 +206,20 @@ public class Database {
 					// 返すマップにレコード番号とリストを追加
 					rows.put(resultSet.getRow(), column);
 				}
-
-				// 後処理
-				resultSet.close();
-				statement.close();
 			}catch (SQLException ex){
 				printErrors(ex);
+			}
+			finally{
+				// 後処理
+				try {
+					if (statement != null)
+						statement.close();
+				}catch (SQLException ex) { printErrors(ex); }
+
+				try {
+					if (resultSet != null)
+						resultSet.close();
+				}catch (SQLException ex) { printErrors(ex); }
 			}
 		}
 		// 未接続
@@ -206,13 +236,23 @@ public class Database {
 	 * @return 最初のローにある数値
 	 */
 	public int getInt(String sql){
-		ResultSet resultSet;
+		return getInt(sql, new Object[0]);
+	}
+	public int getInt(String sql, Object... obj){
+		ResultSet resultSet = null;
 		int result = 0;
 
 		// 接続確認
 		if (isConnected()){
+			PreparedStatement statement = null;
 			try{
-				PreparedStatement statement = connection.prepareStatement(sql);
+				statement = connection.prepareStatement(sql);
+				// バインド
+				if (obj != null && obj.length > 0){
+					for (int i = 0; i < obj.length; i++){
+						statement.setObject(i + 1, obj[i]);
+					}
+				}
 				resultSet = statement.executeQuery(); // 実行
 
 				if (resultSet.next()){
@@ -221,12 +261,20 @@ public class Database {
 					// 結果がなければ0を返す
 					result = 0;
 				}
-
-				// 後処理
-				resultSet.close();
-				statement.close();
 			}catch (SQLException ex){
 				printErrors(ex);
+			}
+			finally{
+				// 後処理
+				try {
+					if (statement != null)
+						statement.close();
+				}catch (SQLException ex) { printErrors(ex); }
+
+				try {
+					if (resultSet != null)
+						resultSet.close();
+				}catch (SQLException ex) { printErrors(ex); }
 			}
 		}
 		// 未接続
@@ -237,7 +285,13 @@ public class Database {
 		return result;
 	}
 
-
+	/**
+	 * テーブル接頭語を返します
+	 * @return
+	 */
+	public String getTablePrefix(){
+		return plugin.getConfigs().getMySQLtablePrefix();
+	}
 
 	/**
 	 * 接続状況を返す

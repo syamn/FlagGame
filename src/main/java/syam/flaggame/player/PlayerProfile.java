@@ -63,11 +63,10 @@ public class PlayerProfile {
 	 * @return 正常終了すればtrue、基本データテーブルにデータがなければfalse
 	 */
 	public boolean loadMySQL(){
-		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
+		Database db = FlagGame.getDatabases();
 
 		// プレイヤーID(DB割り当て)を読み出す
-		playerID = database.getInt("SELECT player_id FROM " + tablePrefix + "users WHERE player_name = '" + playerName + "'");
+		playerID = db.getInt("SELECT `player_id` FROM " + db.getTablePrefix() + "users WHERE `player_name` = ?", playerName);
 
 		// プレイヤー基本テーブルにデータがなければ何もしない
 		if (playerID == 0){
@@ -75,7 +74,7 @@ public class PlayerProfile {
 		}
 
 		/* *** usersテーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> usersDatas = database.read("SELECT lastjoingame, status FROM " + tablePrefix + "users WHERE player_id = " + playerID);
+		HashMap<Integer, ArrayList<String>> usersDatas = db.read("SELECT `lastjoingame`, `status` FROM " + db.getTablePrefix() + "users WHERE `player_id` = ?", playerID);
 		ArrayList<String> dataValues = usersDatas.get(1);
 
 		if (dataValues == null){
@@ -90,12 +89,13 @@ public class PlayerProfile {
 
 
 		/* *** recordsテーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> recordsDatas = database.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `place`, `break`, `kill`, `death` FROM " + tablePrefix + "records WHERE player_id = " + playerID);
+		HashMap<Integer, ArrayList<String>> recordsDatas = db.read("SELECT `played`, `exit`, `win`, `lose`, `draw`, `place`, `break`, `kill`, `death` FROM " + db.getTablePrefix() + "records " +
+																	"WHERE `player_id` = ?", playerID);
 		dataValues = recordsDatas.get(1);
 
 		if (dataValues == null){
 			// 新規レコード追加
-			database.write("INSERT INTO " + tablePrefix + "records (player_id) VALUES (" + playerID + ")");
+			db.write("INSERT INTO " + db.getTablePrefix() + "records (`player_id`) VALUES (?)", playerID);
 			log.warning(playerName + " does not exist in the records table. Their records will be reset.");
 		}else{
 			// データ読み出し
@@ -112,7 +112,7 @@ public class PlayerProfile {
 		dataValues.clear();
 
 		/* *** tpbacksテーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> tpbacksDatas = database.read("SELECT `world`, `x`, `y`, `z`, `pitch`, `yaw` FROM " + tablePrefix + "tpbacks WHERE player_id = " + playerID);
+		HashMap<Integer, ArrayList<String>> tpbacksDatas = db.read("SELECT `world`, `x`, `y`, `z`, `pitch`, `yaw` FROM " + db.getTablePrefix() + "tpbacks WHERE `player_id` = ?", playerID);
 		dataValues = tpbacksDatas.get(1);
 
 		if (dataValues == null){
@@ -153,12 +153,11 @@ public class PlayerProfile {
 	 * 新規ユーザーデータをMySQLデータベースに追加
 	 */
 	private void addMySQLPlayer(){
-		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
+		Database db = FlagGame.getDatabases();
 
-		database.write("INSERT INTO " + tablePrefix + "users (player_name) VALUES ('" + playerName + "')"); // usersテーブル
-		playerID = database.getInt("SELECT player_id FROM "+tablePrefix + "users WHERE player_name = '" + playerName + "'");
-		database.write("INSERT INTO " + tablePrefix + "records (player_id) VALUES (" + playerID + ")"); // recordsテーブル
+		db.write("INSERT INTO " + db.getTablePrefix() + "users (`player_name`) VALUES (?)", playerName); // usersテーブル
+		playerID = db.getInt("SELECT `player_id` FROM "+db.getTablePrefix() + "users WHERE `player_name` = ?", playerName);
+		db.write("INSERT INTO " + db.getTablePrefix() + "records (`player_id`) VALUES (?)", playerID); // recordsテーブル
 	}
 
 	/**
@@ -167,43 +166,31 @@ public class PlayerProfile {
 	public void save(){
 		//Long timestamp = System.currentTimeMillis() / 1000;
 
-		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
+		Database db = FlagGame.getDatabases();
 
 		// データベースupdate
 
 		/* usersテーブル */
-		database.write("UPDATE " + tablePrefix + "users SET " +
-				"`lastjoingame` = " + lastjoingame.intValue() +
-				", `status` = " + status +
-				" WHERE player_id = " + playerID);
+		db.write("UPDATE " + db.getTablePrefix() + "users SET " +
+				"`lastjoingame` = ?, `status` = ? " +
+				"WHERE `player_id` = ?",
+				lastjoingame.intValue(), status,
+				playerID);
 
 		/* recordsテーブル */
-		database.write("UPDATE " + tablePrefix + "records SET " +
-				"`played` = " + played +
-				", `exit` = " + exit +
-				", `win` = " + win +
-				", `lose` = " + lose +
-				", `draw` = " + draw +
-				", `place` = " + flag_place +
-				", `break` = " + flag_break +
-				", `kill` = " + kill +
-				", `death` = " + death +
-				" WHERE player_id = " + playerID);
+		db.write("UPDATE " + db.getTablePrefix() + "records SET " +
+				"`played` = ?, `exit` = ?, `win` = ?, `lose` = ?, `draw` = ?, `place` = ?, `break` = ?, `kill` = ?, `death` = ? " +
+				"WHERE `player_id` = ?",
+				played, exit, win, lose, draw, flag_place, flag_break, kill, death,
+				playerID);
 
 		/* tpbacksテーブル */
 		if (backLocation != null){
-			database.write("REPLACE INTO " + tablePrefix + "tpbacks SET " +
-					"`player_id` = '" + playerID + "', " +
-					"`world` = '" + backLocation.getWorld().getName() + "', " +
-					"`x` = '" + backLocation.getX() + "', " +
-					"`y` = '" + backLocation.getY() + "', " +
-					"`z` = '" + backLocation.getZ() + "', " +
-					"`pitch` = '" + backLocation.getPitch() + "', " +
-					"`yaw` = '" + backLocation.getYaw() + "'");
+			db.write("REPLACE INTO " + db.getTablePrefix() + "tpbacks SET " +
+					"`player_id` = ?, `world` = ?, `x` = ?, `y` = ?, `z` = ?, `pitch` = ?, `yaw` = ?",
+					playerID, backLocation.getWorld().getName(), backLocation.getX(), backLocation.getY(), backLocation.getZ(), backLocation.getPitch(), backLocation.getYaw());
 		}else{
-			database.write("DELETE FROM " + tablePrefix + "tpbacks WHERE " +
-					"`player_id` = " + playerID);
+			db.write("DELETE FROM " + db.getTablePrefix() + "tpbacks WHERE `player_id` = ?", playerID);
 		}
 	}
 

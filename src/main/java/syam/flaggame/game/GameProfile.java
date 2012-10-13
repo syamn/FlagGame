@@ -55,20 +55,19 @@ public class GameProfile {
 	 * @return 成功すればtrue 違えばfalse
 	 */
 	public boolean loadMySQL(){
-		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
+		Database db = FlagGame.getDatabases();
 
 		// ステージID(DB割り当て)を読み出す
-		stageID = database.getInt("SELECT stage_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
+		stageID = db.getInt("SELECT `stage_id` FROM " + db.getTablePrefix() + "stages WHERE `stage_name` = ?", stageName);
 
 		// テーブルにデータが無ければ新規レコードを作る
 		if (stageID == 0){
-			database.write("INSERT INTO " + tablePrefix + "stages (stage_name) VALUES ('" + stageName + "')");
-			stageID = database.getInt("SELECT stage_id FROM " + tablePrefix + "stages WHERE stage_name = '" + stageName + "'");
+			db.write("INSERT INTO " + db.getTablePrefix() + "stages (`stage_name`) VALUES (?)", stageName);
+			stageID = db.getInt("SELECT `stage_id` FROM " + db.getTablePrefix() + "stages WHERE `stage_name` = ?", stageName);
 		}
 
 		/* *** テーブルデータ読み込み *************** */
-		HashMap<Integer, ArrayList<String>> stagesDatas = database.read("SELECT `lastplayed`, `played`, `place`, `break`, `kill`, `death` FROM " + tablePrefix + "stages WHERE stage_id = " + stageID);
+		HashMap<Integer, ArrayList<String>> stagesDatas = db.read("SELECT `lastplayed`, `played`, `place`, `break`, `kill`, `death` FROM " + db.getTablePrefix() + "stages WHERE `stage_id` = ?", stageID);
 		ArrayList<String> dataValues = stagesDatas.get(1);
 
 		if (dataValues == null){
@@ -94,18 +93,14 @@ public class GameProfile {
 	 * ステージデータをMySQLデータベースに保存
 	 */
 	public void save(){
-		Database database = FlagGame.getDatabases();
-		String tablePrefix = FlagGame.getInstance().getConfigs().getMySQLtablePrefix();
+		Database db = FlagGame.getDatabases();
 
 		/* stagesテーブル */
-		database.write("UPDATE " + tablePrefix + "stages SET " +
-				"`lastplayed` = " + lastplayed.intValue() +
-				", `played` = " + played +
-				", `place` = " + flag_place +
-				", `break` = " + flag_break +
-				", `kill` = " + kill +
-				", `death` = " + death +
-				" WHERE stage_id = " + stageID);
+		db.write("UPDATE " + db.getTablePrefix() + "stages SET " +
+				"`lastplayed` = ?, `played` = ?, `place` = ?, `break` = ?, `kill` = ?, `death` = ? " +
+				"WHERE `stage_id` = ?",
+				lastplayed.intValue(), played, flag_place, flag_break, kill, death,
+				stageID);
 	}
 
 	/* getter / setter */
