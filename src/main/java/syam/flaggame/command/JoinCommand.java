@@ -3,6 +3,7 @@ package syam.flaggame.command;
 import java.util.ArrayList;
 
 import syam.flaggame.enums.GameTeam;
+import syam.flaggame.event.GameJoinEvent;
 import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Game;
 import syam.flaggame.game.Stage;
@@ -87,22 +88,36 @@ public class JoinCommand extends BaseCommand {
 			throw new CommandException("&cこのゲームは参加可能な定員に達しています！");
 		}
 
+		double cost = game.getStage().getEntryFee();
+
+		// Call event
+		GameJoinEvent joinEvent = new GameJoinEvent(player, cost);
+		plugin.getServer().getPluginManager().callEvent(joinEvent);
+		if (joinEvent.isCancelled()){
+			return;
+		}
+		cost = joinEvent.getEntryFee();
+
 		// 参加料チェック
-		if (game.getStage().getEntryFee() > 0){
+		if (cost > 0){
 			// 所持金確認
-			if (!Actions.checkMoney(player.getName(), game.getStage().getEntryFee())){
-				throw new CommandException("&c参加するためには参加料 "+game.getStage().getEntryFee()+"Coin が必要です！");
+			if (!Actions.checkMoney(player.getName(), cost)){
+				throw new CommandException("&c参加するためには参加料 "+cost+"Coin が必要です！");
 			}
 			// 引き落とし
-			if (!Actions.takeMoney(player.getName(), game.getStage().getEntryFee())){
+			if (!Actions.takeMoney(player.getName(), cost)){
 				throw new CommandException("&c参加料の引き落としにエラーが発生しました。管理人までご連絡ください。");
 			}else{
-				Actions.message(player, "&c参加料として "+game.getStage().getEntryFee()+"Coin を支払いました！");
+				Actions.message(player, "&c参加料として "+cost+"Coin を支払いました！");
 			}
 		}
 
 		// join
-		game.addPlayer(player);
+		if (joinEvent.getGameTeam() == null){
+			game.addPlayer(player);
+		}else{
+			game.addPlayer(player, joinEvent.getGameTeam());
+		}
 
 		// 所属チーム取得
 		GameTeam team = game.getPlayerTeam(player);

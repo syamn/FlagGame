@@ -33,6 +33,8 @@ import syam.flaggame.enums.FlagState;
 import syam.flaggame.enums.FlagType;
 import syam.flaggame.enums.GameResult;
 import syam.flaggame.enums.GameTeam;
+import syam.flaggame.event.GameFinishedEvent;
+import syam.flaggame.event.GameStartEvent;
 import syam.flaggame.exception.GameStateException;
 import syam.flaggame.manager.GameManager;
 import syam.flaggame.player.PlayerManager;
@@ -167,6 +169,13 @@ public class Game implements IGame{
 	 * ゲームを開始する
 	 */
 	public void start(CommandSender sender){
+		// Call event
+		GameStartEvent startEvent = new GameStartEvent(this.stage, this.random, sender, redPlayers, bluePlayers);
+		plugin.getServer().getPluginManager().callEvent(startEvent);
+		if (startEvent.isCancelled()){
+			return;
+		}
+
 		if (started){
 			Actions.message(sender, "&cこのゲームは既に始まっています");
 			return;
@@ -434,6 +443,14 @@ public class Game implements IGame{
 			}
 		}
 
+		// Call event
+		GameFinishedEvent finishedEvent = new GameFinishedEvent(
+				stage,
+				(winTeam == null) ? GameResult.DRAW : GameResult.TEAM_WIN,
+				winTeam,
+				playersMap);
+		plugin.getServer().getPluginManager().callEvent(finishedEvent);
+
 		// 後処理
 		stage.setUsing(false);
 		stage.setGame(null);
@@ -515,6 +532,15 @@ public class Game implements IGame{
 				}
 			}
 		}
+
+		// Call event
+		GameFinishedEvent finishedEvent = new GameFinishedEvent(
+				stage,
+				result,
+				winTeam,
+				reason,
+				playersMap);
+		plugin.getServer().getPluginManager().callEvent(finishedEvent);
 
 		// 後処理
 		stage.setUsing(false);

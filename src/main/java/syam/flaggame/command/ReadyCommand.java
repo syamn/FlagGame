@@ -1,5 +1,6 @@
 package syam.flaggame.command;
 
+import syam.flaggame.event.GameReadyEvent;
 import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Game;
 import syam.flaggame.game.Stage;
@@ -76,8 +77,15 @@ public class ReadyCommand extends BaseCommand {
 			throw new CommandException("&cチームスポーン地点が正しく設定されていません");
 		}
 
+		// Call event
+		GameReadyEvent readyEvent = new GameReadyEvent(stage, sender, random);
+		plugin.getServer().getPluginManager().callEvent(readyEvent);
+		if (readyEvent.isCancelled()){
+			return;
+		}
+
 		// ready
-		Game game = new Game(plugin, stage, random);
+		Game game = new Game(plugin, readyEvent.getStage(), readyEvent.isRandom());
 		game.ready(sender);
 	}
 

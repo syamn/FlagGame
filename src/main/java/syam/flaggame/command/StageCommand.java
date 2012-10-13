@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import syam.flaggame.command.queue.Queueable;
+import syam.flaggame.event.StageCreateEvent;
 import syam.flaggame.exception.CommandException;
 import syam.flaggame.game.Stage;
 import syam.flaggame.manager.SetupManager;
@@ -85,6 +86,13 @@ public class StageCommand extends BaseCommand implements Queueable{
 		Stage stage = StageManager.getStage(args.get(1));
 		if (stage != null){
 			throw new CommandException("&cそのステージ名は既に存在します！");
+		}
+
+		// Call event
+		StageCreateEvent stageCreateEvent = new StageCreateEvent(sender, stage);
+		plugin.getServer().getPluginManager().callEvent(stageCreateEvent);
+		if (stageCreateEvent.isCancelled()){
+			return;
 		}
 
 		// 新規ゲーム登録
