@@ -364,6 +364,14 @@ public class Game implements IGame{
 			loseTeam = GameTeam.RED;
 		}
 
+		// 引き分けはKill数比較
+		if (winTeam == null){
+			if (getKillCount(GameTeam.RED) > getKillCount(GameTeam.BLUE))
+				winTeam = GameTeam.RED;
+			else if (getKillCount(GameTeam.BLUE) > getKillCount(GameTeam.RED))
+				winTeam = GameTeam.BLUE;
+		}
+
 		// アナウンス
 		Actions.broadcastMessage(msgPrefix+"&2フラッグゲーム'&6"+stage.getName()+"&2'が終わりました！");
 		if (redS != "")
