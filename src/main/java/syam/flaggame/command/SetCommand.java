@@ -375,7 +375,7 @@ public class SetCommand extends BaseCommand {
 		String result = "&a可能";
 		if (!available) result = "&c不可";
 
-		stage.setStageProtected(available);
+		stage.setAvailable(available);
 		Actions.message(sender, null, "&aステージ'"+stage.getName()+"'は使用"+result+"&aに設定されました！");
 	}
 
