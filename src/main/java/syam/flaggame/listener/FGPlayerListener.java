@@ -302,6 +302,11 @@ public class FGPlayerListener implements Listener{
 			if (game.isJoined(deader)){
 				PlayerManager.getProfile(deader.getName()).addDeath(); // death数追加
 				game.getStage().getProfile().addDeath();
+
+				// 頭の羊毛ブロックをドロップさせない
+				if (deader.getInventory().getHelmet().getType() == Material.WOOL){
+					deader.getInventory().setHelmet(null);
+				}
 			}else{
 				continue;
 			}

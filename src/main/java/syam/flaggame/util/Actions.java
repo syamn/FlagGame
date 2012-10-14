@@ -346,6 +346,11 @@ public class Actions {
 	public static void dropInventoryItems(Player player){
 		if (player == null) return;
 
+		// 頭の羊毛ブロックをドロップさせない
+		if (player.getInventory().getHelmet().getType() == Material.WOOL){
+			player.getInventory().setHelmet(null);
+		}
+
 		PlayerInventory inv = player.getInventory();
 		Location loc = player.getLocation();
 
