@@ -203,6 +203,8 @@ public class FlagGame extends JavaPlugin{
 	 * プラグイン停止処理
 	 */
 	public void onDisable(){
+		commands.clear();
+
 		// 開始中のゲームをすべて終わらせる
 		boolean readying = false;
 		for (Game game : GameManager.getGames().values()){

@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -69,6 +70,8 @@ public class Game implements IGame{
 	private Map<GameTeam, Set<String>> playersMap = new ConcurrentHashMap<GameTeam, Set<String>>();
 	private Set<String> redPlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 	private Set<String> bluePlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+
+	private Map<String, String> tabListMap = new ConcurrentHashMap<String, String>();
 
 	// Kill/Death記録
 	private Map<GameTeam, Integer> teamKilledCount = new ConcurrentHashMap<GameTeam, Integer>();
@@ -241,6 +244,8 @@ public class Game implements IGame{
 			Actions.broadcastMessage(msgPrefix+"&2 '&6/flag watch "+stage.getName()+"&2' コマンドで観戦することができます！");
 		}
 
+		tabListMap.clear();
+
 		// 試合に参加する全プレイヤーを回す
 		for (Map.Entry<GameTeam, Set<String>> entry : playersMap.entrySet()){
 			GameTeam team = entry.getKey();
@@ -289,6 +294,14 @@ public class Game implements IGame{
 
 				// メッセージ通知
 				Actions.message(player, msgPrefix+ "&a *** "+team.getColor()+"あなたは "+team.getTeamName()+"チーム です！ &a***");
+
+				// Tabリスト名変更
+				tabListMap.put(player.getName(), player.getPlayerListName());
+				String tabname = team.getColor() + player.getName();
+				if (tabname.length() > 16){
+					tabname = tabname.substring(0, 12) + ChatColor.WHITE + "..";
+				}
+				player.setPlayerListName(tabname);
 			}
 		}
 		String blue = "", red = "";
@@ -444,6 +457,12 @@ public class Game implements IGame{
 					player.getInventory().setChestplate(null);
 					player.getInventory().setLeggings(null);
 					player.getInventory().setBoots(null);
+
+					// TABリスト名を戻す
+					String tabname = tabListMap.get(name);
+					if (tabname != null){
+						player.setPlayerListName(tabname);
+					}
 				}
 
 				// 参加中のゲーム情報更新

@@ -101,6 +101,7 @@ public class Stage implements IStage{
 		}
 		return count;
 	}
+
 	/**
 	 * コンテナブロックを2ブロック下の同じコンテナから要素をコピーする
 	 */
