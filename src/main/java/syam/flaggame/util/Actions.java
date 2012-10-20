@@ -347,7 +347,8 @@ public class Actions {
 		if (player == null) return;
 
 		// 頭の羊毛ブロックをドロップさせない
-		if (player.getInventory().getHelmet().getType() == Material.WOOL){
+		ItemStack helmet = player.getInventory().getHelmet();
+		if (helmet != null && helmet.getType() == Material.WOOL){
 			player.getInventory().setHelmet(null);
 		}
 
