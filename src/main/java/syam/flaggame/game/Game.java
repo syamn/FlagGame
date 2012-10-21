@@ -449,6 +449,7 @@ public class Game implements IGame{
 		for (Set<String> names : playersMap.values()){
 			for (String name : names){
 				Player player = Bukkit.getPlayer(name);
+				name = player.getName();
 				// オンラインチェック
 				if (player != null && player.isOnline()){
 					// アイテムクリア
@@ -556,6 +557,12 @@ public class Game implements IGame{
 					player.getInventory().setChestplate(null);
 					player.getInventory().setLeggings(null);
 					player.getInventory().setBoots(null);
+
+					// TABリスト名を戻す
+					String tabname = tabListMap.get(player.getName());
+					if (tabname != null){
+						player.setPlayerListName(tabname);
+					}
 				}
 			}
 		}
