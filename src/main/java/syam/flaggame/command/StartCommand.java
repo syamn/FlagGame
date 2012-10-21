@@ -63,6 +63,11 @@ public class StartCommand extends BaseCommand{
 			}
 		}
 
+		// check starting countdown
+		if (game.getStarttimerThreadID() != -1){
+			throw new CommandException("&cこのゲームは既に開始カウントダウン中です！");
+		}
+
 		// start
 		//game.start(sender);
 		game.start_timer(sender);

@@ -1013,6 +1013,10 @@ public class Game implements IGame{
 		return this.random;
 	}
 
+	public int getStarttimerThreadID(){
+		return starttimerThreadID;
+	}
+
 	@Override
 	public Stage getStage() {
 		return this.stage;
