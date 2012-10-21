@@ -297,7 +297,7 @@ public class Game implements IGame{
 
 				// Tabリスト名変更
 				tabListMap.put(player.getName(), player.getPlayerListName());
-				String tabname = team.getColor() + player.getName();
+				String tabname = ("§" + team.getColor().charAt(1) + player.getName());
 				if (tabname.length() > 16){
 					tabname = tabname.substring(0, 12) + ChatColor.WHITE + "..";
 				}
