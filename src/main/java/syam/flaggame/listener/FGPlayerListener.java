@@ -304,7 +304,8 @@ public class FGPlayerListener implements Listener{
 				game.getStage().getProfile().addDeath();
 
 				// 頭の羊毛ブロックをドロップさせない
-				if (deader.getInventory().getHelmet().getType() == Material.WOOL){
+				ItemStack helmet = deader.getInventory().getHelmet();
+				if (helmet != null && helmet.getType() == Material.WOOL){
 					deader.getInventory().setHelmet(null);
 				}
 			}else{
