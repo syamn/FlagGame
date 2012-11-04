@@ -18,20 +18,29 @@ public abstract class BaseCommand {
 	protected static final String msgPrefix = FlagGame.msgPrefix;
 
 	/* コマンド関係 */
-	public CommandSender sender;
-	public List<String> args = new ArrayList<String>();
-	public String name;
-	public int argLength = 0;
-	public String usage;
-	public boolean bePlayer = true;
-	public Player player;
-	public String command;
-	public FlagGame plugin;
+	// 初期化必要無し
+	protected FlagGame plugin;
+	protected CommandSender sender;
+	protected String command;
 
-	public boolean run(FlagGame plugin, CommandSender sender, String[] preArgs, String cmd) {
+	// 初期化必要
+	protected Player player;
+	protected List<String> args = new ArrayList<String>();
+
+	// プロパティ
+	protected boolean bePlayer = true;
+	protected String name;
+	protected int argLength = 0;
+	protected String usage;
+
+
+	public boolean run(final FlagGame plugin, final CommandSender sender, final String[] preArgs, final String cmd) {
 		this.plugin = plugin;
 		this.sender = sender;
 		this.command = cmd;
+
+		// init
+		init();
 
 		// 引数をソート
 		args.clear();
@@ -78,6 +87,12 @@ public abstract class BaseCommand {
 		return true;
 	}
 
+	// init commands
+	private void init(){
+		this.args.clear();
+		player = null;
+	}
+
 	/**
 	 * コマンドを実際に実行する
 	 * @return 成功すればtrue それ以外はfalse
@@ -90,6 +105,10 @@ public abstract class BaseCommand {
 	 * @return trueなら権限あり、falseなら権限なし
 	 */
 	public abstract boolean permission();
+
+	public String getName() {
+		return this.name;
+	}
 
 	/**
 	 * コマンドの使い方を送信する
