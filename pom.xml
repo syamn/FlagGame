@@ -192,7 +192,7 @@
       <dependency>
           <groupId>net.milkbowl.vault</groupId>
           <artifactId>Vault</artifactId>
-          <version>1.2.18-SNAPSHOT</version>
+          <version>1.2.19-SNAPSHOT</version>
           <scope>compile</scope>
       </dependency>
       <!-- WorldEdit Dependency -->
@@ -210,7 +210,7 @@
           <artifactId>dynmap-api</artifactId>
           <version>0.70.2</version>
           <scope>system</scope>
-          <systemPath>${project.basedir}/lib/dynmap-0.70.2.jar</systemPath>
+          <systemPath>${project.basedir}/lib/dynmap-0.90.jar</systemPath>
       </dependency>
       <!-- PermissionsEx Dependency -->
       <dependency>
@@ -218,7 +218,7 @@
           <artifactId>PermissionsEx</artifactId>
           <version>1.19.3</version>
           <scope>system</scope>
-          <systemPath>${project.basedir}/lib/PermissionsEx-1.19.3.jar</systemPath>
+          <systemPath>${project.basedir}/lib/PermissionsEx-1.19.4.jar</systemPath>
       </dependency>
       <!-- DeathNotifier Dependency -->
       <dependency>
