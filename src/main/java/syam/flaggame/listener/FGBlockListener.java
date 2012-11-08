@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -48,98 +49,7 @@ public class FGBlockListener implements Listener{
 	 */
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event){
-		Block block = event.getBlock();
-		// ゲーム用ワールドでなければ返す
-		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
-			return;
-		}
-
-		Location loc = block.getLocation();
-		Player player = event.getPlayer();
-
-		// フラッグブロックかチェックする
-		for (Stage stage : StageManager.getStages().values()){
-			Flag flag = null;
-
-			if (stage.isFlag(loc)){
-				flag = stage.getFlag(loc);
-			}else{
-				if (stage.hasStage()){
-					Cuboid stageArea = stage.getStage();
-					if (stageArea.isIn(loc)){
-						if (stage.isStageProtected()){
-							event.setCancelled(true);
-						}
-						return; // ステージエリアの被りが無い前提で返す
-					}
-				}
-				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
-			}
-
-			// 開始状態チェック
-			if (!stage.isUsing() || stage.getGame() == null){
-				event.setCancelled(true); // フラッグなので保護
-				continue;
-			}
-
-			Game game = stage.getGame();
-
-			/* ゲーム中のステージでフラッグが壊された */
-
-			// プレイヤーと壊されたブロックのチーム取得
-			GameTeam pTeam = game.getPlayerTeam(player);
-			if (pTeam == null){
-				Actions.message(player, "&cあなたはこのゲームに参加していません！");
-				event.setCancelled(true);
-				return;
-			}
-
-			GameTeam bTeam = null;
-			int id = block.getTypeId();
-			byte data = block.getData();
-			for (GameTeam gt : GameTeam.values()){
-				if (gt.getBlockID() == id && gt.getBlockData() == data){
-					bTeam = gt;
-				}
-			}
-
-			// フラッグブロックの位置だが、影響のないブロックは何もしない
-			if (bTeam == null)
-				continue;
-
-			// 自分のチームのフラッグは破壊させない
-			if (bTeam == pTeam){
-				event.setCancelled(true);
-				Actions.message(player, "&cこれは自分のチームのフラッグです！");
-				continue;
-			}
-
-			// フラッグ破壊 各チームへメッセージ表示
-			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
-			game.message(pTeam.getAgainstTeam(), msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
-
-			game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
-
-			// 破壊カウント追加
-			PlayerManager.getProfile(player.getName()).addBreak();
-			stage.getProfile().addBreak();
-
-			// エフェクト
-			if (plugin.getConfigs().getUseFlagEffects()){
-				loc.getWorld().createExplosion(loc, 0F, false);
-				loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
-			}
-
-			return;
-		}
-
-		// 権限チェック
-		if (Perms.IGNORE_PROTECT.has(player)){
-			return;
-		}
-
-		// ワールド保護チェック
-		if (plugin.getConfigs().isProtected()){
+		if (onBlockChange(event, event.getPlayer())){
 			event.setCancelled(true);
 		}
 	}
@@ -150,14 +60,27 @@ public class FGBlockListener implements Listener{
 	 */
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockPlace(final BlockPlaceEvent event){
-		Block block = event.getBlock();
+		if (onBlockChange(event, event.getPlayer())){
+			event.setCancelled(true);
+		}
+	}
+
+	// フラッグが壊されたか取得した
+	public boolean onBlockChange(final BlockEvent event, final Player player){
+		final Block block = event.getBlock();
 		// ゲーム用ワールドでなければ返す
 		if (block.getWorld() != Bukkit.getWorld(plugin.getConfigs().getGameWorld())){
-			return;
+			return false;
 		}
 
-		Location loc = block.getLocation();
-		Player player = event.getPlayer();
+		boolean placeEvent = false, breakEvent = false, cancel = false;
+		if (event instanceof BlockPlaceEvent){ placeEvent = true; }
+		else if (event instanceof BlockBreakEvent){ breakEvent = true; }
+		else{
+			return false;
+		}
+
+		final Location loc = block.getLocation();
 
 		// フラッグブロックかチェックする
 		for (Stage stage : StageManager.getStages().values()){
@@ -170,9 +93,9 @@ public class FGBlockListener implements Listener{
 					Cuboid stageArea = stage.getStage();
 					if (stageArea.isIn(loc)){
 						if (stage.isStageProtected()){
-							event.setCancelled(true);
+							cancel = true;
 						}
-						return; // ステージエリアの被りが無い前提で返す
+						return cancel; // ステージエリアの被りが無い前提で返す
 					}
 				}
 				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
@@ -180,20 +103,20 @@ public class FGBlockListener implements Listener{
 
 			// 開始状態チェック
 			if (!stage.isUsing() || stage.getGame() == null){
-				event.setCancelled(true); // フラッグなので保護
+				cancel = true; // フラッグなので保護
 				continue;
 			}
 
 			Game game = stage.getGame();
 
-			/* ゲーム中のステージでフラッグを設置した */
+			/* ゲーム中のステージでフラッグを設置/破壊した */
 
-			// プレイヤーと設置したブロックのチーム取得
+			// プレイヤーと設置/破壊したブロックのチーム取得
 			GameTeam pTeam = game.getPlayerTeam(player);
 			if (pTeam == null){
 				Actions.message(player, "&cあなたはこのゲームに参加していません！");
-				event.setCancelled(true);
-				return;
+				cancel = true;
+				return cancel;
 			}
 			GameTeam bTeam = null;
 			int id = block.getTypeId();
@@ -208,41 +131,59 @@ public class FGBlockListener implements Listener{
 			if (bTeam == null)
 				continue;
 
-			// 相手のチームのフラッグは設置させない
-			if (bTeam != pTeam){
-				event.setCancelled(true);
-				Actions.message(player, "&c相手チームのフラッグは設置できません！");
-				continue;
+			// メッセージ -> カウント -> エフェクト
+			if (placeEvent){ // 設置
+				if (bTeam != pTeam){
+					cancel = true; // 相手のチームのフラッグは設置させない
+					Actions.message(player, "&c相手チームのフラッグは設置できません！");
+					continue;
+				}
+
+				game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
+				game.message(pTeam.getAgainstTeam(), msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
+				game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
+
+				PlayerManager.getProfile(player.getName()).addPlace();
+				stage.getProfile().addPlace();
+
+				if (plugin.getConfigs().getUseFlagEffects()){
+					loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+					loc.getWorld().playEffect(loc, Effect.SMOKE, 4, 2);
+				}
+			}
+			else if (breakEvent){ // 破壊
+				if (bTeam == pTeam){
+					cancel = true; // 自分のチームのフラッグは破壊させない
+					Actions.message(player, "&cこれは自分のチームのフラッグです！");
+					continue;
+				}
+				game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが相手の"+flag.getTypeName()+"フラッグを破壊しました！");
+				game.message(pTeam.getAgainstTeam(), msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを破壊されました！");
+				game.log(" Player "+player.getName()+" Break "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
+
+				PlayerManager.getProfile(player.getName()).addBreak();
+				stage.getProfile().addBreak();
+
+				if (plugin.getConfigs().getUseFlagEffects()){
+					loc.getWorld().createExplosion(loc, 0F, false);
+					loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
+				}
 			}
 
-			// フラッグ設置 各チームへメッセージ表示
-			game.message(pTeam, msgPrefix+ "&f'&6" + player.getName() +"&f'&aが"+flag.getTypeName()+"フラッグを獲得しました！");
-			game.message(pTeam.getAgainstTeam(), msgPrefix+ "&f'&6" + player.getName() +"&f'&cに"+flag.getTypeName()+"フラッグを獲得されました！");
-
-			game.log(" Player "+player.getName()+" Get "+flag.getFlagType().name()+" Flag: "+Actions.getBlockLocationString(block.getLocation()));
-
-			// 設置カウント追加
-			PlayerManager.getProfile(player.getName()).addPlace();
-			stage.getProfile().addPlace();
-
-			// エフェクト
-			if (plugin.getConfigs().getUseFlagEffects()){
-				loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0, 10);
-				loc.getWorld().playEffect(loc, Effect.SMOKE, 4, 2);
-			}
-
-			return;
+			return cancel;
 		}
 
 		// 権限チェック
 		if (Perms.IGNORE_PROTECT.has(player)){
-			return;
+			return cancel;
 		}
 
 		// ワールド保護チェック
 		if (plugin.getConfigs().isProtected()){
-			event.setCancelled(true);
+			cancel = true;
 		}
+
+		return cancel;
 	}
 
 	// 看板設置
