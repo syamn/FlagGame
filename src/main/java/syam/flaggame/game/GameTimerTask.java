@@ -64,8 +64,7 @@ public class GameTimerTask implements Runnable{
 		}
 		// 60秒間隔
 		else if ((game.getRemainTime() % 60) == 0){
-			int remainMin = game.getRemainTime() / 60;
-			game.message(msgPrefix+ "&aゲーム終了まで あと "+remainMin+" 分です！");
+			game.message(msgPrefix+ "&aゲーム終了まで あと "+game.getRemainTime() / 60+" 分です！");
 		}
 
 		// プレイヤーの座標チェック

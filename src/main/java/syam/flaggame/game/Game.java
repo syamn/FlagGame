@@ -55,7 +55,7 @@ public class Game implements IGame{
 	// プラグインインスタンス
 	private final FlagGame plugin;
 
-	private String GameID; // 一意なゲームID ログ用
+	private String gameID; // 一意なゲームID ログ用
 	private Stage stage;
 	private boolean random = false;
 
@@ -158,7 +158,7 @@ public class Game implements IGame{
 
 		// ロギング
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd-HHmmss");
-		this.GameID = stage.getName()+"_"+sdf.format(new Date());
+		this.gameID = stage.getName()+"_"+sdf.format(new Date());
 
 		log("========================================");
 		log("Sender "+sender.getName()+" Ready to Game");
@@ -440,7 +440,7 @@ public class Game implements IGame{
 		log("========================================");
 
 		// ログの終わり
-		GameID = null;
+		gameID = null;
 
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
@@ -541,7 +541,7 @@ public class Game implements IGame{
 		log("========================================");
 
 		// ログの終わり
-		GameID = null;
+		gameID = null;
 
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
@@ -604,7 +604,7 @@ public class Game implements IGame{
 		this.redPlayers = null;
 		this.bluePlayers = null;
 		this.teamKilledCount = null;
-		this.GameID = null;
+		this.gameID = null;
 		this.stage = null;
 	}
 
@@ -1034,8 +1034,8 @@ public class Game implements IGame{
 	 * @param line ログ
 	 */
 	public void log(String line){
-		if (GameID != null){
-			String filepath = plugin.getConfigs().getDetailDirectory() + GameID + ".log";
+		if (gameID != null){
+			String filepath = plugin.getConfigs().getDetailDirectory() + gameID + ".log";
 			Actions.log(filepath, line);
 		}
 	}

@@ -37,11 +37,13 @@ public class StageFileManager {
 
 	/* ステージデータ保存/読み出し */
 	public void saveStages(){
-		FileConfiguration confFile = new YamlConfiguration();
 		String fileDir = plugin.getDataFolder() + System.getProperty("file.separator") +
-				"stageData" + System.getProperty("file.separator");
 
+				"stageData" + System.getProperty("file.separator");
+		FileConfiguration confFile = null;
 		for (Stage stage : StageManager.getStages().values()){
+			confFile = new YamlConfiguration();
+
 			File file = new File(fileDir + stage.getName() + ".yml");
 
 			// マップデータをリストに変換
