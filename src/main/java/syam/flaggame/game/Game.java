@@ -460,10 +460,7 @@ public class Game implements IGame{
 					player.getInventory().setBoots(null);
 
 					// TABリスト名を戻す
-					String tabname = tabListMap.get(name);
-					if (tabname != null){
-						player.setPlayerListName(tabname);
-					}
+					restorePlayerListColor(player);
 				}
 
 				// 参加中のゲーム情報更新
@@ -559,10 +556,7 @@ public class Game implements IGame{
 					player.getInventory().setBoots(null);
 
 					// TABリスト名を戻す
-					String tabname = tabListMap.get(player.getName());
-					if (tabname != null){
-						player.setPlayerListName(tabname);
-					}
+					restorePlayerListColor(player);
 				}
 			}
 		}
@@ -586,6 +580,13 @@ public class Game implements IGame{
 
 		// 初期化
 		//init();
+	}
+
+	public void restorePlayerListColor(final Player player){
+		final String tabname = tabListMap.remove(player.getName());
+		if (tabname != null){
+			player.setPlayerListName(tabname);
+		}
 	}
 
 	/**

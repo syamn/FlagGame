@@ -134,6 +134,7 @@ public class LeaveCommand extends BaseCommand implements Queueable{
 		}
 		player.teleport(tpLoc, TeleportCause.PLUGIN);
 
+		game.restorePlayerListColor(player);
 		Actions.broadcastMessage(msgPrefix+ "&aプレイヤー'"+team.getColor()+player.getName()+"&a'がゲーム'&6"+game.getName()+"&a'から途中退場しました！");
 		Actions.message(player, "&aゲーム'"+game.getName()+"'から抜けました！");
 
