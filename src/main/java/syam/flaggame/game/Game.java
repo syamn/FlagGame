@@ -449,22 +449,24 @@ public class Game implements IGame{
 		for (Set<String> names : playersMap.values()){
 			for (String name : names){
 				Player player = Bukkit.getPlayer(name);
-				name = player.getName();
-				// オンラインチェック
-				if (player != null && player.isOnline()){
-					// アイテムクリア
-					player.getInventory().clear();
-					player.getInventory().setHelmet(null);
-					player.getInventory().setChestplate(null);
-					player.getInventory().setLeggings(null);
-					player.getInventory().setBoots(null);
 
-					// TABリスト名を戻す
-					restorePlayerListColor(player);
+				// オフラインプレイヤーはスキップ
+				if (player == null || !player.isOnline()){
+					continue;
 				}
 
+				// アイテムクリア
+				player.getInventory().clear();
+				player.getInventory().setHelmet(null);
+				player.getInventory().setChestplate(null);
+				player.getInventory().setLeggings(null);
+				player.getInventory().setBoots(null);
+
+				// TABリスト名を戻す
+				restorePlayerListColor(player);
+
 				// 参加中のゲーム情報更新
-				PlayerManager.getPlayer(name).setPlayingGame(null);
+				PlayerManager.getPlayer(player.getName()).setPlayingGame(null);
 			}
 		}
 
