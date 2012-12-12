@@ -446,15 +446,12 @@ public class Game implements IGame{
 		tpSpawnLocation();
 
 		// 同じゲーム参加者のインベントリをクリア
-		for (Set<String> names : playersMap.values()){
-			for (String name : names){
-				Player player = Bukkit.getPlayer(name);
+		for (String name : getPlayersSet()){
+			if (name == null) continue;
+			Player player = Bukkit.getPlayerExact(name);
 
-				// オフラインプレイヤーはスキップ
-				if (player == null || !player.isOnline()){
-					continue;
-				}
-
+			// オフラインプレイヤーはスキップ
+			if (player != null && player.isOnline()){
 				// アイテムクリア
 				player.getInventory().clear();
 				player.getInventory().setHelmet(null);
@@ -469,6 +466,7 @@ public class Game implements IGame{
 				PlayerManager.getPlayer(player.getName()).setPlayingGame(null);
 			}
 		}
+
 
 		// Call event
 		GameFinishedEvent finishedEvent = new GameFinishedEvent(
@@ -545,24 +543,26 @@ public class Game implements IGame{
 		// 参加プレイヤーをスポーン地点に移動させる
 		tpSpawnLocation();
 		// 同じゲーム参加者のインベントリをクリア
-		for (Set<String> names : playersMap.values()){
-			for (String name : names){
-				Player player = Bukkit.getPlayer(name);
-				// オンラインチェック
-				if (player != null && player.isOnline()){
-					// アイテムクリア
-					player.getInventory().clear();
-					player.getInventory().setHelmet(null);
-					player.getInventory().setChestplate(null);
-					player.getInventory().setLeggings(null);
-					player.getInventory().setBoots(null);
+		for (String name : getPlayersSet()){
+			if (name == null) continue;
+			Player player = Bukkit.getPlayerExact(name);
 
-					// TABリスト名を戻す
-					restorePlayerListColor(player);
-				}
+			// オフラインプレイヤーはスキップ
+			if (player != null && player.isOnline()){
+				// アイテムクリア
+				player.getInventory().clear();
+				player.getInventory().setHelmet(null);
+				player.getInventory().setChestplate(null);
+				player.getInventory().setLeggings(null);
+				player.getInventory().setBoots(null);
+
+				// TABリスト名を戻す
+				restorePlayerListColor(player);
+
+				// 参加中のゲーム情報更新
+				PlayerManager.getPlayer(player.getName()).setPlayingGame(null);
 			}
 		}
-
 		// Call event
 		GameFinishedEvent finishedEvent = new GameFinishedEvent(
 				stage,

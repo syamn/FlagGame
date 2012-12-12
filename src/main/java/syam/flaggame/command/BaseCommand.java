@@ -39,6 +39,7 @@ public abstract class BaseCommand {
 		this.sender = sender;
 		this.command = cmd;
 
+		
 		// init
 		init();
 
