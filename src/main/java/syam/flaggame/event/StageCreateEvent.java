@@ -1,6 +1,5 @@
 /**
- * FlagGame - Package: syam.flaggame.event
- * Created: 2012/10/13 21:48:16
+ * FlagGame - Package: syam.flaggame.event Created: 2012/10/13 21:48:16
  */
 package syam.flaggame.event;
 
@@ -13,46 +12,49 @@ import syam.flaggame.game.Stage;
 
 /**
  * StageCreateEvent (StageCreateEvent.java)
+ * 
  * @author syam(syamn)
  */
-public class StageCreateEvent extends Event implements Cancellable{
-	private static final HandlerList handlers = new HandlerList();
-	private boolean isCancelled = false;
+public class StageCreateEvent extends Event implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
+    private boolean isCancelled = false;
 
-	private CommandSender creator;
-	private Stage stage;
+    private CommandSender creator;
+    private Stage stage;
 
-	public StageCreateEvent(CommandSender creator, Stage stage){
-		this.creator = creator;
-		this.stage = stage;
-	}
+    public StageCreateEvent(CommandSender creator, Stage stage) {
+        this.creator = creator;
+        this.stage = stage;
+    }
 
-	public CommandSender getCreator(){
-		return this.creator;
-	}
-	public Stage getStage(){
-		return this.stage;
-	}
+    public CommandSender getCreator() {
+        return this.creator;
+    }
 
-	public String getStageName(){
-		if (this.stage == null) return null;
-		return this.stage.getName();
-	}
+    public Stage getStage() {
+        return this.stage;
+    }
 
-	public boolean isCancelled(){
-		return this.isCancelled;
-	}
-	public void setCancelled(boolean cancelled){
-		this.isCancelled = cancelled;
-	}
+    public String getStageName() {
+        if (this.stage == null) return null;
+        return this.stage.getName();
+    }
 
-	/* ******************** */
-	@Override
-	public HandlerList getHandlers(){
-		return handlers;
-	}
+    public boolean isCancelled() {
+        return this.isCancelled;
+    }
 
-	public static HandlerList getHandlerList(){
-		return handlers;
-	}
+    public void setCancelled(boolean cancelled) {
+        this.isCancelled = cancelled;
+    }
+
+    /* ******************** */
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

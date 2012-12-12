@@ -1,6 +1,5 @@
 /**
- * FlagGame - Package: syam.flaggame.event
- * Created: 2012/10/13 21:37:38
+ * FlagGame - Package: syam.flaggame.event Created: 2012/10/13 21:37:38
  */
 package syam.flaggame.event;
 
@@ -13,54 +12,58 @@ import syam.flaggame.enums.GameTeam;
 
 /**
  * GameJoinEvent (GameJoinEvent.java)
+ * 
  * @author syam(syamn)
  */
-public class GameJoinEvent extends Event implements Cancellable{
-	private static final HandlerList handlers = new HandlerList();
-	private boolean isCancelled = false;
+public class GameJoinEvent extends Event implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
+    private boolean isCancelled = false;
 
-	private Player player;
-	private double entryFee;
+    private Player player;
+    private double entryFee;
 
-	private GameTeam team = null;
+    private GameTeam team = null;
 
-	public GameJoinEvent(Player player, double entryFee){
-		this.player = player;
-		this.entryFee = entryFee;
-	}
+    public GameJoinEvent(Player player, double entryFee) {
+        this.player = player;
+        this.entryFee = entryFee;
+    }
 
-	public Player getPlayer(){
-		return this.player;
-	}
+    public Player getPlayer() {
+        return this.player;
+    }
 
-	public double getEntryFee(){
-		return this.entryFee;
-	}
-	public void setEntryFee(double cost){
-		this.entryFee = cost;
-	}
+    public double getEntryFee() {
+        return this.entryFee;
+    }
 
-	public void setGameTeam(GameTeam team){
-		this.team = team;
-	}
-	public GameTeam getGameTeam(){
-		return this.team;
-	}
+    public void setEntryFee(double cost) {
+        this.entryFee = cost;
+    }
 
-	public boolean isCancelled(){
-		return this.isCancelled;
-	}
-	public void setCancelled(boolean cancelled){
-		this.isCancelled = cancelled;
-	}
+    public void setGameTeam(GameTeam team) {
+        this.team = team;
+    }
 
-	/* ******************** */
-	@Override
-	public HandlerList getHandlers(){
-		return handlers;
-	}
+    public GameTeam getGameTeam() {
+        return this.team;
+    }
 
-	public static HandlerList getHandlerList(){
-		return handlers;
-	}
+    public boolean isCancelled() {
+        return this.isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.isCancelled = cancelled;
+    }
+
+    /* ******************** */
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

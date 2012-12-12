@@ -1,6 +1,5 @@
 /**
- * FlagGame - Package: syam.flaggame.game
- * Created: 2012/09/23 4:58:28
+ * FlagGame - Package: syam.flaggame.game Created: 2012/09/23 4:58:28
  */
 package syam.flaggame.manager;
 
@@ -12,86 +11,97 @@ import syam.flaggame.game.Stage;
 
 /**
  * StageManager (StageManager.java)
+ * 
  * @author syam(syamn)
  */
 public class StageManager {
-	private static HashMap<String, Stage> stages = new HashMap<String, Stage>();
+    private static HashMap<String, Stage> stages = new HashMap<String, Stage>();
 
-	/**
-	 * 全ステージプロファイルを保存する
-	 */
-	public static void saveAll(){
-		for (Stage stage : StageManager.stages.values()){
-			stage.getProfile().save();
-		}
-	}
+    /**
+     * 全ステージプロファイルを保存する
+     */
+    public static void saveAll() {
+        for (Stage stage : StageManager.stages.values()) {
+            stage.getProfile().save();
+        }
+    }
 
-	/**
-	 * 全ステージのマップを返す
-	 * @return HashMap<String, Stage>
-	 */
-	public static HashMap<String, Stage> getStages(){
-		return stages;
-	}
-	/**
-	 * ステージとステージ名を紐付けでマッピングする
-	 * @param stageName ステージ名
-	 * @param stage ステージインスタンス
-	 */
-	public static void addStage(String stageName, Stage stage){
-		stages.put(stageName, stage);
-	}
-	/**
-	 * 指定したステージをマップから削除する
-	 * @param stageName 削除するステージ名
-	 */
-	public static void removeStage(String stageName){
-		stages.remove(stageName);
-	}
-	/**
-	 * ステージマップをクリアする
-	 */
-	public static void removeStages(){
-		stages.clear();
-	}
+    /**
+     * 全ステージのマップを返す
+     * 
+     * @return HashMap<String, Stage>
+     */
+    public static HashMap<String, Stage> getStages() {
+        return stages;
+    }
 
-	/**
-	 * 実行可能なステージリストを返す
-	 * @return List<Stage>
-	 */
-	public static ArrayList<Stage> getAvailableStages(){
-		ArrayList<Stage> ret = new ArrayList<Stage>();
+    /**
+     * ステージとステージ名を紐付けでマッピングする
+     * 
+     * @param stageName
+     *            ステージ名
+     * @param stage
+     *            ステージインスタンス
+     */
+    public static void addStage(String stageName, Stage stage) {
+        stages.put(stageName, stage);
+    }
 
-		for (Stage stage : stages.values()){
-			if (stage.isAvailable() && !stage.isUsing()){
-				ret.add(stage);
-			}
-		}
+    /**
+     * 指定したステージをマップから削除する
+     * 
+     * @param stageName
+     *            削除するステージ名
+     */
+    public static void removeStage(String stageName) {
+        stages.remove(stageName);
+    }
 
-		return ret;
-	}
+    /**
+     * ステージマップをクリアする
+     */
+    public static void removeStages() {
+        stages.clear();
+    }
 
-	/**
-	 * 実行可能なステージからランダムで1つ抽出する
-	 * @return Stage
-	 */
-	public static Stage getRandomAvailableStage(){
-		Random rnd = new Random();
-		ArrayList<Stage> availables = getAvailableStages();
+    /**
+     * 実行可能なステージリストを返す
+     * 
+     * @return List<Stage>
+     */
+    public static ArrayList<Stage> getAvailableStages() {
+        ArrayList<Stage> ret = new ArrayList<Stage>();
 
-		if (availables.size() <= 0){
-			return null;
-		}
+        for (Stage stage : stages.values()) {
+            if (stage.isAvailable() && !stage.isUsing()) {
+                ret.add(stage);
+            }
+        }
 
-		return availables.get(rnd.nextInt(availables.size()));
-	}
+        return ret;
+    }
 
-	/**
-	 * ステージ名からステージを返す
-	 * @param stageName
-	 * @return Game
-	 */
-	public static Stage getStage(String stageName){
-		return stages.get(stageName);
-	}
+    /**
+     * 実行可能なステージからランダムで1つ抽出する
+     * 
+     * @return Stage
+     */
+    public static Stage getRandomAvailableStage() {
+        Random rnd = new Random();
+        ArrayList<Stage> availables = getAvailableStages();
+
+        if (availables.size() <= 0) { return null; }
+
+        return availables.get(rnd.nextInt(availables.size()));
+    }
+
+    /**
+     * ステージ名からステージを返す
+     * 
+     * @param stageName
+     * @return Game
+     */
+    public static Stage getStage(String stageName) {
+        return stages.get(stageName);
+    }
 }

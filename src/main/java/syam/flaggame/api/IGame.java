@@ -1,6 +1,5 @@
 /**
- * FlagGame - Package: syam.flaggame.api
- * Created: 2012/09/22 2:40:53
+ * FlagGame - Package: syam.flaggame.api Created: 2012/09/22 2:40:53
  */
 package syam.flaggame.api;
 
@@ -16,58 +15,68 @@ import syam.flaggame.game.Stage;
 
 /**
  * IGame (IGame.java)
+ * 
  * @author syam(syamn)
  */
 public interface IGame {
-	// ゲーム進行関係
-	void ready(CommandSender sender);
+    // ゲーム進行関係
+    void ready(CommandSender sender);
 
-	void start(CommandSender sender);
+    void start(CommandSender sender);
 
-	void finish();
-	void finish(GameResult result, GameTeam winTeam, String reason);
+    void finish();
 
+    void finish(GameResult result, GameTeam winTeam, String reason);
 
-	// 参加者関係
-	boolean addPlayer(Player player);
-	boolean addPlayer(Player player, GameTeam team);
-	boolean remPlayer(String playerName);
-	boolean remPlayer(Player player);
+    // 参加者関係
+    boolean addPlayer(Player player);
 
-	boolean isJoined(String playerName);
-	boolean isJoined(Player player);
-	GameTeam getPlayerTeam(Player player);
+    boolean addPlayer(Player player, GameTeam team);
 
-	Map<GameTeam, Set<String>> getPlayersMap();
-	Set<String> getPlayersSet();
-	Set<String> getPlayersSet(GameTeam team);
+    boolean remPlayer(String playerName);
 
+    boolean remPlayer(Player player);
 
-	// 参加者へのアクション関係
-	void message(String message);
-	void message(GameTeam team, String message);
-	void tpSpawnLocation();
+    boolean isJoined(String playerName);
 
+    boolean isJoined(Player player);
 
-	// タイマー関係
-	void start_timer(final CommandSender sender);
-	void timer();
-	void cancelTimerTask();
-	int getRemainTime();
+    GameTeam getPlayerTeam(Player player);
 
+    Map<GameTeam, Set<String>> getPlayersMap();
 
-	// kill/death
-	void addKillCount(final GameTeam team);
-	int getKillCount(final GameTeam team);
+    Set<String> getPlayersSet();
 
+    Set<String> getPlayersSet(GameTeam team);
 
-	// ログ取り
-	void log(String line);
+    // 参加者へのアクション関係
+    void message(String message);
 
+    void message(GameTeam team, String message);
 
-	/* getter / setter */
-	boolean isReady();
-	boolean isStarting();
+    void tpSpawnLocation();
 
-	Stage getStage();
+    // タイマー関係
+    void start_timer(final CommandSender sender);
+
+    void timer();
+
+    void cancelTimerTask();
+
+    int getRemainTime();
+
+    // kill/death
+    void addKillCount(final GameTeam team);
+
+    int getKillCount(final GameTeam team);
+
+    // ログ取り
+    void log(String line);
+
+    /* getter / setter */
+    boolean isReady();
+
+    boolean isStarting();
+
+    Stage getStage();
 }

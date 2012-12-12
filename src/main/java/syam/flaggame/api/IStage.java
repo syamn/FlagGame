@@ -1,6 +1,5 @@
 /**
- * FlagGame - Package: syam.flaggame.api
- * Created: 2012/09/22 3:12:09
+ * FlagGame - Package: syam.flaggame.api Created: 2012/09/22 3:12:09
  */
 package syam.flaggame.api;
 
@@ -20,87 +19,108 @@ import syam.flaggame.util.Cuboid;
 
 /**
  * IStage (IStage.java)
+ * 
  * @author syam(syamn)
  */
 public interface IStage {
 
-	// ロールバックメソッド
-	int rollbackFlags();
-	int rollbackChests();
+    // ロールバックメソッド
+    int rollbackFlags();
 
+    int rollbackChests();
 
-	// フラッグ関係
-	void setFlag(Location loc, Flag flag);
-	void removeFlag(Location loc);
-	Flag getFlag(Location loc);
+    // フラッグ関係
+    void setFlag(Location loc, Flag flag);
 
-	void setFlags(Map<Location, Flag> flags);
-	Map<Location, Flag> getFlags();
+    void removeFlag(Location loc);
 
-	public Map<FlagState, HashMap<FlagType, Integer>> checkFlag();
+    Flag getFlag(Location loc);
 
-	// チェスト関係
-	void setChest(Location loc);
-	void removeChest(Location loc);
-	Block getChest(Location loc);
+    void setFlags(Map<Location, Flag> flags);
 
-	void setChests(Set<Location> chests);
-	Set<Location> getChests();
+    Map<Location, Flag> getFlags();
 
-	/* 座標設定 */
-	// スポーン地点
-	void setSpawn(GameTeam team, Location loc);
-	Location getSpawn(GameTeam team);
+    public Map<FlagState, HashMap<FlagType, Integer>> checkFlag();
 
-	void setSpawns(Map<GameTeam, Location> spawns);
-	Map<GameTeam, Location> getSpawns();
+    // チェスト関係
+    void setChest(Location loc);
 
-	// 観戦席
-	void setSpecSpawn(Location loc);
-	Location getSpecSpawn();
+    void removeChest(Location loc);
 
+    Block getChest(Location loc);
 
-	/* エリア設定 */
-	// ステージ
-	void setStage(Location pos1, Location pos2);
-	void setStage(Cuboid cuboid);
-	Cuboid getStage();
+    void setChests(Set<Location> chests);
 
-	void setStageProtected(boolean protect);
-	boolean isStageProtected();
+    Set<Location> getChests();
 
-	// 拠点
-	void setBase(GameTeam team, Location pos1, Location pos2);
-	void setBase(GameTeam team, Cuboid cuboid);
-	Cuboid getBase(GameTeam team);
+    /* 座標設定 */
+    // スポーン地点
+    void setSpawn(GameTeam team, Location loc);
 
-	void setBases(Map<GameTeam, Cuboid> bases);
-	Map<GameTeam, Cuboid> getBases();
+    Location getSpawn(GameTeam team);
 
+    void setSpawns(Map<GameTeam, Location> spawns);
 
-	/* getter / setter */
-	void setFileName(String filename);
-	String getFileName();
+    Map<GameTeam, Location> getSpawns();
 
-	String getName();
-	GameProfile getProfile();
+    // 観戦席
+    void setSpecSpawn(Location loc);
 
-	// ステージ制限時間
-	void setGameTime(int sec);
-	int getGameTime();
+    Location getSpecSpawn();
 
-	// ステージ人数制限
-	void setTeamLimit(int limit);
-	int getTeamLimit();
+    /* エリア設定 */
+    // ステージ
+    void setStage(Location pos1, Location pos2);
 
-	// 賞金
-	void setAward(int award);
-	int getAward();
+    void setStage(Cuboid cuboid);
 
-	// 参加費
-	void setEntryFee(int entryFee);
-	int getEntryFee();
+    Cuboid getStage();
 
-	void setAvailable(boolean available);
-	boolean isAvailable();
+    void setStageProtected(boolean protect);
+
+    boolean isStageProtected();
+
+    // 拠点
+    void setBase(GameTeam team, Location pos1, Location pos2);
+
+    void setBase(GameTeam team, Cuboid cuboid);
+
+    Cuboid getBase(GameTeam team);
+
+    void setBases(Map<GameTeam, Cuboid> bases);
+
+    Map<GameTeam, Cuboid> getBases();
+
+    /* getter / setter */
+    void setFileName(String filename);
+
+    String getFileName();
+
+    String getName();
+
+    GameProfile getProfile();
+
+    // ステージ制限時間
+    void setGameTime(int sec);
+
+    int getGameTime();
+
+    // ステージ人数制限
+    void setTeamLimit(int limit);
+
+    int getTeamLimit();
+
+    // 賞金
+    void setAward(int award);
+
+    int getAward();
+
+    // 参加費
+    void setEntryFee(int entryFee);
+
+    int getEntryFee();
+
+    void setAvailable(boolean available);
+
+    boolean isAvailable();
 }
