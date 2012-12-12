@@ -101,9 +101,9 @@ public class FGBlockListener implements Listener{
 				continue; // フラッグでもなく、エリア内でも無ければ次のゲームステージを走査する
 			}
 
-			// 開始状態チェック
+			// 開始されていないステージ
 			if (!stage.isUsing() || stage.getGame() == null){
-				cancel = true; // フラッグなので保護
+				cancel = stage.isStageProtected(); // フラッグ保護、ステージ保護設定に依存
 				continue;
 			}
 
