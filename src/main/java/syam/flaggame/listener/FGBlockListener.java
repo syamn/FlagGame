@@ -45,7 +45,7 @@ public class FGBlockListener implements Listener {
     /* 登録するイベントはここから下に */
     /**
      * ブロックを破壊した
-     * 
+     *
      * @param event
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -57,7 +57,7 @@ public class FGBlockListener implements Listener {
 
     /**
      * ブロックを設置した
-     * 
+     *
      * @param event
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
