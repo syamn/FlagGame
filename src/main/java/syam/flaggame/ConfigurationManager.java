@@ -64,6 +64,7 @@ public class ConfigurationManager {
     private boolean deathWhenLogout = new Boolean(true);
     private boolean disableRegainHP = new Boolean(true);
     private boolean disableTeamPVP = new Boolean(true);
+    private int godModeTime = new Integer(4);
     private List<String> disableCommands = defaultDisableCommands;
     /* MySQL Configs */
     private String mysqlAddress = "localhost";
@@ -122,6 +123,7 @@ public class ConfigurationManager {
         deathWhenLogout = plugin.getConfig().getBoolean("DeathWhenLogout", true);
         disableRegainHP = plugin.getConfig().getBoolean("DisableRegainHealth", true);
         disableTeamPVP = plugin.getConfig().getBoolean("DisableTeamPVP", true);
+        godModeTime = plugin.getConfig().getInt("RespawnGodModeTime", 4);
         disableCommands = plugin.getConfig().getStringList("DisableCommands");
         /* MySQL Configs */
         mysqlAddress = plugin.getConfig().getString("MySQL.Server.Address", "localhost");
@@ -192,6 +194,10 @@ public class ConfigurationManager {
 
     public boolean getDisableTeamPVP() {
         return this.disableTeamPVP;
+    }
+    
+    public int getGodModeTime(){
+        return this.godModeTime;
     }
 
     public List<String> getDisableCommands() {

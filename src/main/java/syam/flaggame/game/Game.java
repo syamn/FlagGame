@@ -71,7 +71,10 @@ public class Game implements IGame {
     private Set<String> redPlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
     private Set<String> bluePlayers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
+    // Tabリスト表示名変更
     private Map<String, String> tabListMap = new ConcurrentHashMap<String, String>();
+    // リスポン後の無敵プレイヤーリスト
+    private ConcurrentHashMap<String, Long> godModeMap = new ConcurrentHashMap<String, Long>();
 
     // Kill/Death記録
     private Map<GameTeam, Integer> teamKilledCount = new ConcurrentHashMap<GameTeam, Integer>();
@@ -109,6 +112,7 @@ public class Game implements IGame {
         // 一度プレイヤーリスト初期化
         redPlayers.clear();
         bluePlayers.clear();
+        godModeMap.clear();
         // 再マッピング
         mappingPlayersList();
 
@@ -777,6 +781,10 @@ public class Game implements IGame {
         return this.isJoined(player.getName());
     }
 
+    public ConcurrentHashMap<String, Long> getGodModeMap(){
+        return this.godModeMap;
+    }
+    
     /* ***** 参加しているプレイヤーへのアクション関係 ***** */
 
     /**

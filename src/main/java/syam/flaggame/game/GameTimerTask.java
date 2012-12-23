@@ -3,6 +3,10 @@
  */
 package syam.flaggame.game;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -30,6 +34,7 @@ public class GameTimerTask implements Runnable {
     private final FlagGame plugin;
     private Game game;
     private Cuboid cuboid = null;
+    private int godModeTime;
 
     /**
      * コンストラクタ
@@ -44,6 +49,7 @@ public class GameTimerTask implements Runnable {
 
         this.game = game;
         this.cuboid = game.getStage().getStage();
+        this.godModeTime = plugin.getConfigs().getGodModeTime();
     }
 
     @Override
@@ -74,6 +80,9 @@ public class GameTimerTask implements Runnable {
         if (cuboid != null) {
             checkPlayersLocation();
         }
+        
+        // 無敵モードチェック
+        checkGodModePlayers();
 
         // remainsec--
         game.tickRemainTime();
@@ -112,6 +121,21 @@ public class GameTimerTask implements Runnable {
                     player.teleport(loc, TeleportCause.PLUGIN);
                     Actions.message(player, "&cステージエリア外に出たためスポーン地点に戻されました！");
                 }
+            }
+        }
+    }
+    
+    /**
+     * プレイヤーの無敵時間が超過しているかチェックを行う
+     */
+    private void checkGodModePlayers(){
+        ConcurrentHashMap<String, Long> godPlayers = game.getGodModeMap();
+        for (Entry<String, Long> entry : godPlayers.entrySet()){
+            if (entry.getValue() + this.godModeTime < System.currentTimeMillis() / 1000){
+                godPlayers.remove(entry.getKey());
+                Player player = Bukkit.getPlayerExact(entry.getKey());
+                if (player != null && player.isOnline())
+                    Actions.message(player, "&b無敵時間が終了しました！");
             }
         }
     }

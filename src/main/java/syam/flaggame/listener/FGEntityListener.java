@@ -65,16 +65,29 @@ public class FGEntityListener implements Listener {
         // 存在するゲームを回す
         for (Game game : GameManager.getGames().values()) {
             if (!game.isStarting()) continue;
-
-            GameTeam damagerTeam = game.getPlayerTeam(damager);
-            GameTeam attackerTeam = game.getPlayerTeam(attacker);
-
-            // 同じチームの場合イベントをキャンセルする
-            if (damagerTeam != null && attackerTeam != null && damagerTeam == attackerTeam) {
-                event.setDamage(0);
-                event.setCancelled(true);
-                Actions.message(attacker, "&c同じチームメンバーには攻撃できません！");
-
+            
+            if (game.isJoined(damager) && game.isJoined(attacker)){
+                GameTeam damagerTeam = game.getPlayerTeam(damager);
+                GameTeam attackerTeam = game.getPlayerTeam(attacker);
+                
+                boolean cancel = false;
+                
+                // 無敵時間
+                if (game.getGodModeMap().containsKey(damager.getName())){
+                    cancel = true;
+                    Actions.message(attacker, "&cこのプレイヤーはリスポーン後の無敵時間中です！");
+                }
+                
+                // 同じチームメンバー
+                if (damagerTeam == attackerTeam) {
+                    cancel = true;
+                    Actions.message(attacker, "&c同じチームメンバーには攻撃できません！");
+                }
+                
+                if (cancel){
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
                 return;
             }
         }

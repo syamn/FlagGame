@@ -212,6 +212,9 @@ public class FGPlayerListener implements Listener {
                     event.setRespawnLocation(loc);
                     player.getInventory().setHelmet(new ItemStack(team.getBlockID(), 1, (short) 0, team.getBlockData()));
                 }
+                // リスポン後無敵時間設定
+                game.getGodModeMap().put(player.getName(), System.currentTimeMillis() / 1000);
+                
                 return; // 複数ゲーム所属はあり得ないのでここで返す
             }
         }
