@@ -374,26 +374,24 @@ public class Stage implements IStage {
 
     public Location getSpawn(GameTeam team) {
         if (team == null || !spawnMap.containsKey(team)) return null;
-        return spawnMap.get(team);
+        return spawnMap.get(team).clone();
     }
 
     public Map<GameTeam, Location> getSpawns() {
-        return spawnMap;
+        return Collections.unmodifiableMap(spawnMap);
     }
 
     public void setSpawns(Map<GameTeam, Location> spawns) {
-        // クリア
         this.spawnMap.clear();
-        // セット
         this.spawnMap.putAll(spawns);
     }
 
     public Location getSpecSpawn() {
-        return this.specSpawn;
+        return this.specSpawn.clone();
     }
 
     public void setSpecSpawn(Location loc) {
-        this.specSpawn = loc;
+        this.specSpawn = loc.clone();
     }
 
     /* ***** エリア関係 ***** */
