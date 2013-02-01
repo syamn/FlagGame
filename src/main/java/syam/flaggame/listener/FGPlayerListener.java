@@ -57,7 +57,7 @@ public class FGPlayerListener implements Listener {
     /* 登録するイベントはここから下に */
 
     // プレイヤーがブロックをクリックした
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(final PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();

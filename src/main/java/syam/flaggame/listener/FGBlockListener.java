@@ -202,7 +202,7 @@ public class FGBlockListener implements Listener {
                     Actions.message(player, "&cYou don't have permission to do this!");
                     return;
                 }
-                event.setLine(0, "&a[FlagGame]");
+                event.setLine(0, "§a[FlagGame]");
             }
         }
     }
