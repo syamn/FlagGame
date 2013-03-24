@@ -167,6 +167,10 @@ public class Stage implements IStage {
                 Actions.message(player, "&6" + this.getName() + "エラー:&c Occurred NullPointerException: " + Actions.getBlockLocationString(toBlock.getLocation()));
                 npe.printStackTrace();
                 continue;
+            } catch (Exception ex){
+                Actions.message(player, "&6" + this.getName() + "エラー:&c Occurred Exception: " + Actions.getBlockLocationString(toBlock.getLocation()));
+                ex.printStackTrace();
+                continue;
             }
             count++;
         }
